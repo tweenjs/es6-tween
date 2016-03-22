@@ -1,0 +1,55 @@
+{
+  "name": "tween.js",
+  "description": "Super simple, fast and easy to use tweening engine which incorporates optimised Robert Penner's equations.",
+  "version": "0.0.0-development",
+  "main": "dist/tween.js",
+  "jsnext:main": "src/index.js",
+  "homepage": "https://github.com/tweenjs/tween.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tweenjs/tween.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tweenjs/tween.js/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "tween",
+    "interpolation"
+  ],
+  "dependencies": {},
+  "scripts": {
+    "build": "node rollup-build",
+    "test": "ava test/"
+  },
+  "ava": {
+    "babel": "inherit",
+    "require": [
+      "babel-register"
+    ]
+  },
+  "author": "tween.js contributors (https://github.com/tweenjs/tween.js/graphs/contributors)",
+  "devDependencies": {
+    "ava": "^0.13.0",
+    "babel-cli": "^6.5.1",
+    "babel-eslint": "^5.0.0",
+    "babel-plugin-transform-es2015-modules-umd": "^6.5.0",
+    "babel-plugin-transform-runtime": "^6.6.0",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-es2015-rollup": "^1.1.1",
+    "babel-register": "^6.7.2",
+    "eslint": "^2.4.0",
+    "eslint-config-airbnb": "^6.1.0",
+    "eslint-plugin-babel": "^3.1.0",
+    "eslint-plugin-react": "^4.2.3",
+    "estraverse": "^4.2.0",
+    "estraverse-fb": "^1.3.1",
+    "jscs": "^2.2.0",
+    "jshint": "^2.8.0",
+    "nodeunit": "^0.9.1",
+    "rollup": "^0.25.5",
+    "rollup-plugin-babel": "^2.4.0",
+    "rollup-plugin-uglify": "^0.3.1",
+    "semantic-release": "^4.3.5"
+  }
+}

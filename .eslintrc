@@ -1,0 +1,16 @@
+{
+	"extends": "airbnb",
+	"parser": "babel-eslint",
+	"plugins": [
+		"babel"
+	],
+	"rules" : {
+		"indent": [2, "tab"],
+		"new-cap": 0,
+		"max-len": 0
+	},
+	"ecmaFeatures": {
+		"experimentalObjectRestSpread": true,
+		"restParams": true
+	}
+}
