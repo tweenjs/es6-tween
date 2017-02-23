@@ -41,3 +41,5 @@ class TWEEN {
 			return true;
 	}
 }
+
+export default TWEEN;
