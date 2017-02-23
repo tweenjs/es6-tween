@@ -6,3 +6,4 @@ let Easing = class {
 		return k * k;
 	}
 }
+export { Easing };
