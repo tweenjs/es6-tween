@@ -1,2 +1,2 @@
 # es6-tween
-The repository for a potential future es6 version of tween.js
+The first (just basic methods implemented) ES6 (ES2015/Harmony) port of amazing tween.js
