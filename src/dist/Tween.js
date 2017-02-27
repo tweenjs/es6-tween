@@ -12,8 +12,8 @@ class Tween {
 		this._chainedTweens = [];
 
 		this._duration = 1000;
-		this._easingFunction = TWEEN.Easing.Linear.None;
-		this._interpolationFunction = TWEEN.Interpolation.None;
+		this._easingFunction = Easing.Linear.None;
+		this._interpolationFunction = Interpolation.None;
 
 		this._startTime = null;
 		this._delayTime = 0;
