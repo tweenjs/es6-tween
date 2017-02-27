@@ -51,7 +51,7 @@ import TWEEN from 'Tween';
 #### Use `npm`
 
 ```bash
-npm install tween.js
+npm install es6-tween
 ```
 
 Then include the Tween.js module with the standard node.js `require`:
