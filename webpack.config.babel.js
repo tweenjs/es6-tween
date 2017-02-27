@@ -20,6 +20,7 @@ const config = {
   output: {
     path: __dirname,
     filename: 'dist/' + outputFile,
+	library: 'TWEEN',
 	libraryTarget: 'umd'
   },
   module: {
