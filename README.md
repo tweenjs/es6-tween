@@ -35,7 +35,7 @@ Download the [library](https://raw.githubusercontent.com/tweenjs/es6-tween/maste
 You can also reference a `unpkg`-hosted version in your code, thanks to `unpkg`. For example:
 
 ```html
-<script src="unpkg.com/es6-tween/dist/Tween.min.js"></script>
+<script src="https://unpkg.com/es6-tween/dist/Tween.min.js"></script>
 ```
 
 ### More advanced users might want to...
