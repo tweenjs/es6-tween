@@ -138,6 +138,8 @@ So far we've learnt about the `Tween.start` method, but there are more methods t
 tween.stop();
 ````
 
+Stopping a tween that was never started or that has already been stopped has no effect. No errors are thrown either.
+
 ### `play` and `pause`
 Even you can `play` and `pause` individual tweens with easy method:
 
@@ -146,8 +148,6 @@ tween.pause(); // pause tween
 
 tween.play(); // play tween
 ````
-
-Stopping a tween that was never started or that has already been stopped has no effect. No errors are thrown either.
 
 The `start` method also accepts a `time` parameter. If you use it, the tween won't start until that particular moment in time; otherwise it will start as soon as possible (i.e. on the next call to `TWEEN.update`).
 
