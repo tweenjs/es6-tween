@@ -1,23 +1,51 @@
 // TWEEN.js
 let _tweens = [];
+let _time = 0;
+let isStarted = false;
+let autoPlay = false;
+let _tick;
+
+let autoStart = function autoStart(time) {
+	if (TWEEN.update(_time)) {
+		_time = time;
+		_tick = requestAnimationFrame(autoStart);
+	} else {
+		isStarted = false;
+		cancelAnimationFrame(_tick);
+	}
+}
 
 class TWEEN {
 	static getAll() {
 		return _tweens
+	}
+	static autoPlay ( state ) {
+		autoPlay = state;
 	}
 	static removeAll() {
 		_tweens = []
 	}
 	static add( tween ) {
 		_tweens.push( tween );
+
+		if ( autoPlay && !isStarted ) {
+			autoStart(TWEEN.now());
+			isStarted = true;
+		}
+
 	}
 	static remove( tween ) {
 		_tweens.filter( tweens => tweens !== tween );
 	}
 	static now() {
-		return performance.now();
+		return _time;
 	}
 	static update( time, preserve ) {
+
+
+		time = time !== undefined ? time : TWEEN.now();
+
+		_time = time;
 
 		if ( _tweens.length === 0 ) {
 
@@ -25,9 +53,7 @@ class TWEEN {
 
 		}
 
-		var i = 0;
-
-		time = time !== undefined ? time : TWEEN.now();
+		let i = 0;
 
 		while ( i < _tweens.length ) {
 
@@ -65,14 +91,55 @@ TWEEN.Tween = class {
 		this._yoyo = false;
 		this._reversed = false;
 
-		this._onUpdateCallback = null;
-		this._onStartCallback = null;
 		this._onStartCallbackFired = false;
-		this._onCompleteCallback = null;
-		this._onStopCallback = null;
+		this._events = new Map();
+		this._pausedTime = 0;
 
 		return this;
 
+	}
+	emit(name, fn, a2, a3, a4) {
+
+		if (name !== undefined && typeof(fn) === "function") {
+			this._events.set(name, fn);
+		} else if (typeof(fn) !== "function" && this._events.get(name) !== undefined) {
+			this._events.get(name).call(this, fn, a2, a3, a4);
+		}
+		return this;
+
+	}
+	pause () {
+
+		if (!this._isPlaying) {
+			return this;
+		}
+
+		this._isPlaying = false;
+
+		TWEEN.remove(this);
+		this._pausedTime = TWEEN.now();
+
+		return this.emit('pause', this.object);
+	}
+	play () {
+
+		if (this._isPlaying) {
+			return this;
+		}
+
+		this._isPlaying = true;
+
+		this._startTime += TWEEN.now() - this._pausedTime;
+		TWEEN.add(this);
+		this._pausedTime = TWEEN.now();
+
+		return this.emit('play', this.object);
+	}
+	duration ( amount ) {
+
+		this._duration = amount;
+
+		return this;
 	}
 	to( properties = {}, duration = 1000 ) {
 
@@ -100,7 +167,7 @@ TWEEN.Tween = class {
 	}
 	stop() {
 
-		let { _isPlaying, _onStopCallback, _object } = this;
+		let { _isPlaying, _onStopCallback, object } = this;
 
 		if ( !_isPlaying ) {
 			return this;
@@ -109,12 +176,8 @@ TWEEN.Tween = class {
 		TWEEN.remove( this );
 		this._isPlaying = false;
 
-		if ( _onStopCallback !== null ) {
-			_onStopCallback( _object );
-		}
-
 		this.stopChainedTweens();
-		return this;
+		return this.emit('stop', object);
 
 	}
 	end() {
@@ -182,27 +245,6 @@ TWEEN.Tween = class {
 		return this;
 
 	}
-	onStart( fn ) {
-
-		this._onStartCallback = fn;
-
-		return this;
-
-	}
-	onUpdate( fn ) {
-
-		this._onUpdateCallback = fn;
-
-		return this;
-
-	}
-	onComplete( fn ) {
-
-		this.onCompleteCallback = fn;
-
-		return this;
-
-	}
 	update( time ) {
 
 		let {
@@ -236,9 +278,7 @@ TWEEN.Tween = class {
 
 		if ( _onStartCallbackFired === false ) {
 
-			if ( _onStartCallback !== null ) {
-				_onStartCallback( object );
-			}
+			this.emit('start', object);
 
 			this._onStartCallbackFired = true;
 		}
@@ -250,8 +290,8 @@ TWEEN.Tween = class {
 
 		for ( property in _valuesEnd ) {
 
-			const start = _valuesStart[ property ];
-			const end = _valuesEnd[ property ];
+			let start = _valuesStart[ property ];
+			let end = _valuesEnd[ property ];
 
 			if ( end instanceof Array ) {
 
@@ -278,9 +318,7 @@ TWEEN.Tween = class {
 
 		}
 
-		if ( _onUpdateCallback ) {
-			_onUpdateCallback( object, elapsed );
-		}
+		this.emit('update', object, elapsed);
 
 		if ( elapsed === 1 ) {
 
@@ -298,7 +336,7 @@ TWEEN.Tween = class {
 					}
 
 					if ( _yoyo ) {
-						var tmp = _valuesStartRepeat[ property ];
+						let tmp = _valuesStartRepeat[ property ];
 
 						_valuesStartRepeat[ property ] = _valuesEnd[ property ];
 						_valuesEnd[ property ] = tmp;
@@ -307,6 +345,8 @@ TWEEN.Tween = class {
 					_valuesStart[ property ] = _valuesStartRepeat[ property ];
 
 				}
+
+				this.emit('repeat', object, _reversed);
 
 				if ( _yoyo ) {
 					this._reversed = !_reversed;
@@ -322,16 +362,9 @@ TWEEN.Tween = class {
 
 			} else {
 
-				if ( _onCompleteCallback !== null ) {
+				this.emit('complete', object);
 
-					_onCompleteCallback.call( _object, _object );
-				}
-
-				for ( var i = 0, numChainedTweens = _chainedTweens.length; i < numChainedTweens; i++ ) {
-					// Make the chained tweens start exactly at the time they should,
-					// even if the `update()` method was called way past the duration of the tween
-					_chainedTweens[ i ].start( _startTime + _duration );
-				}
+				_chainedTweens.map(tween => tween.start( _startTime + _duration));
 
 				return false;
 
@@ -483,13 +516,13 @@ TWEEN.Easing = {
 
 		In( k ) {
 
-			return k === 0 ? 0 : 1024 ** ( k - 1 );
+			return k === 0 ? 0 : Math.pow(1024, ( k - 1 ));
 
 		},
 
 		Out( k ) {
 
-			return k === 1 ? 1 : 1 - 2 ** ( -10 * k );
+			return k === 1 ? 1 : 1 - Math.pow(-10 * k, 2);
 
 		},
 
@@ -504,10 +537,10 @@ TWEEN.Easing = {
 			}
 
 			if ( ( k *= 2 ) < 1 ) {
-				return 0.5 * ( 1024 ** ( k - 1 ) );
+				return 0.5 * Math.pow(1024, ( k - 1 ) );
 			}
 
-			return 0.5 * ( -( 2 ** ( -10 * ( k - 1 ) ) ) + 2 );
+			return 0.5 * ( -Math.pow( -10 * ( k - 1 ), 2) + 2 );
 
 		}
 
@@ -551,7 +584,7 @@ TWEEN.Easing = {
 				return 1;
 			}
 
-			return -( 2 ** ( 10 * ( k - 1 ) ) ) * Math.sin( ( k - 1.1 ) * 5 * Math.PI );
+			return -Math.pow(( 10 * ( k - 1 ) ), 2 ) * Math.sin( ( k - 1.1 ) * 5 * Math.PI );
 
 		},
 
@@ -565,7 +598,7 @@ TWEEN.Easing = {
 				return 1;
 			}
 
-			return 2 ** ( -10 * k ) * Math.sin( ( k - 0.1 ) * 5 * Math.PI ) + 1;
+			return Math.pow( -10 * k, 2 ) * Math.sin( ( k - 0.1 ) * 5 * Math.PI ) + 1;
 
 		},
 
@@ -582,10 +615,10 @@ TWEEN.Easing = {
 			k *= 2;
 
 			if ( k < 1 ) {
-				return -0.5 * ( 2 ** ( 10 * ( k - 1 ) ) ) * Math.sin( ( k - 1.1 ) * 5 * Math.PI );
+				return -0.5 * Math.pow(( 10 * ( k - 1 ) ), 2) * Math.sin( ( k - 1.1 ) * 5 * Math.PI );
 			}
 
-			return 0.5 * ( 2 ** ( -10 * ( k - 1 ) ) ) * Math.sin( ( k - 1.1 ) * 5 * Math.PI ) + 1;
+			return 0.5 * Math.pow( -10 * ( k - 1 ), 2 ) * Math.sin( ( k - 1.1 ) * 5 * Math.PI ) + 1;
 
 		}
 
@@ -797,6 +830,6 @@ if ( typeof( define ) === "function" && define.amd ) {
 } else if ( typeof( exports ) !== "undefined" && typeof( global ) !== "undefined" ) {
 	exports.TWEEN = Tween;
 	// Else somewhere
-} else {
+} else if (typeof(this) !== "undefined") {
 	this.TWEEN = TWEEN;
 }

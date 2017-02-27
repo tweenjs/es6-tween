@@ -1,0 +1,16 @@
+{
+	"presets": ["es2015"],
+	"plugins": [
+		"babel-plugin-add-module-exports",
+		"transform-proto-to-assign",
+		["transform-es2015-classes", {
+				"loose": true
+			}
+		],
+		[
+			"transform-react-jsx", {
+				"pragma": "m"
+			}
+		]
+	]
+}
