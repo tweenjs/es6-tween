@@ -42,9 +42,8 @@ You can also reference a `unpkg`-hosted version in your code, thanks to `unpkg`.
 
 #### Use `import`
 
-* Coming soon
 ```javascript
-import TWEEN from 'Tween';
+import TWEEN from './src/Tween';
 ```
 
 
@@ -57,7 +56,7 @@ npm install es6-tween
 Then include the Tween.js module with the standard node.js `require`:
 
 ```javascript
-var TWEEN = require('tween.js');
+var TWEEN = require('es6-tween');
 ```
 
 And you can use Tween.js as in all other examples--for example:
