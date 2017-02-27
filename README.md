@@ -6,7 +6,6 @@ ES6 implementation of <a href="https://github.com/tweenjs/tween.js">tween.js</a>
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Travis tests][travis-image]][travis-url]
 [![Flattr this][flattr-image]][flattr-url]
-[![CDNJS][cdnjs-image]][cdnjs-url]
 
 ```javascript
 let coords = { x: 0, y: 0 };
@@ -36,10 +35,8 @@ Download the [library](https://raw.githubusercontent.com/tweenjs/es6-tween/maste
 You can also reference a `unpkg`-hosted version in your code, thanks to `unpkg`. For example:
 
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
+<script src="unpkg.com/es6-tween/dist/Tween.min.js"></script>
 ```
-
-See [es6-tween](https://cdnjs.com/libraries/es6-tween/) for more versions.
 
 ### More advanced users might want to...
 
