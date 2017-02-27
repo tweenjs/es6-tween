@@ -611,8 +611,8 @@ var Tween = function () {
 				this._chainedTweens = [];
 
 				this._duration = 1000;
-				this._easingFunction = TWEEN.Easing.Linear.None;
-				this._interpolationFunction = TWEEN.Interpolation.None;
+				this._easingFunction = _Easing2.default.Linear.None;
+				this._interpolationFunction = _Interpolation2.default.None;
 
 				this._startTime = null;
 				this._delayTime = 0;
