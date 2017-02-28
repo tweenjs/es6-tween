@@ -46,6 +46,11 @@ You can also reference a `unpkg`-hosted version in your code, thanks to <a href=
 import TWEEN from './src/Tween';
 ```
 
+#### Use `yarn`
+```bash
+yarn add es6-tween
+```
+
 
 #### Use `npm`
 
@@ -66,18 +71,18 @@ let t = new TWEEN.Tween( /* etc */ );
 t.start();
 ```
 
-You will need to use a tool such as `browserify` to convert code using this style into something that can be run in the browser (browsers don't know about `require`).
+You can run script commands to build modules into single `UMD` compatible file:
 
-#### Use `bower`
+#### Use `Webpack + Babel Transpiler`
 
 ```bash
-bower install es6-tween --save
+npm run build
 ```
 
 Then reference the library source:
 
 ```html
-<script src="bower_components/es6-tween/src/Tween.js"></script>
+<script src="dist/Tween.min.js"></script>
 ```
 
 ## Features
@@ -90,6 +95,7 @@ Then reference the library source:
 
 ## Documentation
 
+* Original source: <a href="https://github.com/tweenjs/tween.js">check out at here</a>
 * [User guide](./docs/user_guide.md)
 * [Tutorial](http://learningthreejs.com/blog/2011/08/17/tweenjs-for-smooth-animation/)  using tween.js with three.js
 * Also: [libtween](https://github.com/jsm174/libtween), a port of tween.js to C by [jsm174](https://github.com/jsm174)
