@@ -32,7 +32,7 @@ Download the [library](https://raw.githubusercontent.com/tweenjs/es6-tween/maste
 <script src="js/Tween.js"></script>
 ```
 
-You can also reference a `unpkg`-hosted version in your code, thanks to `unpkg`. For example:
+You can also reference a `unpkg`-hosted version in your code, thanks to <a href="https://unpkg.com/#/">unpkg</a>. For example:
 
 ```html
 <script src="https://unpkg.com/es6-tween/dist/Tween.min.js"></script>
@@ -56,13 +56,13 @@ npm install es6-tween
 Then include the Tween.js module with the standard node.js `require`:
 
 ```javascript
-var TWEEN = require('es6-tween');
+let TWEEN = require('es6-tween');
 ```
 
 And you can use Tween.js as in all other examples--for example:
 
 ```javascript
-var t = new TWEEN.Tween( /* etc */ );
+let t = new TWEEN.Tween( /* etc */ );
 t.start();
 ```
 
@@ -113,7 +113,7 @@ Then reference the library source:
 
 ## Tests
 
-You need to install `npm` first--this comes with node.js, so install that one first. Then, cd to `tween.js`'s directory and run:
+You need to install `npm` first--this comes with node.js, so install that one first. Then, cd to `es6-tween`'s directory and run:
 
 ```bash
 npm install
@@ -155,6 +155,6 @@ Maintainers: [mikebolt](https://github.com/mikebolt), [sole](https://github.com/
 [travis-image]: https://travis-ci.org/tweenjs/es6-tween.svg?branch=master
 [travis-url]: https://travis-ci.org/tweenjs/es6-tween
 [flattr-image]: https://api.flattr.com/button/flattr-badge-large.png
-[flattr-url]: https://flattr.com/thing/45014/tween-js
+[flattr-url]: https://flattr.com/thing/c5d938ac13cb0e28e9664089b6d9424a
 [cdnjs-image]: https://img.shields.io/cdnjs/v/es6-tween.svg
 [cdnjs-url]: https://cdnjs.com/libraries/es6-tween
