@@ -8,12 +8,15 @@ import Easing from './Easing';
 import Interpolation from './Interpolation';
 
 class Tween {
+	static createEmptyConst (oldObject) {
+		return typeof(oldObject) === "number" ? 0 : Array.isArray(oldObject) ? [] : typeof(oldObject) === "object" ? {} : '';
+	}
 	constructor( object = {} ) {
 
 		this.object = object;
-		this._valuesStart = Object.assign( {}, object );
-		this._valuesStartRepeat = Object.assign( {}, object );
-		this._valuesEnd = {};
+		this._valuesStart = Object.assign( Tween.createEmptyConst(object), object );
+		this._valuesStartRepeat = Object.assign( Tween.createEmptyConst(object), object );
+		this._valuesEnd = Tween.createEmptyConst(object);
 		this._chainedTweens = [];
 
 		this._duration = 1000;
@@ -173,8 +176,20 @@ class Tween {
 	}
 	to( properties = {}, duration = 1000 ) {
 
-		this._valuesEnd = properties;
-		this._duration = duration;
+		if ( typeof properties === "number" ) {
+			let _vE = { Number: properties };
+			this._valuesEnd = _vE;
+		} else {
+			this._valuesEnd = properties;
+		}
+
+		if ( typeof duration === "number" ) {
+			this._duration = duration;
+		} else if ( typeof duration === "object" ) {
+			for ( let prop in duration ) {
+				this[prop](duration[prop]);
+			}
+		}
 
 		return this;
 
@@ -294,6 +309,10 @@ class Tween {
 
 		return this;
 
+	}
+	get ( time ) {
+		this.update( time );
+		return this._object;
 	}
 	update( time ) {
 

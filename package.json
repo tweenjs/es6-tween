@@ -1,6 +1,6 @@
 {
   "name": "es6-tween",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ES6 implementation of amazing tween.js",
   "main": "dist/Tween.js",
   "directories": {

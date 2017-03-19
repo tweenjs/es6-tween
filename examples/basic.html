@@ -25,7 +25,7 @@ var body = document.body;
 
 TWEEN.autoPlay(true);
 
-var tween = new TWEEN.Tween({x:0}).to({x:200}, 2000).on('update', function (object) {
+var tween = new TWEEN.Tween([0, 200, 300]).to([200, 400, 500], 2000).on('update', function (object) {
 	body.textContent = JSON.stringify(object);
 }).start();
 
