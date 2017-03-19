@@ -32,18 +32,31 @@ Download the [library](https://raw.githubusercontent.com/tweenjs/es6-tween/maste
 <script src="js/Tween.js"></script>
 ```
 
+### CDN-Hosted version
+
+#### Using `unpkg` hosted version
+
 You can also reference a `unpkg`-hosted version in your code, thanks to <a href="https://unpkg.com/#/">unpkg</a>. For example:
 
 ```html
 <script src="https://unpkg.com/es6-tween/dist/Tween.min.js"></script>
 ```
 
+#### Using @jsdelivr hosted version (coming soon)
+
+You can also reference a @jsdelivr-hosted version in your code, thanks to @jsdelivr. For example:
+
+```html
+<script src="https://cdn.jsdelivr.net/es6-tween/latest/dist/Tween.min.js"></script>
+```
+
+
 ### More advanced users might want to...
 
 #### Use `import`
 
 ```javascript
-import TWEEN from './src/Tween';
+import * as TWEEN from './node_modules/es6-tween/src/Tween';
 ```
 
 #### Use `yarn`
