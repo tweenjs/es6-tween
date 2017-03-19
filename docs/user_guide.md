@@ -50,7 +50,7 @@ This will take care of updating all active tweens; after 1 second (i.e. 1000 mil
 But unless you print the value of `x` to the console, you can't see its value changing. You might want to use the `onUpdate` callback:
 
 ````javascript
-tween.emit('update', (object) => {
+tween.on('update', (object) => {
 	console.log(object.x);
 });
 ````
@@ -288,7 +288,7 @@ let trickyObjTween = new TWEEN.Tween({
 	propertyB: trickyObj.getPropertyB()
 })
 	.to({ propertyA: 100, propertyB: 200 })
-	.emit('update', (object) => {
+	.on('update', (object) => {
 		object.setA( object.propertyA );
 		object.setB( object.propertyB );
 	});
@@ -299,29 +299,29 @@ Or imagine you want to play a sound when a tween is started. You can use an `sta
 ````javascript
 let tween = new TWEEN.Tween(obj)
 	.to({ x: 100 })
-	.emit('start', () => {
+	.once('start', () => {
 		sound.play();
 	});
 ````
 
 The scope for each callback is the tweened object--in this case, `obj`.
 
-### emit
+### Events
 
-In ES6 implementation we try to use `emit` similar to `node.js` `emit` events, but easier to use. This way extends flexibility over tweens and reduces size as well. With `emit` method, callback isn't limitation anymore, even you can extend events
+In ES6 implementation we try to use `on`, `once` and `emit` similar to `node.js` `emit` events, but easier to use. This way extends flexibility over tweens and reduces size as well. With `event` methods, callback isn't limitation anymore, even you can extend events
 
 ```javascript
-tween.emit('start', (object) => {
+tween.once('start', (object) => {
 	console.log('start called');
 });
 // 'start' calls when tween starts
 
-tween.emit('completed_my_tween', (sureArg) => {
+tween.once('completed_my_tween', (sureArg) => {
 	console.log('tween is really ' + (sureArg ? 'completed' : 'incompleted'));
 });
 
-tween.emit('complete', function () {
-	tween.emit('completed', !this._isPlaying);
+tween.once('complete', function () {
+	tween.emit('completed_my_tween', !this._isPlaying);
 });
 
 ```
@@ -405,7 +405,7 @@ When you try to animate the position of an element in the page, the easiest solu
 let element = document.getElementById('myElement');
 let tween = new TWEEN.Tween({ top: 0, left: 0 })
 	.to({ top: 100, left: 100 }, 1000)
-	.emit('update', (object) => {
+	.on('update', (object) => {
 		element.style.top = object.top + 'px';
 		element.style.left = object.left + 'px';
 	});
@@ -417,7 +417,7 @@ but this is really inefficient because altering these properties forces the brow
 let element = document.getElementById('myElement');
 let tween = new TWEEN.Tween({ top: 0, left: 0 })
 	.to({ top: 100, left: 100 }, 1000)
-	.emit('update', (object) => {
+	.on('update', (object) => {
 		element.style.transform = 'translate(' + object.left + 'px, ' + object.top + 'px);';
 	});
 ```

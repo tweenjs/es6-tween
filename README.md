@@ -11,7 +11,7 @@ ES6 implementation of <a href="https://github.com/tweenjs/tween.js">tween.js</a>
 let coords = { x: 0, y: 0 };
 let tween = new TWEEN.Tween(coords)
 	.to({ x: 100, y: 100 }, 1000)
-	.onUpdate(object => {
+	.on('update', object => {
 		console.log(object.x, object.y);
 	})
 	.start();
