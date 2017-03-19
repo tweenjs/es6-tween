@@ -614,30 +614,122 @@ var Tween = function () {
 				this._easingFunction = _Easing2.default.Linear.None;
 				this._interpolationFunction = _Interpolation2.default.None;
 
-				this._startTime = null;
+				this._startTime = 0;
 				this._delayTime = 0;
 				this._repeat = 0;
+				this._r = 0;
 				this._repeatDelayTime = 0;
+				this._reverseDelayTime = 0;
 				this._isPlaying = false;
 				this._yoyo = false;
 				this._reversed = false;
 
 				this._onStartCallbackFired = false;
-				this._events = new Map();
+				this._events = {};
 				this._pausedTime = 0;
 
 				return this;
 		}
 
 		_createClass(Tween, [{
-				key: 'emit',
-				value: function emit(name, fn, a2, a3, a4) {
+				key: 'isPlaying',
+				value: function isPlaying() {
+						return this._isPlaying;
+				}
+		}, {
+				key: 'isStarted',
+				value: function isStarted() {
+						return this._onStartCallbackFired;
+				}
+		}, {
+				key: 'reverse',
+				value: function reverse() {
+						var _valuesStartRepeat = this._valuesStartRepeat,
+						    _yoyo = this._yoyo,
+						    _valuesEnd = this._valuesEnd,
+						    _valuesStart = this._valuesStart;
 
-						if (name !== undefined && typeof fn === "function") {
-								this._events.set(name, fn);
-						} else if (typeof fn !== "function" && this._events.get(name) !== undefined) {
-								this._events.get(name).call(this, fn, a2, a3, a4);
+						// Reassign starting values, restart by making startTime = now
+
+						for (var property in _valuesStartRepeat) {
+
+								if (typeof _valuesEnd[property] === 'string') {
+										_valuesStartRepeat[property] = _valuesStartRepeat[property] + parseFloat(_valuesEnd[property]);
+								}
+
+								if (_yoyo) {
+										var tmp = _valuesStartRepeat[property];
+
+										_valuesStartRepeat[property] = _valuesEnd[property];
+										_valuesEnd[property] = tmp;
+								}
+
+								_valuesStart[property] = _valuesStartRepeat[property];
 						}
+
+						this._reversed = !this._reversed;
+
+						return this;
+				}
+		}, {
+				key: 'off',
+				value: function off(name, fn) {
+						if (this._events[name] === undefined) {
+								return this;
+						}
+						if (name !== undefined && fn !== undefined) {
+								this._events[name].filter(function (event) {
+										if (event === fn) {
+												return false;
+										}
+										return true;
+								});
+						} else if (name !== undefined && fn === undefined) {
+								this._events[name] = [];
+						}
+						return this;
+				}
+		}, {
+				key: 'on',
+				value: function on(name, fn) {
+						if (this._events[name] === undefined) {
+								this._events[name] = [];
+						}
+						this._events[name].push(fn);
+						return this;
+				}
+		}, {
+				key: 'once',
+				value: function once(name, fn) {
+						var _this = this;
+
+						if (this._events[name] === undefined) {
+								this._events[name] = [];
+						}
+						return this.on(name, function () {
+								for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+										args[_key] = arguments[_key];
+								}
+
+								fn.call.apply(fn, [_this].concat(args));
+								_this.off(name);
+						});
+				}
+		}, {
+				key: 'emit',
+				value: function emit(name) {
+						var _this2 = this;
+
+						for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+								args[_key2 - 1] = arguments[_key2];
+						}
+
+						if (this._events[name] === undefined) {
+								return this;
+						}
+						this._events[name].map(function (event) {
+								event.call.apply(event, [_this2].concat(args));
+						});
 						return this;
 				}
 		}, {
@@ -670,6 +762,28 @@ var Tween = function () {
 						this._pausedTime = TWEEN.now();
 
 						return this.emit('play', this.object);
+				}
+		}, {
+				key: 'restart',
+				value: function restart(noDelay) {
+
+						this._startTime = TWEEN.now() + (noDelay ? 0 : this._delayTime);
+
+						if (!this._isPlaying) {
+								TWEEN.add(this);
+						}
+
+						return this.emit('restart', this._object);
+				}
+		}, {
+				key: 'seek',
+				value: function seek(time, keepPlaying) {
+
+						this._startTime = TWEEN.now() + Math.max(0, Math.min(time, this._duration));
+
+						this.emit('seek', time, this._object);
+
+						return keepPlaying ? this : this.pause();
 				}
 		}, {
 				key: 'duration',
@@ -761,6 +875,7 @@ var Tween = function () {
 				value: function repeat(times) {
 
 						this._repeat = times;
+						this._r = times;
 
 						return this;
 				}
@@ -769,6 +884,14 @@ var Tween = function () {
 				value: function repeatDelay(amount) {
 
 						this._repeatDelayTime = amount;
+
+						return this;
+				}
+		}, {
+				key: 'reverseDelay',
+				value: function reverseDelay(amount) {
+
+						this._reverseDelayTime = amount;
 
 						return this;
 				}
@@ -799,8 +922,8 @@ var Tween = function () {
 		}, {
 				key: 'chain',
 				value: function chain() {
-						for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-								args[_key] = arguments[_key];
+						for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+								args[_key3] = arguments[_key3];
 						}
 
 						this._chainedTweens = args;
@@ -810,15 +933,13 @@ var Tween = function () {
 		}, {
 				key: 'update',
 				value: function update(time) {
-						var _onUpdateCallback = this._onUpdateCallback,
-						    _onStartCallback = this._onStartCallback,
-						    _onStartCallbackFired = this._onStartCallbackFired,
-						    _onCompleteCallback = this._onCompleteCallback,
+						var _onStartCallbackFired = this._onStartCallbackFired,
 						    _chainedTweens = this._chainedTweens,
 						    _easingFunction = this._easingFunction,
 						    _interpolationFunction = this._interpolationFunction,
 						    _repeat = this._repeat,
 						    _repeatDelayTime = this._repeatDelayTime,
+						    _reverseDelayTime = this._reverseDelayTime,
 						    _delayTime = this._delayTime,
 						    _yoyo = this._yoyo,
 						    _reversed = this._reversed,
@@ -904,14 +1025,16 @@ var Tween = function () {
 												_valuesStart[property] = _valuesStartRepeat[property];
 										}
 
-										this.emit('repeat', object, _reversed);
+										this.emit(_reversed ? 'repeat' : 'reverse', object);
 
 										if (_yoyo) {
 												this._reversed = !_reversed;
 										}
 
-										if (_repeatDelayTime) {
+										if (_reversed && _repeatDelayTime) {
 												this._startTime = time + _repeatDelayTime;
+										} else if (!_reversed && _reverseDelayTime) {
+												this._startTime = time + _reverseDelayTime;
 										} else {
 												this._startTime = time + _delayTime;
 										}
@@ -924,6 +1047,8 @@ var Tween = function () {
 										_chainedTweens.map(function (tween) {
 												return tween.start(_startTime + _duration);
 										});
+
+										this._repeat = this._r;
 
 										return false;
 								}
@@ -1001,7 +1126,7 @@ if (ROOT.requestAnimationFrame === undefined) {
 	}
 }
 
-if (ROOT.cancelAnimationFrame === undefined) {
+if (ROOT.cancelAnimationFrame === undefined && (ROOT.cancelAnimationFrame = ROOT.cancelRequestAnimationFrame) === undefined) {
 	var _caf = void 0;
 
 	_vendor.map(function (vendor) {

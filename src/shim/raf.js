@@ -28,7 +28,7 @@ if ( ROOT.requestAnimationFrame === undefined ) {
 	}
 }
 
-if ( ROOT.cancelAnimationFrame === undefined ) {
+if ( ROOT.cancelAnimationFrame === undefined && (ROOT.cancelAnimationFrame = ROOT.cancelRequestAnimationFrame) === undefined ) {
 	let _caf;
 
 	_vendor.map(vendor => {

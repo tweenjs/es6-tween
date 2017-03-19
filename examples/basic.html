@@ -25,11 +25,11 @@ var body = document.body;
 
 TWEEN.autoPlay(true);
 
-var tween = new TWEEN.Tween({x:0}).to({x:200}, 2000).emit('update', function (object) {
+var tween = new TWEEN.Tween({x:0}).to({x:200}, 2000).on('update', function (object) {
 	body.textContent = JSON.stringify(object);
 }).start();
 
-var tween = new TWEEN.Tween({x:200}).to({x:0}, 2000).delay(3000).emit('update', function (object) {
+var tween = new TWEEN.Tween({x:200}).to({x:0}, 2000).delay(3000).on('update', function (object) {
 	body.textContent = JSON.stringify(object);
 }).start();
 </script>

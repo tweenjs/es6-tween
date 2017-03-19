@@ -1,4 +1,9 @@
-import { add, remove, now } from './core';
+import {
+	add
+	, remove
+	, now
+}
+from './core';
 import Easing from './Easing';
 import Interpolation from './Interpolation';
 
@@ -15,59 +20,152 @@ class Tween {
 		this._easingFunction = Easing.Linear.None;
 		this._interpolationFunction = Interpolation.None;
 
-		this._startTime = null;
+		this._startTime = 0;
 		this._delayTime = 0;
 		this._repeat = 0;
+		this._r = 0;
 		this._repeatDelayTime = 0;
+		this._reverseDelayTime = 0;
 		this._isPlaying = false;
 		this._yoyo = false;
 		this._reversed = false;
 
 		this._onStartCallbackFired = false;
-		this._events = new Map();
+		this._events = {};
 		this._pausedTime = 0;
 
 		return this;
 
 	}
-	emit(name, fn, a2, a3, a4) {
+	isPlaying() {
+		return this._isPlaying;
+	}
+	isStarted() {
+		return this._onStartCallbackFired;
+	}
+	reverse() {
 
-		if (name !== undefined && typeof(fn) === "function") {
-			this._events.set(name, fn);
-		} else if (typeof(fn) !== "function" && this._events.get(name) !== undefined) {
-			this._events.get(name).call(this, fn, a2, a3, a4);
+		let {
+			_valuesStartRepeat
+			, _yoyo
+			, _valuesEnd
+			, _valuesStart
+		} = this;
+
+		// Reassign starting values, restart by making startTime = now
+		for ( let property in _valuesStartRepeat ) {
+
+			if ( typeof( _valuesEnd[ property ] ) === 'string' ) {
+				_valuesStartRepeat[ property ] = _valuesStartRepeat[ property ] + parseFloat( _valuesEnd[ property ] );
+			}
+
+			if ( _yoyo ) {
+				let tmp = _valuesStartRepeat[ property ];
+
+				_valuesStartRepeat[ property ] = _valuesEnd[ property ];
+				_valuesEnd[ property ] = tmp;
+			}
+
+			_valuesStart[ property ] = _valuesStartRepeat[ property ];
+
 		}
+
+		this._reversed = !this._reversed;
+
+		return this;
+	}
+	off( name, fn ) {
+		if ( this._events[ name ] === undefined ) {
+			return this;
+		}
+		if ( name !== undefined && fn !== undefined ) {
+			this._events[ name ].filter( event => {
+				if ( event === fn ) {
+					return false;
+				}
+				return true;
+			} );
+		} else if ( name !== undefined && fn === undefined ) {
+			this._events[ name ] = [];
+		}
+		return this;
+	}
+	on( name, fn ) {
+		if ( this._events[ name ] === undefined ) {
+			this._events[ name ] = [];
+		}
+		this._events[ name ].push( fn );
+		return this;
+	}
+	once( name, fn ) {
+		if ( this._events[ name ] === undefined ) {
+			this._events[ name ] = [];
+		}
+		return this.on( name, ( ...args ) => {
+			fn.call( this, ...args );
+			this.off( name );
+		} );
+	}
+	emit( name, ...args ) {
+
+		if ( this._events[ name ] === undefined ) {
+			return this;
+		}
+		this._events[ name ].map( event => {
+			event.call( this, ...args );
+		} );
 		return this;
 
 	}
-	pause () {
+	pause() {
 
-		if (!this._isPlaying) {
+		if ( !this._isPlaying ) {
 			return this;
 		}
 
 		this._isPlaying = false;
 
-		TWEEN.remove(this);
+		TWEEN.remove( this );
 		this._pausedTime = TWEEN.now();
 
-		return this.emit('pause', this.object);
+		return this.emit( 'pause', this.object );
 	}
-	play () {
+	play() {
 
-		if (this._isPlaying) {
+		if ( this._isPlaying ) {
 			return this;
 		}
 
 		this._isPlaying = true;
 
 		this._startTime += TWEEN.now() - this._pausedTime;
-		TWEEN.add(this);
+		TWEEN.add( this );
 		this._pausedTime = TWEEN.now();
 
-		return this.emit('play', this.object);
+		return this.emit( 'play', this.object );
 	}
-	duration ( amount ) {
+	restart( noDelay ) {
+
+		this._startTime = TWEEN.now() + ( noDelay ? 0 : this._delayTime );
+
+		if ( !this._isPlaying ) {
+			TWEEN.add( this );
+		}
+
+		return this.emit( 'restart', this._object );
+
+	}
+	seek( time, keepPlaying ) {
+
+		this._startTime = TWEEN.now() + Math.max( 0, Math.min(
+			time, this._duration ) );
+
+		this.emit( 'seek', time, this._object );
+
+		return keepPlaying ? this : this.pause();
+
+	}
+	duration( amount ) {
 
 		this._duration = amount;
 
@@ -83,7 +181,10 @@ class Tween {
 	}
 	start( time ) {
 
-		let { _startTime, _delayTime } = this;
+		let {
+			_startTime
+			, _delayTime
+		} = this;
 
 		_startTime = time !== undefined ? time : TWEEN.now();
 		_startTime += _delayTime;
@@ -99,7 +200,11 @@ class Tween {
 	}
 	stop() {
 
-		let { _isPlaying, _onStopCallback, object } = this;
+		let {
+			_isPlaying
+			, _onStopCallback
+			, object
+		} = this;
 
 		if ( !_isPlaying ) {
 			return this;
@@ -109,19 +214,24 @@ class Tween {
 		this._isPlaying = false;
 
 		this.stopChainedTweens();
-		return this.emit('stop', object);
+		return this.emit( 'stop', object );
 
 	}
 	end() {
 
-		const { _startTime, _duration } = this;
+		const {
+			_startTime
+			, _duration
+		} = this;
 
 		return this.update( _startTime + _duration );
 
 	}
 	stopChainedTweens() {
 
-		let { _chainedTweens } = this;
+		let {
+			_chainedTweens
+		} = this;
 
 		_chainedTweens.map( item => item.stop() );
 
@@ -138,6 +248,7 @@ class Tween {
 	repeat( times ) {
 
 		this._repeat = times;
+		this._r = times;
 
 		return this;
 
@@ -145,6 +256,13 @@ class Tween {
 	repeatDelay( amount ) {
 
 		this._repeatDelayTime = amount;
+
+		return this;
+
+	}
+	reverseDelay( amount ) {
+
+		this._reverseDelayTime = amount;
 
 		return this;
 
@@ -180,15 +298,13 @@ class Tween {
 	update( time ) {
 
 		let {
-			_onUpdateCallback
-			, _onStartCallback
-			, _onStartCallbackFired
-			, _onCompleteCallback
+			_onStartCallbackFired
 			, _chainedTweens
 			, _easingFunction
 			, _interpolationFunction
 			, _repeat
 			, _repeatDelayTime
+			, _reverseDelayTime
 			, _delayTime
 			, _yoyo
 			, _reversed
@@ -210,7 +326,7 @@ class Tween {
 
 		if ( _onStartCallbackFired === false ) {
 
-			this.emit('start', object);
+			this.emit( 'start', object );
 
 			this._onStartCallbackFired = true;
 		}
@@ -250,7 +366,7 @@ class Tween {
 
 		}
 
-		this.emit('update', object, elapsed);
+		this.emit( 'update', object, elapsed );
 
 		if ( elapsed === 1 ) {
 
@@ -278,14 +394,16 @@ class Tween {
 
 				}
 
-				this.emit('repeat', object, _reversed);
+				this.emit( _reversed ? 'repeat' : 'reverse', object );
 
 				if ( _yoyo ) {
 					this._reversed = !_reversed;
 				}
 
-				if ( _repeatDelayTime ) {
+				if ( _reversed && _repeatDelayTime ) {
 					this._startTime = time + _repeatDelayTime;
+				} else if ( !_reversed && _reverseDelayTime ) {
+					this._startTime = time + _reverseDelayTime;
 				} else {
 					this._startTime = time + _delayTime;
 				}
@@ -294,9 +412,11 @@ class Tween {
 
 			} else {
 
-				this.emit('complete', object);
+				this.emit( 'complete', object );
 
-				_chainedTweens.map(tween => tween.start( _startTime + _duration));
+				_chainedTweens.map( tween => tween.start( _startTime + _duration ) );
+
+				this._repeat = this._r;
 
 				return false;
 
