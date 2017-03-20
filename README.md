@@ -42,9 +42,9 @@ You can also reference a `unpkg`-hosted version in your code, thanks to <a href=
 <script src="https://unpkg.com/es6-tween/dist/Tween.min.js"></script>
 ```
 
-#### Using @jsdelivr hosted version (coming soon)
+#### Using [@jsdelivr](https://github.com/jsdelivr) hosted version (coming soon)
 
-You can also reference a @jsdelivr-hosted version in your code, thanks to @jsdelivr. For example:
+You can also reference a @jsdelivr-hosted version in your code, thanks to [@jsdelivr](https://github.com/jsdelivr). For example:
 
 ```html
 <script src="https://cdn.jsdelivr.net/es6-tween/latest/dist/Tween.min.js"></script>
