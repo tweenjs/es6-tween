@@ -18,23 +18,13 @@ const removeAll = () => {
 	_tweens = []
 }
 
-const add = ( tween ) => {
-	_tweens.push( tween );
-
-	if ( _autoPlay && !isStarted ) {
-		autoStart( now() );
-		isStarted = true;
-	}
-
-}
-
-const emit = ( ev, ...args ) {
+const emit = ( ev, ...args ) => {
 	if ( _events[ ev ] !== undefined ) {
 		_events[ ev ].map( event => event( ...args ) );
 	}
 }
 
-const off = ( ev, fn ) {
+const off = ( ev, fn ) => {
 	if ( ev === undefined || _events[ ev ] === undefined ) {
 		return;
 	}
@@ -52,14 +42,26 @@ const off = ( ev, fn ) {
 	}
 }
 
-const on = ( ev, fn ) {
+const add = ( tween ) => {
+	_tweens.push( tween );
+
+	if ( _autoPlay && !isStarted ) {
+		autoStart( now() );
+		isStarted = true;
+		emit( 'start' );
+	}
+	emit( 'add', tween, _tweens );
+
+}
+
+const on = ( ev, fn ) => {
 	if ( _events[ ev ] === undefined ) {
 		_events[ ev ] = [];
 	}
 	_events[ ev ].push( fn );
 }
 
-const once = ( ev, fn ) {
+const once = ( ev, fn ) => {
 	if ( _events[ ev ] === undefined ) {
 		_events[ ev ] = [];
 	}
@@ -76,6 +78,7 @@ const remove = ( tween ) => {
 	while ( i < _tweens.length ) {
 		tweenFind = _tweens[ i ];
 		if ( tweenFind === tween ) {
+			emit( 'remove', tween, _tweens );
 			_tweens.splice( i, 1 );
 		}
 		i++
@@ -86,13 +89,13 @@ const now = () => {
 	return _time;
 }
 
-const update = ( time, preserve ) => {
+const update = ( time = now(), preserve ) => {
 
 	time = time !== undefined ? time : now();
 
 	_time = time;
 
-	emit( 'update', time );
+	emit( 'update', time, _tweens );
 
 	if ( _tweens.length === 0 ) {
 
@@ -120,9 +123,11 @@ function autoStart( time ) {
 	if ( update( _time ) ) {
 		_time = time;
 		_tick = requestAnimationFrame( autoStart );
+		emit( 'autostart', time );
 	} else {
 		isStarted = false;
 		cancelAnimationFrame( _tick );
+		emit( 'stop', time );
 	}
 }
 

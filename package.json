@@ -9,7 +9,14 @@
   "scripts": {
     "build": "webpack --env build",
     "source": "webpack --progress --colors --env dev",
-    "dev": "webpack --progress --colors --watch --env dev"
+    "dev": "webpack --progress --colors --watch --env dev",
+	"dist": "npm run source && npm run build",
+	"dist_test": "npm run dist && npm run test",
+	"test": "npm run test-unit && npm run test-correctness && npm run test-style",
+    "test-unit": "nodeunit test/unit/nodeunitheadless.js",
+    "test-correctness": "jshint --config test/jshintrc dist/Tween.js",
+    "test-style": "jscs --config test/jscs.json dist/Tween.js",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
@@ -24,7 +31,7 @@
     "easing",
     "emit"
   ],
-  "author": "tween.js contributors",
+  "author": "dalisoft",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tweenjs/es6-tween/issues"
@@ -43,7 +50,11 @@
     "eslint": "1.7.2",
     "eslint-loader": "1.6.1",
     "webpack": "2.2.1",
-    "yargs": "6.6.0"
+    "yargs": "6.6.0",
+	"jscs": "^2.2.0",
+    "jshint": "^2.8.0",
+    "nodeunit": "^0.9.1",
+    "semantic-release": "^6.3.2"
   },
   "dependencies": {}
 }
