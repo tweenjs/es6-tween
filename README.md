@@ -6,6 +6,8 @@ ES6 implementation of <a href="https://github.com/tweenjs/tween.js">tween.js</a>
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Travis tests][travis-image]][travis-url]
 [![Flattr this][flattr-image]][flattr-url]
+<br/>
+[![NPM](https://nodei.co/npm/es6-tween.png?downloads=true&stars=true)](https://nodei.co/npm/es6-tween/)
 
 ```javascript
 let coords = { x: 0, y: 0 };
@@ -184,6 +186,6 @@ Maintainers: [mikebolt](https://github.com/mikebolt), [sole](https://github.com/
 [travis-image]: https://travis-ci.org/tweenjs/es6-tween.svg?branch=master
 [travis-url]: https://travis-ci.org/tweenjs/es6-tween
 [flattr-image]: https://api.flattr.com/button/flattr-badge-large.png
-[flattr-url]: https://flattr.com/thing/c5d938ac13cb0e28e9664089b6d9424a
+[flattr-url]: https://flattr.com/submit/auto?fid=kxw7jx&url=https%3A%2F%2Fgithub.com%2Ftweenjs%2Fes6-tween
 [cdnjs-image]: https://img.shields.io/cdnjs/v/es6-tween.svg
 [cdnjs-url]: https://cdnjs.com/libraries/es6-tween
