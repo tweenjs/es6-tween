@@ -122,8 +122,8 @@ Then reference the library source:
 
 * Original source: <a href="https://github.com/tweenjs/tween.js">check out at here</a>
 * [User guide](./docs/user_guide.md)
+* [Compatiblity](./compatibility/comp_support.md)
 * [Tutorial](http://learningthreejs.com/blog/2011/08/17/tweenjs-for-smooth-animation/)  using tween.js with three.js
-* Also: [libtween](https://github.com/jsm174/libtween), a port of tween.js to C by [jsm174](https://github.com/jsm174)
 
 ## Examples
 
@@ -162,7 +162,7 @@ If you want to add any feature or change existing features, you *must* run the t
 
 ## People
 
-Maintainers: [mikebolt](https://github.com/mikebolt), [sole](https://github.com/sole), [dalisoft](https://github.com/dalisoft).
+Maintainers: [sole](https://github.com/sole), [dalisoft](https://github.com/dalisoft).
 
 [All contributors](http://github.com/tweenjs/tween.js/contributors).
 
