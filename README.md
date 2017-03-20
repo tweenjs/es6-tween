@@ -42,13 +42,17 @@ You can also reference a `unpkg`-hosted version in your code, thanks to <a href=
 <script src="https://unpkg.com/es6-tween/dist/Tween.min.js"></script>
 ```
 
-#### Using [@jsdelivr](https://github.com/jsdelivr) hosted version (coming soon)
+#### Using [jsdelivr](https://github.com/jsdelivr) hosted version (coming soon)
 
-You can also reference a @jsdelivr-hosted version in your code, thanks to [@jsdelivr](https://github.com/jsdelivr). For example:
+You can also reference a @jsdelivr-hosted version in your code, thanks to [jsdelivr](https://github.com/jsdelivr). For example:
 
 ```html
 <script src="https://cdn.jsdelivr.net/es6-tween/latest/dist/Tween.min.js"></script>
 ```
+
+#### Using `cdnjs` (TO-DO)
+
+Sorry for that, but `cdnjs` doesn't accept none of my app, so if someone can from `cdnjs` contributors, would be nice.
 
 
 ### More advanced users might want to...
@@ -65,10 +69,16 @@ yarn add es6-tween
 ```
 
 
-#### Use `npm`
+#### Use `npm` or `bower`
 
 ```bash
 npm install es6-tween
+```
+
+or
+
+```bash
+bower install es6-tween
 ```
 
 Then include the Tween.js module with the standard node.js `require`:
