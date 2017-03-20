@@ -11,8 +11,8 @@ class Tween {
 	constructor( object = {} ) {
 
 		this.object = object;
-		this._valuesStart = Object.assign( Tween.createEmptyConst(object), object );
-		this._valuesStartRepeat = Object.assign( Tween.createEmptyConst(object), object );
+		this._valuesStart = Tween.createEmptyConst(object);
+		this._valuesStartRepeat = Tween.createEmptyConst(object);
 		this._valuesEnd = Tween.createEmptyConst(object);
 		this._chainedTweens = [];
 
@@ -24,8 +24,6 @@ class Tween {
 		this._delayTime = 0;
 		this._repeat = 0;
 		this._r = 0;
-		this._repeatDelayTime = 0;
-		this._reverseDelayTime = 0;
 		this._isPlaying = false;
 		this._yoyo = false;
 		this._reversed = false;
@@ -39,6 +37,9 @@ class Tween {
 	}
 	static createEmptyConst (oldObject) {
 		return typeof(oldObject) === "number" ? 0 : Array.isArray(oldObject) ? [] : typeof(oldObject) === "object" ? {} : '';
+	}
+	static checkValidness ( valid ) {
+		return valid !== undefined && valid !== null && valid !== '';
 	}
 	isPlaying() {
 		return this._isPlaying;
@@ -129,8 +130,8 @@ class Tween {
 
 		this._isPlaying = false;
 
-		TWEEN.remove( this );
-		this._pausedTime = TWEEN.now();
+		remove( this );
+		this._pausedTime = now();
 
 		return this.emit( 'pause', this.object );
 	}
@@ -142,18 +143,19 @@ class Tween {
 
 		this._isPlaying = true;
 
-		this._startTime += TWEEN.now() - this._pausedTime;
-		TWEEN.add( this );
-		this._pausedTime = TWEEN.now();
+		this._startTime += now() - this._pausedTime;
+		add( this );
+		this._pausedTime = now();
 
 		return this.emit( 'play', this.object );
 	}
 	restart( noDelay ) {
 
-		this._startTime = TWEEN.now() + ( noDelay ? 0 : this._delayTime );
+		this._repeat = this._r;
+		this._startTime = now() + ( noDelay ? 0 : this._delayTime );
 
 		if ( !this._isPlaying ) {
-			TWEEN.add( this );
+			add( this );
 		}
 
 		return this.emit( 'restart', this._object );
@@ -161,7 +163,7 @@ class Tween {
 	}
 	seek( time, keepPlaying ) {
 
-		this._startTime = TWEEN.now() + Math.max( 0, Math.min(
+		this._startTime = now() + Math.max( 0, Math.min(
 			time, this._duration ) );
 
 		this.emit( 'seek', time, this._object );
@@ -200,14 +202,45 @@ class Tween {
 		let {
 			_startTime
 			, _delayTime
+			, _valuesEnd
+			, _valuesStart
+			, _valuesStartRepeat
+			, object
 		} = this;
 
-		_startTime = time !== undefined ? time : TWEEN.now();
+		_startTime = time !== undefined ? time : now();
 		_startTime += _delayTime;
 
 		this._startTime = _startTime;
 
-		TWEEN.add( this );
+		for ( let property in _valuesEnd ) {
+
+			// Check if an Array was provided as property value
+			if (typeof object[property] === "number" && _valuesEnd[property] instanceof Array) {
+
+				if (_valuesEnd[property].length === 0) {
+					continue;
+				}
+
+				// Create a local copy of the Array with the start value at the front
+				this._valuesEnd[property] = [object[property]].concat(_valuesEnd[property]);
+
+			}
+
+			// If `to()` specifies a property that doesn't exist in the source object,
+			// we should not set that property in the object
+			if (object[property] === undefined) {
+				continue;
+			}
+
+			this._valuesStart[property] = object[property];
+
+			this._valuesStartRepeat[property] = _valuesStart[property] || 0;
+
+
+		}
+
+		add( this );
 
 		this._isPlaying = true;
 
@@ -226,7 +259,7 @@ class Tween {
 			return this;
 		}
 
-		TWEEN.remove( this );
+		remove( this );
 		this._isPlaying = false;
 
 		this.stopChainedTweens();
@@ -315,7 +348,7 @@ class Tween {
 		this.update( time );
 		return this._object;
 	}
-	update( time ) {
+	update( time = now() ) {
 
 		let {
 			_onStartCallbackFired
@@ -358,6 +391,11 @@ class Tween {
 
 		for ( property in _valuesEnd ) {
 
+			// Don't update properties that do not exist in the source object
+			if (_valuesStart[property] === undefined) {
+				continue;
+			}
+
 			let start = _valuesStart[ property ];
 			let end = _valuesEnd[ property ];
 
@@ -393,39 +431,25 @@ class Tween {
 			if ( _repeat > 0 ) {
 
 				if ( isFinite( _repeat ) ) {
-					_repeat--;
+					this._repeat--;
 				}
+
 
 				// Reassign starting values, restart by making startTime = now
-				for ( property in _valuesStartRepeat ) {
+				this.reverse();
 
-					if ( typeof( _valuesEnd[ property ] ) === 'string' ) {
-						_valuesStartRepeat[ property ] = _valuesStartRepeat[ property ] + parseFloat( _valuesEnd[ property ] );
-					}
-
-					if ( _yoyo ) {
-						let tmp = _valuesStartRepeat[ property ];
-
-						_valuesStartRepeat[ property ] = _valuesEnd[ property ];
-						_valuesEnd[ property ] = tmp;
-					}
-
-					_valuesStart[ property ] = _valuesStartRepeat[ property ];
-
-				}
-
-				this.emit( _reversed ? 'repeat' : 'reverse', object );
+				this.emit( _reversed ? 'reverse' : 'repeat', object );
 
 				if ( _yoyo ) {
 					this._reversed = !_reversed;
 				}
 
-				if ( _reversed && _repeatDelayTime ) {
-					this._startTime = time + _repeatDelayTime;
-				} else if ( !_reversed && _reverseDelayTime ) {
-					this._startTime = time + _reverseDelayTime;
+				if ( !_reversed && _repeatDelayTime !== undefined ) {
+					this._startTime += _duration + _repeatDelayTime;
+				} else if ( _reversed && _reverseDelayTime !== undefined ) {
+					this._startTime += _duration + _reverseDelayTime;
 				} else {
-					this._startTime = time + _delayTime;
+					this._startTime += _duration + _delayTime;
 				}
 
 				return true;
@@ -435,8 +459,6 @@ class Tween {
 				this.emit( 'complete', object );
 
 				_chainedTweens.map( tween => tween.start( _startTime + _duration ) );
-
-				this._repeat = this._r;
 
 				return false;
 
