@@ -8,9 +8,6 @@ import Easing from './Easing';
 import Interpolation from './Interpolation';
 
 class Tween {
-	static createEmptyConst (oldObject) {
-		return typeof(oldObject) === "number" ? 0 : Array.isArray(oldObject) ? [] : typeof(oldObject) === "object" ? {} : '';
-	}
 	constructor( object = {} ) {
 
 		this.object = object;
@@ -39,6 +36,9 @@ class Tween {
 
 		return this;
 
+	}
+	static createEmptyConst (oldObject) {
+		return typeof(oldObject) === "number" ? 0 : Array.isArray(oldObject) ? [] : typeof(oldObject) === "object" ? {} : '';
 	}
 	isPlaying() {
 		return this._isPlaying;
@@ -82,12 +82,13 @@ class Tween {
 			return this;
 		}
 		if ( name !== undefined && fn !== undefined ) {
-			this._events[ name ].filter( event => {
-				if ( event === fn ) {
-					return false;
+			let eventsList = this._events[ name ], i = 0;
+			while (i < eventsList.length) {
+				if ( eventsList[i] === fn ) {
+					eventsList.splice(i, 1);
 				}
-				return true;
-			} );
+				i++
+			}
 		} else if ( name !== undefined && fn === undefined ) {
 			this._events[ name ] = [];
 		}
