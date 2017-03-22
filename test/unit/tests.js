@@ -321,7 +321,7 @@
 				t.start( 0 );
 				t.update( 1000 );
 
-				test.deepEqual( obj.x, 2 );
+				test.deepEqual( obj.x, null );
 				test.done();
 
 			},

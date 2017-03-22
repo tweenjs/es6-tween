@@ -39,7 +39,7 @@ class Tween {
 		return typeof(oldObject) === "number" ? 0 : Array.isArray(oldObject) ? [] : typeof(oldObject) === "object" ? {} : '';
 	}
 	static checkValidness ( valid ) {
-		return valid !== undefined && valid !== null && valid !== '';
+		return valid !== undefined && valid !== null && valid !== '' && valid !== NaN && valid !== Infinity;
 	}
 	isPlaying() {
 		return this._isPlaying;
@@ -229,7 +229,7 @@ class Tween {
 
 			// If `to()` specifies a property that doesn't exist in the source object,
 			// we should not set that property in the object
-			if (Tween.checkValidness(object[property])) {
+			if (Tween.checkValidness(object[property]) === false) {
 				continue;
 			}
 
