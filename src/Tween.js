@@ -1,6 +1,6 @@
-import "./shim/object_assign";
+import './shim/object_assign';
 
-import "./shim/raf";
+import './shim/raf';
 
 import { getAll, add, removeAll, remove, update, autoPlay, now } from './dist/core';
 
@@ -10,4 +10,4 @@ import Tween from './dist/Tween';
 
 import Interpolation from './dist/Interpolation';
 
-export { getAll, add, removeAll, remove, update, autoPlay, now, Tween, Easing, Interpolation }
+export { getAll, add, removeAll, remove, update, autoPlay, now, Tween, Easing, Interpolation };

@@ -44,12 +44,12 @@ You can also reference a `unpkg`-hosted version in your code, thanks to <a href=
 <script src="https://unpkg.com/es6-tween/dist/Tween.min.js"></script>
 ```
 
-#### Using [jsdelivr](https://github.com/jsdelivr) hosted version (coming soon)
+#### Using [jsdelivr](https://github.com/jsdelivr) hosted version
 
 You can also reference a @jsdelivr-hosted version in your code, thanks to [jsdelivr](https://github.com/jsdelivr). For example:
 
 ```html
-<script src="https://cdn.jsdelivr.net/es6-tween/latest/dist/Tween.min.js"></script>
+<script src="https://cdn.jsdelivr.net/es6-tween/latest/Tween.min.js"></script>
 ```
 
 #### Using `cdnjs` (TO-DO)
@@ -108,6 +108,16 @@ Then reference the library source:
 
 ```html
 <script src="dist/Tween.min.js"></script>
+```
+
+## Bugs/Fixes
+
+#### Helping to avoid false log of `jscs`
+```bash
+git config core.eol lf
+git config core.autocrlf input
+git rm --cached -r .
+git reset --hard
 ```
 
 ## Features

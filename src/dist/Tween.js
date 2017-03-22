@@ -229,7 +229,7 @@ class Tween {
 
 			// If `to()` specifies a property that doesn't exist in the source object,
 			// we should not set that property in the object
-			if (object[property] === undefined) {
+			if (Tween.checkValidness(object[property])) {
 				continue;
 			}
 
