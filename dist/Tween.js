@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -342,7 +342,9 @@ var Easing = {
 	},
 
 
-	// Adapted from https://github.com/michaelvillar/dynamics.js
+	// Credits:
+	// @michaelvillar for dynamics.js easing/physics
+	// Adapted by @dalisoft
 	get bezier() {
 		var b, d;
 		b = function b(_b, d, g, f, h) {
@@ -714,175 +716,12 @@ exports.default = Interpolation;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-// TWEEN.js
-var _tweens = [];
-var _time = 0;
-var isStarted = false;
-var _autoPlay = false;
-var _tick = void 0;
-var _events = {};
-
-var getAll = function getAll() {
-	return _tweens;
-};
-
-var autoPlay = function autoPlay(state) {
-	_autoPlay = state;
-};
-
-var removeAll = function removeAll() {
-	_tweens = [];
-};
-
-var emit = function emit(ev) {
-	for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-		args[_key - 1] = arguments[_key];
-	}
-
-	if (_events[ev] !== undefined) {
-		_events[ev].map(function (event) {
-			return event.apply(undefined, args);
-		});
-	}
-};
-
-var off = function off(ev, fn) {
-	if (ev === undefined || _events[ev] === undefined) {
-		return;
-	}
-	if (fn !== undefined) {
-		var eventsList = _events[name],
-		    i = 0;
-		while (i < eventsList.length) {
-			if (eventsList[i] === fn) {
-				eventsList.splice(i, 1);
-			}
-			i++;
-		}
-	} else {
-		_events[name] = [];
-	}
-};
-
-var add = function add(tween) {
-	_tweens.push(tween);
-
-	if (_autoPlay && !isStarted) {
-		autoStart(now());
-		isStarted = true;
-		emit('start');
-	}
-	emit('add', tween, _tweens);
-};
-
-var on = function on(ev, fn) {
-	if (_events[ev] === undefined) {
-		_events[ev] = [];
-	}
-	_events[ev].push(fn);
-};
-
-var once = function once(ev, fn) {
-	if (_events[ev] === undefined) {
-		_events[ev] = [];
-	}
-	on(ev, function () {
-		fn.apply(undefined, arguments);
-		off(ev);
-	});
-};
-
-var remove = function remove(tween) {
-	_tweens.filter(function (tweens) {
-		return tweens !== tween;
-	});
-	var i = 0,
-	    tweenFind = void 0;
-	while (i < _tweens.length) {
-		tweenFind = _tweens[i];
-		if (tweenFind === tween) {
-			emit('remove', tween, _tweens);
-			_tweens.splice(i, 1);
-		}
-		i++;
-	}
-};
-
-var now = function now() {
-	return _time;
-};
-
-var update = function update() {
-	var time = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : now();
-	var preserve = arguments[1];
-
-
-	time = time !== undefined ? time : now();
-
-	_time = time;
-
-	emit('update', time, _tweens);
-
-	if (_tweens.length === 0) {
-
-		return false;
-	}
-
-	emit('realupdate', time, _tweens);
-
-	var i = 0;
-	while (i < _tweens.length) {
-
-		if (_tweens[i].update(time) || preserve) {
-			i++;
-		} else {
-			_tweens.splice(i, 1);
-		}
-	}
-
-	return true;
-};
-
-function autoStart(time) {
-	if (update(_time)) {
-		_time = time;
-		_tick = requestAnimationFrame(autoStart);
-		emit('autostart', time);
-	} else {
-		isStarted = false;
-		cancelAnimationFrame(_tick);
-		emit('stop', time);
-	}
-}
-
-exports.getAll = getAll;
-exports.removeAll = removeAll;
-exports.remove = remove;
-exports.add = add;
-exports.now = now;
-exports.update = update;
-exports.autoPlay = autoPlay;
-exports.on = on;
-exports.once = once;
-exports.off = off;
-exports.emit = emit;
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _core = __webpack_require__(2);
+var _core = __webpack_require__(4);
 
 var _Easing = __webpack_require__(0);
 
@@ -892,9 +731,26 @@ var _Interpolation = __webpack_require__(1);
 
 var _Interpolation2 = _interopRequireDefault(_Interpolation);
 
+var _clone = __webpack_require__(3);
+
+var _clone2 = _interopRequireDefault(_clone);
+
+var _joinToString = __webpack_require__(9);
+
+var _joinToString2 = _interopRequireDefault(_joinToString);
+
+var _toNumber = __webpack_require__(10);
+
+var _toNumber2 = _interopRequireDefault(_toNumber);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// Credits: 
+// @jkroso for string parse library
+// Optimized, Extended by @dalisoft
+var Number_Match_RegEx = /\s+|([A-Za-z?().,{}:""\[\]#]+)|([-+\/*%]+=)?([-+*\/%]+)?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/gi;
 
 var Tween = function () {
 	function Tween() {
@@ -1088,7 +944,7 @@ var Tween = function () {
 		key: 'duration',
 		value: function duration(amount) {
 
-			this._duration = amount;
+			this._duration = typeof amount === "function" ? amount(this._duration) : amount;
 
 			return this;
 		}
@@ -1123,7 +979,6 @@ var Tween = function () {
 			    _delayTime = this._delayTime,
 			    _valuesEnd = this._valuesEnd,
 			    _valuesStart = this._valuesStart,
-			    _valuesStartRepeat = this._valuesStartRepeat,
 			    object = this.object;
 
 
@@ -1134,20 +989,41 @@ var Tween = function () {
 
 			for (var property in _valuesEnd) {
 
-				// Check if an Array was provided as property value
-				if (typeof object[property] === "number" && _valuesEnd[property] instanceof Array) {
+				if (_typeof(_valuesEnd[property]) === "object") {
+					if (Array.isArray(_valuesEnd[property])) {
+						if (typeof object[property] === "number") {
+							this._valuesEnd[property] = [object[property]].concat(_valuesEnd[property]);
+						} else {
+							var clonedTween = (0, _clone2.default)(this, { object: object[property], _valuesEnd: _valuesEnd[property] }).start().stop();
 
-					if (_valuesEnd[property].length === 0) {
-						continue;
+							this._valuesEnd[property] = clonedTween;
+						}
+					} else {
+						var _clonedTween = (0, _clone2.default)(this, { object: object[property], _valuesEnd: _valuesEnd[property] }).start().stop();
+
+						this._valuesEnd[property] = _clonedTween;
 					}
+				} else if (typeof _valuesEnd[property] === "string" && typeof object[property] === "string" && Number_Match_RegEx.test(object[property]) && Number_Match_RegEx.test(_valuesEnd[property])) {
 
-					// Create a local copy of the Array with the start value at the front
-					this._valuesEnd[property] = [object[property]].concat(_valuesEnd[property]);
+					var __get__Start = object[property].match(Number_Match_RegEx);
+					__get__Start = __get__Start.map(_toNumber2.default);
+					var __get__End = _valuesEnd[property].match(Number_Match_RegEx);
+					__get__End = __get__End.map(_toNumber2.default);
+					var _clonedTween2 = (0, _clone2.default)(this, { object: __get__Start, _valuesEnd: __get__End }).start().stop();
+
+					_clonedTween2.join = true; // For string tweening
+					this._valuesEnd[property] = _clonedTween2;
 				}
 
 				// If `to()` specifies a property that doesn't exist in the source object,
 				// we should not set that property in the object
 				if (Tween.checkValidness(object[property]) === false) {
+					continue;
+				}
+
+				// If duplicate or non-tweening numerics matched,
+				// we should delete from _valuesEnd
+				if (object[property] === _valuesEnd[property]) {
 					continue;
 				}
 
@@ -1166,7 +1042,6 @@ var Tween = function () {
 		key: 'stop',
 		value: function stop() {
 			var _isPlaying = this._isPlaying,
-			    _onStopCallback = this._onStopCallback,
 			    object = this.object;
 
 
@@ -1273,7 +1148,7 @@ var Tween = function () {
 		key: 'get',
 		value: function get(time) {
 			this.update(time);
-			return this._object;
+			return this.object;
 		}
 	}, {
 		key: 'update',
@@ -1292,7 +1167,6 @@ var Tween = function () {
 			    _startTime = this._startTime,
 			    _duration = this._duration,
 			    _valuesStart = this._valuesStart,
-			    _valuesStartRepeat = this._valuesStartRepeat,
 			    _valuesEnd = this._valuesEnd,
 			    object = this.object;
 
@@ -1327,7 +1201,18 @@ var Tween = function () {
 				var start = _valuesStart[property];
 				var end = _valuesEnd[property];
 
-				if (end instanceof Array) {
+				if (end instanceof Tween) {
+
+					var getValue = end.get(time);
+
+					if (end.join) {
+
+						object[property] = (0, _joinToString2.default)(getValue);
+					} else {
+
+						object[property] = getValue;
+					}
+				} else if (Array.isArray(end)) {
 
 					object[property] = _interpolationFunction(end, value);
 				} else {
@@ -1408,7 +1293,218 @@ var Tween = function () {
 exports.default = Tween;
 
 /***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = cloneTween;
+
+var _Tween = __webpack_require__(2);
+
+var _Tween2 = _interopRequireDefault(_Tween);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function cloneTween() {
+	var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	var configs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+	var copyTween = new _Tween2.default({ x: 0 });
+	for (var config in obj) {
+		if (configs[config] !== undefined) {
+			copyTween[config] = configs[config];
+		} else {
+			copyTween[config] = obj[config];
+		}
+	}
+	return copyTween;
+}
+
+/***/ }),
 /* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+// TWEEN.js
+var _tweens = [];
+var _time = 0;
+var isStarted = false;
+var _autoPlay = false;
+var _tick = void 0;
+var _events = {};
+
+var getAll = function getAll() {
+	return _tweens;
+};
+
+var autoPlay = function autoPlay(state) {
+	_autoPlay = state;
+};
+
+var removeAll = function removeAll() {
+	_tweens = [];
+};
+
+var emit = function emit(ev) {
+	for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+		args[_key - 1] = arguments[_key];
+	}
+
+	if (_events[ev] !== undefined) {
+		_events[ev].map(function (event) {
+			return event.apply(undefined, args);
+		});
+	}
+};
+
+var off = function off(ev, fn) {
+	if (ev === undefined || _events[ev] === undefined) {
+		return;
+	}
+	if (fn !== undefined) {
+		var eventsList = _events[name],
+		    i = 0;
+		while (i < eventsList.length) {
+			if (eventsList[i] === fn) {
+				eventsList.splice(i, 1);
+			}
+			i++;
+		}
+	} else {
+		_events[name] = [];
+	}
+};
+
+var add = function add(tween) {
+	_tweens.push(tween);
+
+	if (_autoPlay && !isStarted) {
+		autoStart(now());
+		isStarted = true;
+		emit('start');
+	}
+	emit('add', tween, _tweens);
+};
+
+var on = function on(ev, fn) {
+	if (_events[ev] === undefined) {
+		_events[ev] = [];
+	}
+	_events[ev].push(fn);
+};
+
+var once = function once(ev, fn) {
+	if (_events[ev] === undefined) {
+		_events[ev] = [];
+	}
+	on(ev, function () {
+		fn.apply(undefined, arguments);
+		off(ev);
+	});
+};
+
+var remove = function remove(tween) {
+	_tweens.filter(function (tweens) {
+		return tweens !== tween;
+	});
+	var i = 0,
+	    tweenFind = void 0;
+	while (i < _tweens.length) {
+		tweenFind = _tweens[i];
+		if (tweenFind === tween) {
+			emit('remove', tween, _tweens);
+			_tweens.splice(i, 1);
+		}
+		i++;
+	}
+};
+
+var now = function now() {
+	return _time;
+};
+
+var update = function update() {
+	var time = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : now();
+	var preserve = arguments[1];
+
+
+	time = time !== undefined ? time : now();
+
+	_time = time;
+
+	emit('update', time, _tweens);
+
+	if (_tweens.length === 0) {
+
+		return false;
+	}
+
+	emit('realupdate', time, _tweens);
+
+	var i = 0;
+	while (i < _tweens.length) {
+
+		if (_tweens[i].update(time) || preserve) {
+			i++;
+		} else {
+			_tweens.splice(i, 1);
+		}
+	}
+
+	return true;
+};
+
+function autoStart(time) {
+	if (update(_time)) {
+		_time = time;
+		_tick = requestAnimationFrame(autoStart);
+		emit('autostart', time);
+	} else {
+		isStarted = false;
+		cancelAnimationFrame(_tick);
+		emit('stop', time);
+	}
+}
+
+exports.getAll = getAll;
+exports.removeAll = removeAll;
+exports.remove = remove;
+exports.add = add;
+exports.now = now;
+exports.update = update;
+exports.autoPlay = autoPlay;
+exports.on = on;
+exports.once = once;
+exports.off = off;
+exports.emit = emit;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+if (Array.isArray === undefined) {
+	Array.isArray = function (arrayLike) {
+		return arrayLike !== undefined && (typeof arrayLike === "undefined" ? "undefined" : _typeof(arrayLike)) === "object" && arrayLike.length && arrayLike.push !== undefined && arrayLike.splice !== undefined;
+	};
+}
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1431,7 +1527,7 @@ if (Object.assign === undefined) {
 }
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1486,10 +1582,10 @@ if (ROOT.cancelAnimationFrame === undefined && (ROOT.cancelAnimationFrame = ROOT
 		ROOT.cancelAnimationFrame = _caf;
 	}
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1519,7 +1615,42 @@ try {
 module.exports = g;
 
 /***/ }),
-/* 7 */
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = joinToString;
+function joinToString(__array__like) {
+	var str = '';
+	for (var i = 0, len = __array__like.length; i < len; i++) {
+		str += __array__like[i];
+	}
+	return str;
+}
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = toNumber;
+function toNumber(val) {
+	var floatedVal = parseFloat(val);
+	return typeof floatedVal === "number" && !isNaN(floatedVal) ? floatedVal : val;
+}
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1528,25 +1659,31 @@ module.exports = g;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Interpolation = exports.Easing = exports.Tween = exports.now = exports.autoPlay = exports.update = exports.remove = exports.removeAll = exports.add = exports.getAll = undefined;
+exports.Interpolation = exports.Easing = exports.Tween = exports.now = exports.autoPlay = exports.cloneTween = exports.update = exports.remove = exports.removeAll = exports.add = exports.getAll = undefined;
 
-__webpack_require__(4);
+__webpack_require__(6);
+
+__webpack_require__(7);
 
 __webpack_require__(5);
 
-var _core = __webpack_require__(2);
+var _core = __webpack_require__(4);
 
 var _Easing = __webpack_require__(0);
 
 var _Easing2 = _interopRequireDefault(_Easing);
 
-var _Tween = __webpack_require__(3);
+var _Tween = __webpack_require__(2);
 
 var _Tween2 = _interopRequireDefault(_Tween);
 
 var _Interpolation = __webpack_require__(1);
 
 var _Interpolation2 = _interopRequireDefault(_Interpolation);
+
+var _clone = __webpack_require__(3);
+
+var _clone2 = _interopRequireDefault(_clone);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1555,6 +1692,7 @@ exports.add = _core.add;
 exports.removeAll = _core.removeAll;
 exports.remove = _core.remove;
 exports.update = _core.update;
+exports.cloneTween = _clone2.default;
 exports.autoPlay = _core.autoPlay;
 exports.now = _core.now;
 exports.Tween = _Tween2.default;

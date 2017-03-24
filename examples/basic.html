@@ -25,11 +25,23 @@ var body = document.body;
 
 TWEEN.autoPlay(true);
 
-var tween = new TWEEN.Tween([0, 200, 300]).to([200, 400, 500], 2000).on('update', function (object) {
+var round = function round(o) {
+for ( var p in o ) {
+	if ( typeof o[p] === "number" ) {
+		o[p] = o[p] | 0;
+	} else if (typeof o[p] === "object") {
+		round(o[p]);
+	}
+	}
+}
+
+var tween = new TWEEN.Tween([0, 200, {x:300}]).to([200, 400, {x:500}], 2000).on('update', function (object) {
+	round(object);
 	body.textContent = JSON.stringify(object);
 }).start();
 
-var tween = new TWEEN.Tween({x:200}).to({x:0}, 2000).delay(3000).on('update', function (object) {
+var tween = new TWEEN.Tween({x:'i am here 600 year'}).to({x:'i am here 200 year'}, 2000).delay(3000).on('update', function (object) {
+	//round(object);
 	body.textContent = JSON.stringify(object);
 }).start();
 </script>

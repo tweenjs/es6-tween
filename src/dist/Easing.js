@@ -328,7 +328,9 @@ const Easing = {
 
 	},
 
-	// Adapted from https://github.com/michaelvillar/dynamics.js
+	// Credits:
+	// @michaelvillar for dynamics.js easing/physics
+	// Adapted by @dalisoft
 	get bezier() {
 			var b
 				, d;

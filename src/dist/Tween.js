@@ -6,14 +6,22 @@ import {
 from './core';
 import Easing from './Easing';
 import Interpolation from './Interpolation';
+import cloneTween from './clone';
+import joinToString from './joinToString';
+import toNumber from './toNumber';
+
+// Credits: 
+// @jkroso for string parse library
+// Optimized, Extended by @dalisoft
+const Number_Match_RegEx = /\s+|([A-Za-z?().,{}:""\[\]#]+)|([-+\/*%]+=)?([-+*\/%]+)?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/gi;
 
 class Tween {
 	constructor( object = {} ) {
 
 		this.object = object;
-		this._valuesStart = Tween.createEmptyConst(object);
-		this._valuesStartRepeat = Tween.createEmptyConst(object);
-		this._valuesEnd = Tween.createEmptyConst(object);
+		this._valuesStart = Tween.createEmptyConst( object );
+		this._valuesStartRepeat = Tween.createEmptyConst( object );
+		this._valuesEnd = Tween.createEmptyConst( object );
 		this._chainedTweens = [];
 
 		this._duration = 1000;
@@ -35,10 +43,10 @@ class Tween {
 		return this;
 
 	}
-	static createEmptyConst (oldObject) {
-		return typeof(oldObject) === "number" ? 0 : Array.isArray(oldObject) ? [] : typeof(oldObject) === "object" ? {} : '';
+	static createEmptyConst( oldObject ) {
+		return typeof( oldObject ) === "number" ? 0 : Array.isArray( oldObject ) ? [] : typeof( oldObject ) === "object" ? {} : '';
 	}
-	static checkValidness ( valid ) {
+	static checkValidness( valid ) {
 		return valid !== undefined && valid !== null && valid !== '' && valid !== NaN && valid !== Infinity;
 	}
 	isPlaying() {
@@ -84,11 +92,11 @@ class Tween {
 		}
 		if ( name !== undefined && fn !== undefined ) {
 			let eventsList = this._events[ name ], i = 0;
-			while (i < eventsList.length) {
-				if ( eventsList[i] === fn ) {
-					eventsList.splice(i, 1);
+			while ( i < eventsList.length ) {
+				if ( eventsList[ i ] === fn ) {
+					eventsList.splice( i, 1 );
 				}
-				i++
+				i++;
 			}
 		} else if ( name !== undefined && fn === undefined ) {
 			this._events[ name ] = [];
@@ -173,7 +181,7 @@ class Tween {
 	}
 	duration( amount ) {
 
-		this._duration = amount;
+		this._duration = typeof(amount) === "function" ? amount(this._duration) : amount;
 
 		return this;
 	}
@@ -190,7 +198,7 @@ class Tween {
 			this._duration = duration;
 		} else if ( typeof duration === "object" ) {
 			for ( let prop in duration ) {
-				this[prop](duration[prop]);
+				this[ prop ]( duration[ prop ] );
 			}
 		}
 
@@ -204,7 +212,6 @@ class Tween {
 			, _delayTime
 			, _valuesEnd
 			, _valuesStart
-			, _valuesStartRepeat
 			, object
 		} = this;
 
@@ -215,27 +222,54 @@ class Tween {
 
 		for ( let property in _valuesEnd ) {
 
-			// Check if an Array was provided as property value
-			if (typeof object[property] === "number" && _valuesEnd[property] instanceof Array) {
+			if ( typeof _valuesEnd[ property ] === "object" ) {
+				if ( Array.isArray( _valuesEnd[ property ] ) ) {
+					if ( typeof object[ property ] === "number" ) {
+						this._valuesEnd[ property ] = [ object[ property ] ].concat( _valuesEnd[ property ] );
+					} else {
+						let clonedTween = cloneTween( this, { object: object[ property ], _valuesEnd: _valuesEnd[ property ] } )
+							.start()
+							.stop();
 
-				if (_valuesEnd[property].length === 0) {
-					continue;
+					this._valuesEnd[ property ] = clonedTween;
+					}
+				} else {
+					let clonedTween = cloneTween( this, { object: object[ property ], _valuesEnd: _valuesEnd[ property ] } )
+						.start()
+						.stop();
+
+					this._valuesEnd[ property ] = clonedTween;
 				}
+			} else if ( typeof _valuesEnd[ property ] === "string" && typeof object[ property ] === "string" && Number_Match_RegEx.test(object[ property]) && Number_Match_RegEx.test(_valuesEnd[property]) ) {
 
-				// Create a local copy of the Array with the start value at the front
-				this._valuesEnd[property] = [object[property]].concat(_valuesEnd[property]);
+				let __get__Start = object[ property ].match(Number_Match_RegEx);
+					__get__Start = __get__Start.map(toNumber);
+				let __get__End = _valuesEnd[ property ].match(Number_Match_RegEx);
+					__get__End = __get__End.map(toNumber);
+					let clonedTween = cloneTween( this, { object: __get__Start, _valuesEnd: __get__End } )
+						.start()
+						.stop();
+
+					clonedTween.join = true; // For string tweening
+					this._valuesEnd[ property ] = clonedTween;
 
 			}
 
 			// If `to()` specifies a property that doesn't exist in the source object,
 			// we should not set that property in the object
-			if (Tween.checkValidness(object[property]) === false) {
+			if ( Tween.checkValidness( object[ property ] ) === false ) {
 				continue;
 			}
 
-			this._valuesStart[property] = object[property];
+			// If duplicate or non-tweening numerics matched,
+			// we should delete from _valuesEnd
+			if ( object[ property ] === _valuesEnd[ property ] ) {
+				continue;
+			}
 
-			this._valuesStartRepeat[property] = _valuesStart[property] || 0;
+			this._valuesStart[ property ] = object[ property ];
+
+			this._valuesStartRepeat[ property ] = _valuesStart[ property ] || 0;
 
 
 		}
@@ -251,7 +285,6 @@ class Tween {
 
 		let {
 			_isPlaying
-			, _onStopCallback
 			, object
 		} = this;
 
@@ -344,9 +377,9 @@ class Tween {
 		return this;
 
 	}
-	get ( time ) {
+	get( time ) {
 		this.update( time );
-		return this._object;
+		return this.object;
 	}
 	update( time = now() ) {
 
@@ -364,7 +397,6 @@ class Tween {
 			, _startTime
 			, _duration
 			, _valuesStart
-			, _valuesStartRepeat
 			, _valuesEnd
 			, object
 		} = this;
@@ -392,14 +424,28 @@ class Tween {
 		for ( property in _valuesEnd ) {
 
 			// Don't update properties that do not exist in the source object
-			if (_valuesStart[property] === undefined) {
+			if ( _valuesStart[ property ] === undefined ) {
 				continue;
 			}
 
 			let start = _valuesStart[ property ];
 			let end = _valuesEnd[ property ];
 
-			if ( end instanceof Array ) {
+			if ( end instanceof Tween ) {
+
+				let getValue = end.get( time );
+
+				if ( end.join ) {
+
+				object[ property ] = joinToString(getValue);
+
+				} else {
+
+				object[ property ] = getValue;
+
+				}
+
+			} else if ( Array.isArray( end ) ) {
 
 				object[ property ] = _interpolationFunction( end, value );
 
