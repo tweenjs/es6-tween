@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## v1.2.1: Small bug-fix
+
+#### Fixes
 - Fixed bug with `package.json`
 
 ## v1.2.0: Big-change
