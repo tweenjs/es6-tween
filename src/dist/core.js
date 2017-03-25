@@ -1,10 +1,10 @@
 // TWEEN.js
 let _tweens = [];
-let _time = 0;
 let isStarted = false;
 let _autoPlay = false;
 let _tick;
 let _events = {};
+let root = typeof( window ) !== "undefined" ? window : typeof( global ) !== "undefined" ? global : this;
 
 const getAll = () => {
 	return _tweens;
@@ -18,9 +18,16 @@ const removeAll = () => {
 	_tweens = []
 }
 
-const emit = ( ev, ...args ) => {
-	if ( _events[ ev ] !== undefined ) {
-		_events[ ev ].map( event => event( ...args ) );
+const emit = ( name, ...args ) => {
+	let eventFn = _events[ name ];
+
+	if ( !eventFn ) {
+		return;
+	}
+
+	let i = eventFn.length;
+	while ( i-- ) {
+		eventFn[ i ].call( this, ...args );
 	}
 }
 
@@ -86,14 +93,12 @@ const remove = ( tween ) => {
 }
 
 const now = () => {
-	return _time;
+	return root.performance !== undefined && root.performance.now ? root.performance.now() : Date.now();
 }
 
-const update = ( time = now(), preserve ) => {
+const update = ( time, preserve ) => {
 
 	time = time !== undefined ? time : now();
-
-	_time = time;
 
 	emit( 'update', time, _tweens );
 
@@ -102,8 +107,6 @@ const update = ( time = now(), preserve ) => {
 		return false;
 
 	}
-
-	emit( 'realupdate', time, _tweens );
 
 	let i = 0;
 	while ( i < _tweens.length ) {
@@ -120,10 +123,8 @@ const update = ( time = now(), preserve ) => {
 }
 
 function autoStart( time ) {
-	if ( update( _time ) ) {
-		_time = time;
+	if ( update( time ) ) {
 		_tick = requestAnimationFrame( autoStart );
-		emit( 'autostart', time );
 	} else {
 		isStarted = false;
 		cancelAnimationFrame( _tick );

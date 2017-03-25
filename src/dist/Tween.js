@@ -20,7 +20,6 @@ class Tween {
 
 		this.object = object;
 		this._valuesStart = Tween.createEmptyConst( object );
-		this._valuesStartRepeat = Tween.createEmptyConst( object );
 		this._valuesEnd = Tween.createEmptyConst( object );
 		this._chainedTweens = [];
 
@@ -57,32 +56,26 @@ class Tween {
 	}
 	reverse() {
 
-		let {
-			_valuesStartRepeat
-			, _yoyo
-			, _valuesEnd
+		/*let {
+			_valuesEnd
 			, _valuesStart
+			, _reversed
 		} = this;
 
 		// Reassign starting values, restart by making startTime = now
-		for ( let property in _valuesStartRepeat ) {
+		for ( let property in _valuesEnd ) {
 
-			if ( typeof( _valuesEnd[ property ] ) === 'string' ) {
-				_valuesStartRepeat[ property ] = _valuesStartRepeat[ property ] + parseFloat( _valuesEnd[ property ] );
-			}
+				let tmp = _valuesStart[ property ];
 
-			if ( _yoyo ) {
-				let tmp = _valuesStartRepeat[ property ];
+				this._valuesStart[ property ] = _valuesEnd[ property ];
 
-				_valuesStartRepeat[ property ] = _valuesEnd[ property ];
-				_valuesEnd[ property ] = tmp;
-			}
+				this._valuesEnd[ property ] = tmp;
 
-			_valuesStart[ property ] = _valuesStartRepeat[ property ];
+		}*/
 
-		}
+		const { _reversed } = this;
 
-		this._reversed = !this._reversed;
+		this._reversed = !_reversed;
 
 		return this;
 	}
@@ -91,7 +84,8 @@ class Tween {
 			return this;
 		}
 		if ( name !== undefined && fn !== undefined ) {
-			let eventsList = this._events[ name ], i = 0;
+			let eventsList = this._events[ name ]
+				, i = 0;
 			while ( i < eventsList.length ) {
 				if ( eventsList[ i ] === fn ) {
 					eventsList.splice( i, 1 );
@@ -121,12 +115,18 @@ class Tween {
 	}
 	emit( name, ...args ) {
 
-		if ( this._events[ name ] === undefined ) {
+		let { _events } = this;
+
+		let eventFn = _events[ name ];
+
+		if ( !eventFn ) {
 			return this;
 		}
-		this._events[ name ].map( event => {
-			event.call( this, ...args );
-		} );
+
+		let i = eventFn.length;
+		while ( i-- ) {
+			eventFn[ i ].call( this, ...args );
+		}
 		return this;
 
 	}
@@ -181,7 +181,7 @@ class Tween {
 	}
 	duration( amount ) {
 
-		this._duration = typeof(amount) === "function" ? amount(this._duration) : amount;
+		this._duration = typeof( amount ) === "function" ? amount( this._duration ) : amount;
 
 		return this;
 	}
@@ -231,7 +231,7 @@ class Tween {
 							.start()
 							.stop();
 
-					this._valuesEnd[ property ] = clonedTween;
+						this._valuesEnd[ property ] = clonedTween;
 					}
 				} else {
 					let clonedTween = cloneTween( this, { object: object[ property ], _valuesEnd: _valuesEnd[ property ] } )
@@ -240,18 +240,18 @@ class Tween {
 
 					this._valuesEnd[ property ] = clonedTween;
 				}
-			} else if ( typeof _valuesEnd[ property ] === "string" && typeof object[ property ] === "string" && Number_Match_RegEx.test(object[ property]) && Number_Match_RegEx.test(_valuesEnd[property]) ) {
+			} else if ( typeof _valuesEnd[ property ] === "string" && typeof object[ property ] === "string" && Number_Match_RegEx.test( object[ property ] ) && Number_Match_RegEx.test( _valuesEnd[ property ] ) ) {
 
-				let __get__Start = object[ property ].match(Number_Match_RegEx);
-					__get__Start = __get__Start.map(toNumber);
-				let __get__End = _valuesEnd[ property ].match(Number_Match_RegEx);
-					__get__End = __get__End.map(toNumber);
-					let clonedTween = cloneTween( this, { object: __get__Start, _valuesEnd: __get__End } )
-						.start()
-						.stop();
+				let __get__Start = object[ property ].match( Number_Match_RegEx );
+				__get__Start = __get__Start.map( toNumber );
+				let __get__End = _valuesEnd[ property ].match( Number_Match_RegEx );
+				__get__End = __get__End.map( toNumber );
+				let clonedTween = cloneTween( this, { object: __get__Start, _valuesEnd: __get__End } )
+					.start()
+					.stop();
 
-					clonedTween.join = true; // For string tweening
-					this._valuesEnd[ property ] = clonedTween;
+				clonedTween.join = true; // For string tweening
+				this._valuesEnd[ property ] = clonedTween;
 
 			}
 
@@ -268,8 +268,6 @@ class Tween {
 			}
 
 			this._valuesStart[ property ] = object[ property ];
-
-			this._valuesStartRepeat[ property ] = _valuesStart[ property ] || 0;
 
 
 		}
@@ -381,7 +379,7 @@ class Tween {
 		this.update( time );
 		return this.object;
 	}
-	update( time = now() ) {
+	update( time ) {
 
 		let {
 			_onStartCallbackFired
@@ -405,11 +403,13 @@ class Tween {
 		let elapsed;
 		let value;
 
+		time = time !== undefined ? time : now();
+
 		if ( time < _startTime ) {
 			return true;
 		}
 
-		if ( _onStartCallbackFired === false ) {
+		if ( !_onStartCallbackFired ) {
 
 			this.emit( 'start', object );
 
@@ -418,6 +418,7 @@ class Tween {
 
 		elapsed = ( time - _startTime ) / _duration;
 		elapsed = elapsed > 1 ? 1 : elapsed;
+		elapsed = _reversed ? 1 - elapsed : elapsed;
 
 		value = _easingFunction( elapsed );
 
@@ -437,11 +438,11 @@ class Tween {
 
 				if ( end.join ) {
 
-				object[ property ] = joinToString(getValue);
+					object[ property ] = joinToString( getValue );
 
 				} else {
 
-				object[ property ] = getValue;
+					object[ property ] = getValue;
 
 				}
 
@@ -472,27 +473,33 @@ class Tween {
 
 		this.emit( 'update', object, elapsed );
 
-		if ( elapsed === 1 ) {
+		if ( elapsed === 1 || ( _reversed && elapsed === 0 ) ) {
 
-			if ( _repeat > 0 ) {
+			if ( _repeat ) {
 
 				if ( isFinite( _repeat ) ) {
 					this._repeat--;
 				}
 
+				for ( property in _valuesEnd ) {
+
+					if ( typeof( _valuesEnd[ property ] ) === 'string' ) {
+						this._valuesStart[ property ] = _valuesStart[ property ] + parseFloat( _valuesEnd[ property ] );
+					}
+
+				}
+
 
 				// Reassign starting values, restart by making startTime = now
-				this.reverse();
-
 				this.emit( _reversed ? 'reverse' : 'repeat', object );
 
 				if ( _yoyo ) {
-					this._reversed = !_reversed;
+					this.reverse();
 				}
 
-				if ( !_reversed && _repeatDelayTime !== undefined ) {
+				if ( !_reversed && _repeatDelayTime ) {
 					this._startTime += _duration + _repeatDelayTime;
-				} else if ( _reversed && _reverseDelayTime !== undefined ) {
+				} else if ( _reversed && _reverseDelayTime ) {
 					this._startTime += _duration + _reverseDelayTime;
 				} else {
 					this._startTime += _duration + _delayTime;

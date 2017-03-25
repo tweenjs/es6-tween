@@ -34,7 +34,7 @@ for ( var p in o ) {
 	}
 	}
 }
-
+				
 var tween = new TWEEN.Tween([0, 200, {x:300}]).to([200, 400, {x:500}], 2000).on('update', function (object) {
 	round(object);
 	body.textContent = JSON.stringify(object);

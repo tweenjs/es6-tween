@@ -760,7 +760,6 @@ var Tween = function () {
 
 		this.object = object;
 		this._valuesStart = Tween.createEmptyConst(object);
-		this._valuesStartRepeat = Tween.createEmptyConst(object);
 		this._valuesEnd = Tween.createEmptyConst(object);
 		this._chainedTweens = [];
 
@@ -796,30 +795,23 @@ var Tween = function () {
 	}, {
 		key: 'reverse',
 		value: function reverse() {
-			var _valuesStartRepeat = this._valuesStartRepeat,
-			    _yoyo = this._yoyo,
-			    _valuesEnd = this._valuesEnd,
-			    _valuesStart = this._valuesStart;
 
-			// Reassign starting values, restart by making startTime = now
+			/*let {
+   	_valuesEnd
+   	, _valuesStart
+   	, _reversed
+   } = this;
+   	// Reassign starting values, restart by making startTime = now
+   for ( let property in _valuesEnd ) {
+   			let tmp = _valuesStart[ property ];
+   			this._valuesStart[ property ] = _valuesEnd[ property ];
+   			this._valuesEnd[ property ] = tmp;
+   	}*/
 
-			for (var property in _valuesStartRepeat) {
+			var _reversed = this._reversed;
 
-				if (typeof _valuesEnd[property] === 'string') {
-					_valuesStartRepeat[property] = _valuesStartRepeat[property] + parseFloat(_valuesEnd[property]);
-				}
 
-				if (_yoyo) {
-					var tmp = _valuesStartRepeat[property];
-
-					_valuesStartRepeat[property] = _valuesEnd[property];
-					_valuesEnd[property] = tmp;
-				}
-
-				_valuesStart[property] = _valuesStartRepeat[property];
-			}
-
-			this._reversed = !this._reversed;
+			this._reversed = !_reversed;
 
 			return this;
 		}
@@ -872,18 +864,26 @@ var Tween = function () {
 	}, {
 		key: 'emit',
 		value: function emit(name) {
-			var _this2 = this;
+			var _events = this._events;
+
+
+			var eventFn = _events[name];
+
+			if (!eventFn) {
+				return this;
+			}
+
+			var i = eventFn.length;
 
 			for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
 				args[_key2 - 1] = arguments[_key2];
 			}
 
-			if (this._events[name] === undefined) {
-				return this;
+			while (i--) {
+				var _eventFn$i;
+
+				(_eventFn$i = eventFn[i]).call.apply(_eventFn$i, [this].concat(args));
 			}
-			this._events[name].map(function (event) {
-				event.call.apply(event, [_this2].concat(args));
-			});
 			return this;
 		}
 	}, {
@@ -1028,8 +1028,6 @@ var Tween = function () {
 				}
 
 				this._valuesStart[property] = object[property];
-
-				this._valuesStartRepeat[property] = _valuesStart[property] || 0;
 			}
 
 			(0, _core.add)(this);
@@ -1152,8 +1150,7 @@ var Tween = function () {
 		}
 	}, {
 		key: 'update',
-		value: function update() {
-			var time = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _core.now)();
+		value: function update(time) {
 			var _onStartCallbackFired = this._onStartCallbackFired,
 			    _chainedTweens = this._chainedTweens,
 			    _easingFunction = this._easingFunction,
@@ -1175,11 +1172,13 @@ var Tween = function () {
 			var elapsed = void 0;
 			var value = void 0;
 
+			time = time !== undefined ? time : (0, _core.now)();
+
 			if (time < _startTime) {
 				return true;
 			}
 
-			if (_onStartCallbackFired === false) {
+			if (!_onStartCallbackFired) {
 
 				this.emit('start', object);
 
@@ -1188,6 +1187,7 @@ var Tween = function () {
 
 			elapsed = (time - _startTime) / _duration;
 			elapsed = elapsed > 1 ? 1 : elapsed;
+			elapsed = _reversed ? 1 - elapsed : elapsed;
 
 			value = _easingFunction(elapsed);
 
@@ -1236,26 +1236,31 @@ var Tween = function () {
 
 			this.emit('update', object, elapsed);
 
-			if (elapsed === 1) {
+			if (elapsed === 1 || _reversed && elapsed === 0) {
 
-				if (_repeat > 0) {
+				if (_repeat) {
 
 					if (isFinite(_repeat)) {
 						this._repeat--;
 					}
 
-					// Reassign starting values, restart by making startTime = now
-					this.reverse();
+					for (property in _valuesEnd) {
 
+						if (typeof _valuesEnd[property] === 'string') {
+							this._valuesStart[property] = _valuesStart[property] + parseFloat(_valuesEnd[property]);
+						}
+					}
+
+					// Reassign starting values, restart by making startTime = now
 					this.emit(_reversed ? 'reverse' : 'repeat', object);
 
 					if (_yoyo) {
-						this._reversed = !_reversed;
+						this.reverse();
 					}
 
-					if (!_reversed && _repeatDelayTime !== undefined) {
+					if (!_reversed && _repeatDelayTime) {
 						this._startTime += _duration + _repeatDelayTime;
-					} else if (_reversed && _reverseDelayTime !== undefined) {
+					} else if (_reversed && _reverseDelayTime) {
 						this._startTime += _duration + _reverseDelayTime;
 					} else {
 						this._startTime += _duration + _delayTime;
@@ -1330,18 +1335,18 @@ function cloneTween() {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(global) {
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 // TWEEN.js
 var _tweens = [];
-var _time = 0;
 var isStarted = false;
 var _autoPlay = false;
 var _tick = void 0;
 var _events = {};
+var root = typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : undefined;
 
 var getAll = function getAll() {
 	return _tweens;
@@ -1355,15 +1360,22 @@ var removeAll = function removeAll() {
 	_tweens = [];
 };
 
-var emit = function emit(ev) {
+var emit = function emit(name) {
 	for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 		args[_key - 1] = arguments[_key];
 	}
 
-	if (_events[ev] !== undefined) {
-		_events[ev].map(function (event) {
-			return event.apply(undefined, args);
-		});
+	var eventFn = _events[name];
+
+	if (!eventFn) {
+		return;
+	}
+
+	var i = eventFn.length;
+	while (i--) {
+		var _eventFn$i;
+
+		(_eventFn$i = eventFn[i]).call.apply(_eventFn$i, [undefined].concat(args));
 	}
 };
 
@@ -1430,17 +1442,12 @@ var remove = function remove(tween) {
 };
 
 var now = function now() {
-	return _time;
+	return root.performance !== undefined && root.performance.now ? root.performance.now() : Date.now();
 };
 
-var update = function update() {
-	var time = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : now();
-	var preserve = arguments[1];
-
+var update = function update(time, preserve) {
 
 	time = time !== undefined ? time : now();
-
-	_time = time;
 
 	emit('update', time, _tweens);
 
@@ -1448,8 +1455,6 @@ var update = function update() {
 
 		return false;
 	}
-
-	emit('realupdate', time, _tweens);
 
 	var i = 0;
 	while (i < _tweens.length) {
@@ -1465,10 +1470,8 @@ var update = function update() {
 };
 
 function autoStart(time) {
-	if (update(_time)) {
-		_time = time;
+	if (update(time)) {
 		_tick = requestAnimationFrame(autoStart);
-		emit('autostart', time);
 	} else {
 		isStarted = false;
 		cancelAnimationFrame(_tick);
@@ -1487,9 +1490,40 @@ exports.on = on;
 exports.once = once;
 exports.off = off;
 exports.emit = emit;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var g;
+
+// This works in non-strict mode
+g = function () {
+	return this;
+}();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1, eval)("this");
+} catch (e) {
+	// This works if the window reference is available
+	if ((typeof window === "undefined" ? "undefined" : _typeof(window)) === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1504,7 +1538,7 @@ if (Array.isArray === undefined) {
 }
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1527,7 +1561,7 @@ if (Object.assign === undefined) {
 }
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1582,37 +1616,7 @@ if (ROOT.cancelAnimationFrame === undefined && (ROOT.cancelAnimationFrame = ROOT
 		ROOT.cancelAnimationFrame = _caf;
 	}
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var g;
-
-// This works in non-strict mode
-g = function () {
-	return this;
-}();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1, eval)("this");
-} catch (e) {
-	// This works if the window reference is available
-	if ((typeof window === "undefined" ? "undefined" : _typeof(window)) === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
 /* 9 */
@@ -1659,13 +1663,13 @@ function toNumber(val) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Interpolation = exports.Easing = exports.Tween = exports.now = exports.autoPlay = exports.cloneTween = exports.update = exports.remove = exports.removeAll = exports.add = exports.getAll = undefined;
-
-__webpack_require__(6);
+exports.Interpolation = exports.Easing = exports.Tween = exports.emit = exports.off = exports.once = exports.on = exports.autoPlay = exports.update = exports.now = exports.add = exports.remove = exports.removeAll = exports.getAll = undefined;
 
 __webpack_require__(7);
 
-__webpack_require__(5);
+__webpack_require__(8);
+
+__webpack_require__(6);
 
 var _core = __webpack_require__(4);
 
@@ -1688,13 +1692,16 @@ var _clone2 = _interopRequireDefault(_clone);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.getAll = _core.getAll;
-exports.add = _core.add;
 exports.removeAll = _core.removeAll;
 exports.remove = _core.remove;
-exports.update = _core.update;
-exports.cloneTween = _clone2.default;
-exports.autoPlay = _core.autoPlay;
+exports.add = _core.add;
 exports.now = _core.now;
+exports.update = _core.update;
+exports.autoPlay = _core.autoPlay;
+exports.on = _core.on;
+exports.once = _core.once;
+exports.off = _core.off;
+exports.emit = _core.emit;
 exports.Tween = _Tween2.default;
 exports.Easing = _Easing2.default;
 exports.Interpolation = _Interpolation2.default;
