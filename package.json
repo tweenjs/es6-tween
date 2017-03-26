@@ -18,6 +18,9 @@
 		"test-style": "jscs --config test/jscs.json src/Tween.js",
 		"semantic-release": "semantic-release pre && npm publish && semantic-release post"
 	},
+	"release": {
+		"debug": false
+	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/tweenjs/es6-tween.git"

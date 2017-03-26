@@ -79,6 +79,9 @@ class Tween {
 
 		return this;
 	}
+	reversed() {
+		return this._reversed;
+	}
 	off( name, fn ) {
 		if ( this._events[ name ] === undefined ) {
 			return this;
