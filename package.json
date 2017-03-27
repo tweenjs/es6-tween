@@ -1,6 +1,6 @@
 {
 	"name": "es6-tween",
-	"version": "1.4.0",
+	"version": "1.4.1",
 	"description": "ES6 implementation of amazing tween.js",
 	"main": "dist/Tween.js",
 	"directories": {
@@ -19,7 +19,8 @@
 		"semantic-release": "semantic-release pre && npm publish && semantic-release post"
 	},
 	"release": {
-		"debug": false
+		"debug": false,
+		"githubToken": "32558a13585b92da451b3d55f1623f36513586ea"
 	},
 	"repository": {
 		"type": "git",
