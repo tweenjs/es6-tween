@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## v1.4.0: Improvements
+
+#### Fixes
+- `TWEEN.now` issue fixed, where it's failed tweens
+
+#### Improvements
+- Performance imporved by almost `~15%`
+- Improved timing
+- `TWEEN.now` improvements
+
+#### Optimization
+- Optimized code for faster execution
+- `emit` method arguments reduced to `5` for better performance
+- `TWEEN.now` optimization
+- Merged `requestAnimationFrame` function
+
+#### NEW features
+- Added new `reversed` method
+- Added timing-correcter when `visibilitychange` event is called
+- Added `test.html` for comparing performance
+
+
 ## v1.2.2: Most issue fixed
 
 #### Fixes

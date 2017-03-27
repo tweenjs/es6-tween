@@ -1,0 +1,70 @@
+<html><head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, minimum-scale=1.0">
+      <title>Unim.js</title>
+	  <style>
+	  #container {
+	  width: 200px;
+	  height: auto;
+	  margin: 0 auto;
+	  position: relative;
+	  display: block;
+	  }
+	  
+	  .line {
+	  width: 200px;
+	  height: 2px;
+	  position: absolute;
+	  }
+	  </style>
+   </head>
+   <body>
+
+	 <div id="container"></div>
+
+      <script src="../dist/Tween.js"></script>
+      <script>
+	  
+	  TWEEN.autoPlay(true);
+
+	  function random(min, max) {
+	  	return Math.random() * (max - min) + min;
+	  }
+
+	  var nodes = [],
+	  c = document.getElementById("container"),
+	  easing = "quadraticInOut",
+	  wIh = window.innerHeight || screen.height - 40,
+	  frag = document.createDocumentFragment();
+	  
+	  const update = (object) => {
+		object.dom.style.transform = 'translate3d(' + object.x + 'px, 0px, 0px)';
+	  }
+
+	  function createTest(count) {
+	  	var i;
+	  	for (i = 0; i < count; i++) {
+	  		var div = document.createElement("div"),
+	  		bg = (Math.random() * 0xffffff) >> 0,
+	  		bgC = "#" + bg.toString(16),
+	  		l = Math.floor(random(-200, 200)),
+	  		dl = Math.floor(Math.random() * 1000),
+	  		tl = Math.floor(random(-200, 200));
+	  		div.setAttribute("class", "line");
+	  		div.style.top = [(Math.random() * wIh), "px"].join("");
+	  		div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
+	  		//div.style.left = l + "px";
+	  		div.style.backgroundColor = bgC;
+	  		nodes.push(div);
+	  		frag.appendChild(div);
+			var a = new TWEEN.Tween({ x : l, dom:div }).to({
+	  				x : tl
+	  			}, 1000).easing(TWEEN.Easing.Quadratic.InOut).on('update', update).repeat(Infinity).yoyo(true).start();
+
+	  	}
+	  	c.appendChild(frag);
+	  }
+	  createTest(200);
+      </script>
+   
+</body></html>

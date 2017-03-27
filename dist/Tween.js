@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 12);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -735,11 +735,11 @@ var _clone = __webpack_require__(3);
 
 var _clone2 = _interopRequireDefault(_clone);
 
-var _joinToString = __webpack_require__(9);
+var _joinToString = __webpack_require__(10);
 
 var _joinToString2 = _interopRequireDefault(_joinToString);
 
-var _toNumber = __webpack_require__(10);
+var _toNumber = __webpack_require__(11);
 
 var _toNumber2 = _interopRequireDefault(_toNumber);
 
@@ -816,6 +816,11 @@ var Tween = function () {
 			return this;
 		}
 	}, {
+		key: 'reversed',
+		value: function reversed() {
+			return this._reversed;
+		}
+	}, {
 		key: 'off',
 		value: function off(name, fn) {
 			if (this._events[name] === undefined) {
@@ -863,7 +868,7 @@ var Tween = function () {
 		}
 	}, {
 		key: 'emit',
-		value: function emit(name) {
+		value: function emit(name, a, b, c, d, e) {
 			var _events = this._events;
 
 
@@ -874,15 +879,8 @@ var Tween = function () {
 			}
 
 			var i = eventFn.length;
-
-			for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-				args[_key2 - 1] = arguments[_key2];
-			}
-
 			while (i--) {
-				var _eventFn$i;
-
-				(_eventFn$i = eventFn[i]).call.apply(_eventFn$i, [this].concat(args));
+				eventFn[i].call(this, a, b, c, d, e);
 			}
 			return this;
 		}
@@ -1134,8 +1132,8 @@ var Tween = function () {
 	}, {
 		key: 'chain',
 		value: function chain() {
-			for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-				args[_key3] = arguments[_key3];
+			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+				args[_key2] = arguments[_key2];
 			}
 
 			this._chainedTweens = args;
@@ -1215,26 +1213,24 @@ var Tween = function () {
 				} else if (Array.isArray(end)) {
 
 					object[property] = _interpolationFunction(end, value);
-				} else {
+				} else if (typeof end === 'string') {
 
-					// Parses relative end values with start as base (e.g.: +10, -3)
-					if (typeof end === 'string') {
-
-						if (end.charAt(0) === '+' || end.charAt(0) === '-') {
-							end = start + parseFloat(end);
-						} else {
-							end = parseFloat(end);
-						}
+					if (end.charAt(0) === '+' || end.charAt(0) === '-') {
+						end = start + parseFloat(end);
+					} else {
+						end = parseFloat(end);
 					}
 
 					// Protect against non numeric properties.
 					if (typeof end === 'number') {
 						object[property] = start + (end - start) * value;
 					}
+				} else if (typeof end === 'number') {
+					object[property] = start + (end - start) * value;
 				}
 			}
 
-			this.emit('update', object, elapsed);
+			this.emit('update', object, value, elapsed);
 
 			if (elapsed === 1 || _reversed && elapsed === 0) {
 
@@ -1335,7 +1331,7 @@ function cloneTween() {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
+/* WEBPACK VAR INJECTION */(function(global, process) {
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -1360,22 +1356,14 @@ var removeAll = function removeAll() {
 	_tweens = [];
 };
 
-var emit = function emit(name) {
-	for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-		args[_key - 1] = arguments[_key];
-	}
-
+var emit = function emit(name, a, b, c, d, e) {
 	var eventFn = _events[name];
 
-	if (!eventFn) {
-		return;
-	}
-
-	var i = eventFn.length;
-	while (i--) {
-		var _eventFn$i;
-
-		(_eventFn$i = eventFn[i]).call.apply(_eventFn$i, [undefined].concat(args));
+	if (eventFn) {
+		var i = eventFn.length;
+		while (i--) {
+			eventFn[i].call(undefined, a, b, c, d, e);
+		}
 	}
 };
 
@@ -1401,7 +1389,7 @@ var add = function add(tween) {
 	_tweens.push(tween);
 
 	if (_autoPlay && !isStarted) {
-		autoStart(now());
+		update();
 		isStarted = true;
 		emit('start');
 	}
@@ -1441,18 +1429,45 @@ var remove = function remove(tween) {
 	}
 };
 
-var now = function now() {
-	return root.performance !== undefined && root.performance.now ? root.performance.now() : Date.now();
-};
+var now = function () {
+	if (typeof process !== "undefined" && process.hrtime !== undefined) {
+		return function () {
+			var time = process.hrtime();
+
+			// Convert [seconds, nanoseconds] to milliseconds.
+			return time[0] * 1000 + time[1] / 1000000;
+		};
+	}
+	// In a browser, use window.performance.now if it is available.
+	else if (root.performance !== undefined && root.performance.now !== undefined) {
+
+			// This must be bound, because directly assigning this function
+			// leads to an invocation exception in Chrome.
+			return root.performance.now.bind(root.performance);
+		}
+		// Use Date.now if it is available.
+		else {
+				var offset = root.performance && root.performance.timing && root.performance.timing.navigationStart ? root.performance.timing.navigationStart : Date.now();
+				return function () {
+					return Date.now() - offset;
+				};
+			}
+}();
 
 var update = function update(time, preserve) {
 
 	time = time !== undefined ? time : now();
 
+	if (_autoPlay) {
+		_tick = requestAnimationFrame(update);
+	}
 	emit('update', time, _tweens);
 
 	if (_tweens.length === 0) {
 
+		isStarted = false;
+		cancelAnimationFrame(_tick);
+		emit('stop', time);
 		return false;
 	}
 
@@ -1469,14 +1484,25 @@ var update = function update(time, preserve) {
 	return true;
 };
 
-function autoStart(time) {
-	if (update(time)) {
-		_tick = requestAnimationFrame(autoStart);
-	} else {
-		isStarted = false;
-		cancelAnimationFrame(_tick);
-		emit('stop', time);
-	}
+// Normalise time when visiblity is changed ...
+if (root.document) {
+	var doc = root.document,
+	    timeDiff = 0,
+	    timePause = 0;
+	doc.addEventListener('visibilitychange', function (ev) {
+		if (_tweens.length === 0) {
+			return false;
+		}
+		if (document.hidden) {
+			timePause = now();
+		} else {
+			timeDiff = now() - timePause;
+			_tweens.map(function (tween) {
+				return tween._startTime += timeDiff;
+			});
+		}
+		return true;
+	});
 }
 
 exports.getAll = getAll;
@@ -1490,7 +1516,7 @@ exports.on = on;
 exports.once = once;
 exports.off = off;
 exports.emit = emit;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(9)))
 
 /***/ }),
 /* 5 */
@@ -1625,6 +1651,193 @@ if (ROOT.cancelAnimationFrame === undefined && (ROOT.cancelAnimationFrame = ROOT
 "use strict";
 
 
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout() {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+})();
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch (e) {
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch (e) {
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e) {
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e) {
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while (len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () {
+    return '/';
+};
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function () {
+    return 0;
+};
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
@@ -1638,7 +1851,7 @@ function joinToString(__array__like) {
 }
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1654,7 +1867,7 @@ function toNumber(val) {
 }
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
