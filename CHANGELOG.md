@@ -6,7 +6,7 @@
 - `TWEEN.now` issue fixed, where it's failed tweens
 
 #### Improvements
-- Performance imporved by almost `~15%`
+- Performance improved by almost `~15%`
 - Improved timing
 - `TWEEN.now` improvements
 
