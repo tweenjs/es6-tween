@@ -73,11 +73,599 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _core = __webpack_require__(4);
+
+var _Easing = __webpack_require__(1);
+
+var _Easing2 = _interopRequireDefault(_Easing);
+
+var _Interpolation = __webpack_require__(2);
+
+var _Interpolation2 = _interopRequireDefault(_Interpolation);
+
+var _clone = __webpack_require__(6);
+
+var _clone2 = _interopRequireDefault(_clone);
+
+var _joinToString = __webpack_require__(13);
+
+var _joinToString2 = _interopRequireDefault(_joinToString);
+
+var _toNumber = __webpack_require__(14);
+
+var _toNumber2 = _interopRequireDefault(_toNumber);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// Credits:
+// @jkroso for string parse library
+// Optimized, Extended by @dalisoft
+var Number_Match_RegEx = /\s+|([A-Za-z?().,{}:""\[\]#]+)|([-+\/*%]+=)?([-+*\/%]+)?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/gi;
+
+var Tween = function () {
+	function Tween() {
+		var object = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+		_classCallCheck(this, Tween);
+
+		this.object = object;
+		this._valuesStart = Tween.createEmptyConst(object);
+		this._valuesEnd = Tween.createEmptyConst(object);
+		this._chainedTweens = [];
+
+		this._duration = 1000;
+		this._easingFunction = _Easing2.default.Linear.None;
+		this._interpolationFunction = _Interpolation2.default.None;
+
+		this._startTime = 0;
+		this._delayTime = 0;
+		this._repeat = 0;
+		this._r = 0;
+		this._isPlaying = false;
+		this._yoyo = false;
+		this._reversed = false;
+
+		this._onStartCallbackFired = false;
+		this._events = {};
+		this._pausedTime = 0;
+
+		return this;
+	}
+
+	_createClass(Tween, [{
+		key: 'isPlaying',
+		value: function isPlaying() {
+			return this._isPlaying;
+		}
+	}, {
+		key: 'isStarted',
+		value: function isStarted() {
+			return this._onStartCallbackFired;
+		}
+	}, {
+		key: 'reverse',
+		value: function reverse() {
+			var _reversed = this._reversed;
+
+
+			this._reversed = !_reversed;
+
+			return this;
+		}
+	}, {
+		key: 'reversed',
+		value: function reversed() {
+			return this._reversed;
+		}
+	}, {
+		key: 'off',
+		value: function off(name, fn) {
+			if (this._events[name] === undefined) {
+				return this;
+			}
+			if (name !== undefined && fn !== undefined) {
+				var eventsList = this._events[name],
+				    i = 0;
+				while (i < eventsList.length) {
+					if (eventsList[i] === fn) {
+						eventsList.splice(i, 1);
+					}
+					i++;
+				}
+			} else if (name !== undefined && fn === undefined) {
+				this._events[name] = [];
+			}
+			return this;
+		}
+	}, {
+		key: 'on',
+		value: function on(name, fn) {
+			if (this._events[name] === undefined) {
+				this._events[name] = [];
+			}
+			this._events[name].push(fn);
+			return this;
+		}
+	}, {
+		key: 'once',
+		value: function once(name, fn) {
+			var _this = this;
+
+			if (this._events[name] === undefined) {
+				this._events[name] = [];
+			}
+			return this.on(name, function () {
+				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+					args[_key] = arguments[_key];
+				}
+
+				fn.call.apply(fn, [_this].concat(args));
+				_this.off(name);
+			});
+		}
+	}, {
+		key: 'emit',
+		value: function emit(name, a, b, c, d, e) {
+			var _events = this._events;
+
+
+			var eventFn = _events[name];
+
+			if (!eventFn) {
+				return this;
+			}
+
+			var i = eventFn.length;
+			while (i--) {
+				eventFn[i].call(this, a, b, c, d, e);
+			}
+			return this;
+		}
+	}, {
+		key: 'pause',
+		value: function pause() {
+
+			if (!this._isPlaying) {
+				return this;
+			}
+
+			this._isPlaying = false;
+
+			(0, _core.remove)(this);
+			this._pausedTime = (0, _core.now)();
+
+			return this.emit('pause', this.object);
+		}
+	}, {
+		key: 'play',
+		value: function play() {
+
+			if (this._isPlaying) {
+				return this;
+			}
+
+			this._isPlaying = true;
+
+			this._startTime += (0, _core.now)() - this._pausedTime;
+			(0, _core.add)(this);
+			this._pausedTime = (0, _core.now)();
+
+			return this.emit('play', this.object);
+		}
+	}, {
+		key: 'restart',
+		value: function restart(noDelay) {
+
+			this._repeat = this._r;
+			this._startTime = (0, _core.now)() + (noDelay ? 0 : this._delayTime);
+
+			if (!this._isPlaying) {
+				(0, _core.add)(this);
+			}
+
+			return this.emit('restart', this._object);
+		}
+	}, {
+		key: 'seek',
+		value: function seek(time, keepPlaying) {
+
+			this._startTime = (0, _core.now)() + Math.max(0, Math.min(time, this._duration));
+
+			this.emit('seek', time, this._object);
+
+			return keepPlaying ? this : this.pause();
+		}
+	}, {
+		key: 'duration',
+		value: function duration(amount) {
+
+			this._duration = typeof amount === "function" ? amount(this._duration) : amount;
+
+			return this;
+		}
+	}, {
+		key: 'to',
+		value: function to() {
+			var properties = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+			var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1000;
+
+
+			if (typeof properties === "number") {
+				var _vE = {
+					Number: properties
+				};
+				this._valuesEnd = _vE;
+			} else {
+				this._valuesEnd = properties;
+			}
+
+			if (typeof duration === "number") {
+				this._duration = typeof duration === "function" ? duration(this._duration) : duration;
+			} else if ((typeof duration === 'undefined' ? 'undefined' : _typeof(duration)) === "object") {
+				for (var prop in duration) {
+					this[prop](typeof duration[prop] === "function" ? duration[prop](this._duration) : duration);
+				}
+			}
+
+			return this;
+		}
+	}, {
+		key: 'start',
+		value: function start(time) {
+			var _startTime = this._startTime,
+			    _delayTime = this._delayTime,
+			    _valuesEnd = this._valuesEnd,
+			    _valuesStart = this._valuesStart,
+			    object = this.object;
+
+
+			_startTime = time !== undefined ? time : (0, _core.now)();
+			_startTime += _delayTime;
+
+			this._startTime = _startTime;
+
+			for (var property in _valuesEnd) {
+
+				if (_typeof(_valuesEnd[property]) === "object") {
+					if (Array.isArray(_valuesEnd[property])) {
+						if (typeof object[property] === "number") {
+							this._valuesEnd[property] = [object[property]].concat(_valuesEnd[property]);
+						} else {
+							var clonedTween = (0, _clone2.default)(this, {
+								object: object[property],
+								_valuesEnd: _valuesEnd[property],
+								_events: {}
+							}).start().stop();
+
+							this._valuesEnd[property] = clonedTween;
+						}
+					} else {
+						var _clonedTween = (0, _clone2.default)(this, {
+							object: object[property],
+							_valuesEnd: _valuesEnd[property],
+							_events: {}
+						}).start().stop();
+
+						this._valuesEnd[property] = _clonedTween;
+					}
+				} else if (typeof _valuesEnd[property] === "string" && typeof object[property] === "string" && Number_Match_RegEx.test(object[property]) && Number_Match_RegEx.test(_valuesEnd[property])) {
+
+					var __get__Start = object[property].match(Number_Match_RegEx);
+					__get__Start = __get__Start.map(_toNumber2.default);
+					var __get__End = _valuesEnd[property].match(Number_Match_RegEx);
+					__get__End = __get__End.map(_toNumber2.default);
+					var _clonedTween2 = (0, _clone2.default)(this, {
+						object: __get__Start,
+						_valuesEnd: __get__End,
+						_events: {}
+					}).start().stop();
+
+					_clonedTween2.join = true; // For string tweening
+					this._valuesEnd[property] = _clonedTween2;
+				}
+
+				// If `to()` specifies a property that doesn't exist in the source object,
+				// we should not set that property in the object
+				if (Tween.checkValidness(object[property]) === false) {
+					continue;
+				}
+
+				// If duplicate or non-tweening numerics matched,
+				// we should delete from _valuesEnd
+				if (object[property] === _valuesEnd[property]) {
+					continue;
+				}
+
+				this._valuesStart[property] = object[property];
+			}
+
+			(0, _core.add)(this);
+
+			this._isPlaying = true;
+
+			return this;
+		}
+	}, {
+		key: 'stop',
+		value: function stop() {
+			var _isPlaying = this._isPlaying,
+			    object = this.object;
+
+
+			if (!_isPlaying) {
+				return this;
+			}
+
+			(0, _core.remove)(this);
+			this._isPlaying = false;
+
+			this.stopChainedTweens();
+			return this.emit('stop', object);
+		}
+	}, {
+		key: 'end',
+		value: function end() {
+			var _startTime = this._startTime,
+			    _duration = this._duration;
+
+
+			return this.update(_startTime + _duration);
+		}
+	}, {
+		key: 'stopChainedTweens',
+		value: function stopChainedTweens() {
+			var _chainedTweens = this._chainedTweens;
+
+
+			_chainedTweens.map(function (item) {
+				return item.stop();
+			});
+
+			return this;
+		}
+	}, {
+		key: 'delay',
+		value: function delay(amount) {
+
+			this._delayTime = typeof amount === "function" ? amount(this._delayTime) : amount;
+
+			return this;
+		}
+	}, {
+		key: 'repeat',
+		value: function repeat(amount) {
+
+			this._repeat = typeof amount === "function" ? amount(this._repeat) : amount;
+			this._r = this._repeat;
+
+			return this;
+		}
+	}, {
+		key: 'repeatDelay',
+		value: function repeatDelay(amount) {
+
+			this._repeatDelayTime = typeof amount === "function" ? amount(this._repeatDelayTime) : amount;
+
+			return this;
+		}
+	}, {
+		key: 'reverseDelay',
+		value: function reverseDelay(amount) {
+
+			this._reverseDelayTime = typeof amount === "function" ? amount(this._reverseDelayTime) : amount;
+
+			return this;
+		}
+	}, {
+		key: 'yoyo',
+		value: function yoyo(state) {
+
+			this._yoyo = typeof state === "function" ? state(this._yoyo) : state;
+
+			return this;
+		}
+	}, {
+		key: 'easing',
+		value: function easing(fn) {
+
+			this._easingFunction = fn;
+
+			return this;
+		}
+	}, {
+		key: 'interpolation',
+		value: function interpolation(fn) {
+
+			this._interpolationFunction = fn;
+
+			return this;
+		}
+	}, {
+		key: 'chain',
+		value: function chain() {
+			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+				args[_key2] = arguments[_key2];
+			}
+
+			this._chainedTweens = args;
+
+			return this;
+		}
+	}, {
+		key: 'get',
+		value: function get(time) {
+			this.update(time);
+			return this.object;
+		}
+	}, {
+		key: 'update',
+		value: function update(time) {
+			var _onStartCallbackFired = this._onStartCallbackFired,
+			    _chainedTweens = this._chainedTweens,
+			    _easingFunction = this._easingFunction,
+			    _interpolationFunction = this._interpolationFunction,
+			    _repeat = this._repeat,
+			    _repeatDelayTime = this._repeatDelayTime,
+			    _reverseDelayTime = this._reverseDelayTime,
+			    _delayTime = this._delayTime,
+			    _yoyo = this._yoyo,
+			    _reversed = this._reversed,
+			    _startTime = this._startTime,
+			    _duration = this._duration,
+			    _valuesStart = this._valuesStart,
+			    _valuesEnd = this._valuesEnd,
+			    object = this.object;
+
+
+			var property = void 0;
+			var elapsed = void 0;
+			var value = void 0;
+
+			time = time !== undefined ? time : (0, _core.now)();
+
+			if (time < _startTime) {
+				return true;
+			}
+
+			if (!_onStartCallbackFired) {
+
+				this.emit('start', object);
+
+				this._onStartCallbackFired = true;
+			}
+
+			elapsed = (time - _startTime) / _duration;
+			elapsed = elapsed > 1 ? 1 : elapsed;
+			elapsed = _reversed ? 1 - elapsed : elapsed;
+
+			value = _easingFunction(elapsed);
+
+			for (property in _valuesEnd) {
+
+				// Don't update properties that do not exist in the source object
+				if (_valuesStart[property] === undefined) {
+					continue;
+				}
+
+				var start = _valuesStart[property];
+				var end = _valuesEnd[property];
+
+				if (end instanceof Tween) {
+
+					var getValue = end.get(time);
+
+					if (end.join) {
+
+						object[property] = (0, _joinToString2.default)(getValue);
+					} else {
+
+						object[property] = getValue;
+					}
+				} else if (Array.isArray(end)) {
+
+					object[property] = _interpolationFunction(end, value);
+				} else if (typeof end === 'string') {
+
+					if (end.charAt(0) === '+' || end.charAt(0) === '-') {
+						end = start + parseFloat(end);
+					} else {
+						end = parseFloat(end);
+					}
+
+					// Protect against non numeric properties.
+					if (typeof end === 'number') {
+						object[property] = start + (end - start) * value;
+					}
+				} else if (typeof end === 'number') {
+					object[property] = start + (end - start) * value;
+				}
+			}
+
+			this.emit('update', object, value, elapsed);
+
+			if (elapsed === 1 || _reversed && elapsed === 0) {
+
+				if (_repeat) {
+
+					if (isFinite(_repeat)) {
+						this._repeat--;
+					}
+
+					for (property in _valuesEnd) {
+
+						if (typeof _valuesEnd[property] === 'string' && typeof _valuesStart[property] === 'number') {
+							this._valuesStart[property] = _valuesStart[property] + parseFloat(_valuesEnd[property]);
+						}
+					}
+
+					// Reassign starting values, restart by making startTime = now
+					this.emit(_reversed ? 'reverse' : 'repeat', object);
+
+					if (_yoyo) {
+						this.reverse();
+					}
+
+					if (!_reversed && _repeatDelayTime) {
+						this._startTime += _duration + _repeatDelayTime;
+					} else if (_reversed && _reverseDelayTime) {
+						this._startTime += _duration + _reverseDelayTime;
+					} else {
+						this._startTime += _duration + _delayTime;
+					}
+
+					return true;
+				} else {
+
+					this.emit('complete', object);
+
+					_chainedTweens.map(function (tween) {
+						return tween.start(_startTime + _duration);
+					});
+
+					return false;
+				}
+			}
+			return true;
+		}
+	}], [{
+		key: 'createEmptyConst',
+		value: function createEmptyConst(oldObject) {
+			return typeof oldObject === "number" ? 0 : Array.isArray(oldObject) ? [] : (typeof oldObject === 'undefined' ? 'undefined' : _typeof(oldObject)) === "object" ? {} : '';
+		}
+	}, {
+		key: 'checkValidness',
+		value: function checkValidness(valid) {
+			return valid !== undefined && valid !== null && valid !== '' && valid !== NaN && valid !== Infinity;
+		}
+	}]);
+
+	return Tween;
+}();
+
+exports.default = Tween;
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -589,7 +1177,7 @@ Easing.easeInOut.defaults = Easing.easeIn.defaults = Easing.easeOut.defaults = {
 exports.default = Easing;
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -707,593 +1295,6 @@ var Interpolation = {
 exports.default = Interpolation;
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _core = __webpack_require__(4);
-
-var _Easing = __webpack_require__(0);
-
-var _Easing2 = _interopRequireDefault(_Easing);
-
-var _Interpolation = __webpack_require__(1);
-
-var _Interpolation2 = _interopRequireDefault(_Interpolation);
-
-var _clone = __webpack_require__(3);
-
-var _clone2 = _interopRequireDefault(_clone);
-
-var _joinToString = __webpack_require__(10);
-
-var _joinToString2 = _interopRequireDefault(_joinToString);
-
-var _toNumber = __webpack_require__(11);
-
-var _toNumber2 = _interopRequireDefault(_toNumber);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-// Credits: 
-// @jkroso for string parse library
-// Optimized, Extended by @dalisoft
-var Number_Match_RegEx = /\s+|([A-Za-z?().,{}:""\[\]#]+)|([-+\/*%]+=)?([-+*\/%]+)?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/gi;
-
-var Tween = function () {
-	function Tween() {
-		var object = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-		_classCallCheck(this, Tween);
-
-		this.object = object;
-		this._valuesStart = Tween.createEmptyConst(object);
-		this._valuesEnd = Tween.createEmptyConst(object);
-		this._chainedTweens = [];
-
-		this._duration = 1000;
-		this._easingFunction = _Easing2.default.Linear.None;
-		this._interpolationFunction = _Interpolation2.default.None;
-
-		this._startTime = 0;
-		this._delayTime = 0;
-		this._repeat = 0;
-		this._r = 0;
-		this._isPlaying = false;
-		this._yoyo = false;
-		this._reversed = false;
-
-		this._onStartCallbackFired = false;
-		this._events = {};
-		this._pausedTime = 0;
-
-		return this;
-	}
-
-	_createClass(Tween, [{
-		key: 'isPlaying',
-		value: function isPlaying() {
-			return this._isPlaying;
-		}
-	}, {
-		key: 'isStarted',
-		value: function isStarted() {
-			return this._onStartCallbackFired;
-		}
-	}, {
-		key: 'reverse',
-		value: function reverse() {
-
-			/*let {
-   	_valuesEnd
-   	, _valuesStart
-   	, _reversed
-   } = this;
-   	// Reassign starting values, restart by making startTime = now
-   for ( let property in _valuesEnd ) {
-   			let tmp = _valuesStart[ property ];
-   			this._valuesStart[ property ] = _valuesEnd[ property ];
-   			this._valuesEnd[ property ] = tmp;
-   	}*/
-
-			var _reversed = this._reversed;
-
-
-			this._reversed = !_reversed;
-
-			return this;
-		}
-	}, {
-		key: 'reversed',
-		value: function reversed() {
-			return this._reversed;
-		}
-	}, {
-		key: 'off',
-		value: function off(name, fn) {
-			if (this._events[name] === undefined) {
-				return this;
-			}
-			if (name !== undefined && fn !== undefined) {
-				var eventsList = this._events[name],
-				    i = 0;
-				while (i < eventsList.length) {
-					if (eventsList[i] === fn) {
-						eventsList.splice(i, 1);
-					}
-					i++;
-				}
-			} else if (name !== undefined && fn === undefined) {
-				this._events[name] = [];
-			}
-			return this;
-		}
-	}, {
-		key: 'on',
-		value: function on(name, fn) {
-			if (this._events[name] === undefined) {
-				this._events[name] = [];
-			}
-			this._events[name].push(fn);
-			return this;
-		}
-	}, {
-		key: 'once',
-		value: function once(name, fn) {
-			var _this = this;
-
-			if (this._events[name] === undefined) {
-				this._events[name] = [];
-			}
-			return this.on(name, function () {
-				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-					args[_key] = arguments[_key];
-				}
-
-				fn.call.apply(fn, [_this].concat(args));
-				_this.off(name);
-			});
-		}
-	}, {
-		key: 'emit',
-		value: function emit(name, a, b, c, d, e) {
-			var _events = this._events;
-
-
-			var eventFn = _events[name];
-
-			if (!eventFn) {
-				return this;
-			}
-
-			var i = eventFn.length;
-			while (i--) {
-				eventFn[i].call(this, a, b, c, d, e);
-			}
-			return this;
-		}
-	}, {
-		key: 'pause',
-		value: function pause() {
-
-			if (!this._isPlaying) {
-				return this;
-			}
-
-			this._isPlaying = false;
-
-			(0, _core.remove)(this);
-			this._pausedTime = (0, _core.now)();
-
-			return this.emit('pause', this.object);
-		}
-	}, {
-		key: 'play',
-		value: function play() {
-
-			if (this._isPlaying) {
-				return this;
-			}
-
-			this._isPlaying = true;
-
-			this._startTime += (0, _core.now)() - this._pausedTime;
-			(0, _core.add)(this);
-			this._pausedTime = (0, _core.now)();
-
-			return this.emit('play', this.object);
-		}
-	}, {
-		key: 'restart',
-		value: function restart(noDelay) {
-
-			this._repeat = this._r;
-			this._startTime = (0, _core.now)() + (noDelay ? 0 : this._delayTime);
-
-			if (!this._isPlaying) {
-				(0, _core.add)(this);
-			}
-
-			return this.emit('restart', this._object);
-		}
-	}, {
-		key: 'seek',
-		value: function seek(time, keepPlaying) {
-
-			this._startTime = (0, _core.now)() + Math.max(0, Math.min(time, this._duration));
-
-			this.emit('seek', time, this._object);
-
-			return keepPlaying ? this : this.pause();
-		}
-	}, {
-		key: 'duration',
-		value: function duration(amount) {
-
-			this._duration = typeof amount === "function" ? amount(this._duration) : amount;
-
-			return this;
-		}
-	}, {
-		key: 'to',
-		value: function to() {
-			var properties = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-			var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1000;
-
-
-			if (typeof properties === "number") {
-				var _vE = { Number: properties };
-				this._valuesEnd = _vE;
-			} else {
-				this._valuesEnd = properties;
-			}
-
-			if (typeof duration === "number") {
-				this._duration = duration;
-			} else if ((typeof duration === 'undefined' ? 'undefined' : _typeof(duration)) === "object") {
-				for (var prop in duration) {
-					this[prop](duration[prop]);
-				}
-			}
-
-			return this;
-		}
-	}, {
-		key: 'start',
-		value: function start(time) {
-			var _startTime = this._startTime,
-			    _delayTime = this._delayTime,
-			    _valuesEnd = this._valuesEnd,
-			    _valuesStart = this._valuesStart,
-			    object = this.object;
-
-
-			_startTime = time !== undefined ? time : (0, _core.now)();
-			_startTime += _delayTime;
-
-			this._startTime = _startTime;
-
-			for (var property in _valuesEnd) {
-
-				if (_typeof(_valuesEnd[property]) === "object") {
-					if (Array.isArray(_valuesEnd[property])) {
-						if (typeof object[property] === "number") {
-							this._valuesEnd[property] = [object[property]].concat(_valuesEnd[property]);
-						} else {
-							var clonedTween = (0, _clone2.default)(this, { object: object[property], _valuesEnd: _valuesEnd[property] }).start().stop();
-
-							this._valuesEnd[property] = clonedTween;
-						}
-					} else {
-						var _clonedTween = (0, _clone2.default)(this, { object: object[property], _valuesEnd: _valuesEnd[property] }).start().stop();
-
-						this._valuesEnd[property] = _clonedTween;
-					}
-				} else if (typeof _valuesEnd[property] === "string" && typeof object[property] === "string" && Number_Match_RegEx.test(object[property]) && Number_Match_RegEx.test(_valuesEnd[property])) {
-
-					var __get__Start = object[property].match(Number_Match_RegEx);
-					__get__Start = __get__Start.map(_toNumber2.default);
-					var __get__End = _valuesEnd[property].match(Number_Match_RegEx);
-					__get__End = __get__End.map(_toNumber2.default);
-					var _clonedTween2 = (0, _clone2.default)(this, { object: __get__Start, _valuesEnd: __get__End }).start().stop();
-
-					_clonedTween2.join = true; // For string tweening
-					this._valuesEnd[property] = _clonedTween2;
-				}
-
-				// If `to()` specifies a property that doesn't exist in the source object,
-				// we should not set that property in the object
-				if (Tween.checkValidness(object[property]) === false) {
-					continue;
-				}
-
-				// If duplicate or non-tweening numerics matched,
-				// we should delete from _valuesEnd
-				if (object[property] === _valuesEnd[property]) {
-					continue;
-				}
-
-				this._valuesStart[property] = object[property];
-			}
-
-			(0, _core.add)(this);
-
-			this._isPlaying = true;
-
-			return this;
-		}
-	}, {
-		key: 'stop',
-		value: function stop() {
-			var _isPlaying = this._isPlaying,
-			    object = this.object;
-
-
-			if (!_isPlaying) {
-				return this;
-			}
-
-			(0, _core.remove)(this);
-			this._isPlaying = false;
-
-			this.stopChainedTweens();
-			return this.emit('stop', object);
-		}
-	}, {
-		key: 'end',
-		value: function end() {
-			var _startTime = this._startTime,
-			    _duration = this._duration;
-
-
-			return this.update(_startTime + _duration);
-		}
-	}, {
-		key: 'stopChainedTweens',
-		value: function stopChainedTweens() {
-			var _chainedTweens = this._chainedTweens;
-
-
-			_chainedTweens.map(function (item) {
-				return item.stop();
-			});
-
-			return this;
-		}
-	}, {
-		key: 'delay',
-		value: function delay(amount) {
-
-			this._delayTime = amount;
-
-			return this;
-		}
-	}, {
-		key: 'repeat',
-		value: function repeat(times) {
-
-			this._repeat = times;
-			this._r = times;
-
-			return this;
-		}
-	}, {
-		key: 'repeatDelay',
-		value: function repeatDelay(amount) {
-
-			this._repeatDelayTime = amount;
-
-			return this;
-		}
-	}, {
-		key: 'reverseDelay',
-		value: function reverseDelay(amount) {
-
-			this._reverseDelayTime = amount;
-
-			return this;
-		}
-	}, {
-		key: 'yoyo',
-		value: function yoyo(state) {
-
-			this._yoyo = state;
-
-			return this;
-		}
-	}, {
-		key: 'easing',
-		value: function easing(fn) {
-
-			this._easingFunction = fn;
-
-			return this;
-		}
-	}, {
-		key: 'interpolation',
-		value: function interpolation(fn) {
-
-			this._interpolationFunction = fn;
-
-			return this;
-		}
-	}, {
-		key: 'chain',
-		value: function chain() {
-			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-				args[_key2] = arguments[_key2];
-			}
-
-			this._chainedTweens = args;
-
-			return this;
-		}
-	}, {
-		key: 'get',
-		value: function get(time) {
-			this.update(time);
-			return this.object;
-		}
-	}, {
-		key: 'update',
-		value: function update(time) {
-			var _onStartCallbackFired = this._onStartCallbackFired,
-			    _chainedTweens = this._chainedTweens,
-			    _easingFunction = this._easingFunction,
-			    _interpolationFunction = this._interpolationFunction,
-			    _repeat = this._repeat,
-			    _repeatDelayTime = this._repeatDelayTime,
-			    _reverseDelayTime = this._reverseDelayTime,
-			    _delayTime = this._delayTime,
-			    _yoyo = this._yoyo,
-			    _reversed = this._reversed,
-			    _startTime = this._startTime,
-			    _duration = this._duration,
-			    _valuesStart = this._valuesStart,
-			    _valuesEnd = this._valuesEnd,
-			    object = this.object;
-
-
-			var property = void 0;
-			var elapsed = void 0;
-			var value = void 0;
-
-			time = time !== undefined ? time : (0, _core.now)();
-
-			if (time < _startTime) {
-				return true;
-			}
-
-			if (!_onStartCallbackFired) {
-
-				this.emit('start', object);
-
-				this._onStartCallbackFired = true;
-			}
-
-			elapsed = (time - _startTime) / _duration;
-			elapsed = elapsed > 1 ? 1 : elapsed;
-			elapsed = _reversed ? 1 - elapsed : elapsed;
-
-			value = _easingFunction(elapsed);
-
-			for (property in _valuesEnd) {
-
-				// Don't update properties that do not exist in the source object
-				if (_valuesStart[property] === undefined) {
-					continue;
-				}
-
-				var start = _valuesStart[property];
-				var end = _valuesEnd[property];
-
-				if (end instanceof Tween) {
-
-					var getValue = end.get(time);
-
-					if (end.join) {
-
-						object[property] = (0, _joinToString2.default)(getValue);
-					} else {
-
-						object[property] = getValue;
-					}
-				} else if (Array.isArray(end)) {
-
-					object[property] = _interpolationFunction(end, value);
-				} else if (typeof end === 'string') {
-
-					if (end.charAt(0) === '+' || end.charAt(0) === '-') {
-						end = start + parseFloat(end);
-					} else {
-						end = parseFloat(end);
-					}
-
-					// Protect against non numeric properties.
-					if (typeof end === 'number') {
-						object[property] = start + (end - start) * value;
-					}
-				} else if (typeof end === 'number') {
-					object[property] = start + (end - start) * value;
-				}
-			}
-
-			this.emit('update', object, value, elapsed);
-
-			if (elapsed === 1 || _reversed && elapsed === 0) {
-
-				if (_repeat) {
-
-					if (isFinite(_repeat)) {
-						this._repeat--;
-					}
-
-					for (property in _valuesEnd) {
-
-						if (typeof _valuesEnd[property] === 'string') {
-							this._valuesStart[property] = _valuesStart[property] + parseFloat(_valuesEnd[property]);
-						}
-					}
-
-					// Reassign starting values, restart by making startTime = now
-					this.emit(_reversed ? 'reverse' : 'repeat', object);
-
-					if (_yoyo) {
-						this.reverse();
-					}
-
-					if (!_reversed && _repeatDelayTime) {
-						this._startTime += _duration + _repeatDelayTime;
-					} else if (_reversed && _reverseDelayTime) {
-						this._startTime += _duration + _reverseDelayTime;
-					} else {
-						this._startTime += _duration + _delayTime;
-					}
-
-					return true;
-				} else {
-
-					this.emit('complete', object);
-
-					_chainedTweens.map(function (tween) {
-						return tween.start(_startTime + _duration);
-					});
-
-					return false;
-				}
-			}
-			return true;
-		}
-	}], [{
-		key: 'createEmptyConst',
-		value: function createEmptyConst(oldObject) {
-			return typeof oldObject === "number" ? 0 : Array.isArray(oldObject) ? [] : (typeof oldObject === 'undefined' ? 'undefined' : _typeof(oldObject)) === "object" ? {} : '';
-		}
-	}, {
-		key: 'checkValidness',
-		value: function checkValidness(valid) {
-			return valid !== undefined && valid !== null && valid !== '' && valid !== NaN && valid !== Infinity;
-		}
-	}]);
-
-	return Tween;
-}();
-
-exports.default = Tween;
-
-/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1303,28 +1304,48 @@ exports.default = Tween;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.default = cloneTween;
 
-var _Tween = __webpack_require__(2);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Tween2 = _interopRequireDefault(_Tween);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function cloneTween() {
-	var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-	var configs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-	var copyTween = new _Tween2.default({ x: 0 });
-	for (var config in obj) {
-		if (configs[config] !== undefined) {
-			copyTween[config] = configs[config];
-		} else {
-			copyTween[config] = obj[config];
-		}
+var Plugins = function () {
+	function Plugins() {
+		_classCallCheck(this, Plugins);
 	}
-	return copyTween;
-}
+
+	_createClass(Plugins, null, [{
+		key: "DOM",
+		value: function DOM(Composite) {
+			var layer = Composite.domNode,
+			    style = layer.style;
+			return {
+				update: function update(Tween, RenderObject) {
+					for (var p in RenderObject) {
+						style[p] = RenderObject[p];
+					}
+				}
+			};
+		}
+	}, {
+		key: "Scroll",
+		value: function Scroll(Composite) {
+			var layer = Composite.domNode;
+			return {
+				update: function update(Tween, RenderObject) {
+					for (var p in RenderObject) {
+						layer[p] = RenderObject[p];
+					}
+				}
+			};
+		}
+	}]);
+
+	return Plugins;
+}();
+
+exports.default = Plugins;
+;
 
 /***/ }),
 /* 4 */
@@ -1516,7 +1537,7 @@ exports.on = on;
 exports.once = once;
 exports.off = off;
 exports.emit = emit;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(9)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(12)))
 
 /***/ }),
 /* 5 */
@@ -1555,6 +1576,202 @@ module.exports = g;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = cloneTween;
+
+var _Tween = __webpack_require__(0);
+
+var _Tween2 = _interopRequireDefault(_Tween);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function cloneTween() {
+	var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	var configs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	var Constructor_Ex = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _Tween2.default;
+
+	var copyTween = new Constructor_Ex();
+	for (var config in obj) {
+		if (configs[config] !== undefined) {
+			copyTween[config] = configs[config];
+		} else {
+			copyTween[config] = obj[config];
+		}
+	}
+	return copyTween;
+}
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _clone = __webpack_require__(6);
+
+var _clone2 = _interopRequireDefault(_clone);
+
+var _Plugins = __webpack_require__(3);
+
+var _Plugins2 = _interopRequireDefault(_Plugins);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Composite = function () {
+	function Composite(domNode) {
+		_classCallCheck(this, Composite);
+
+		var self = this;
+
+		this.mode = 'dom';
+		this.domNode = domNode;
+		this.plugins = {};
+		var pluginList = this.plugins;
+
+		this.render = function (object) {
+
+			for (var p in pluginList) {
+
+				pluginList[p] && pluginList[p].update && pluginList[p].update(this, object);
+			}
+
+			return this;
+		};
+		return this;
+	}
+
+	_createClass(Composite, [{
+		key: 'applyPlugin',
+		value: function applyPlugin(name) {
+			if (_Plugins2.default[name] !== undefined) {
+				this.plugins[name] = _Plugins2.default[name](this);
+			}
+			return this;
+		}
+	}, {
+		key: 'drawMode',
+		value: function drawMode() {
+			var mode = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'dom';
+
+			// TO-DO: Implement SVG and Canvas mode
+			this.mode = mode;
+			return this;
+		}
+	}, {
+		key: 'cloneLayer',
+		value: function cloneLayer() {
+			return (0, _clone2.default)(this, {}, Composite);
+		}
+	}, {
+		key: 'appendTo',
+		value: function appendTo(node) {
+			node.appendChild(this.domNode);
+			return this;
+		}
+	}, {
+		key: 'object',
+		set: function set(obj) {
+			return this.render(obj);
+		}
+	}]);
+
+	return Composite;
+}();
+
+exports.default = Composite;
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Tween = __webpack_require__(0);
+
+var _Tween2 = _interopRequireDefault(_Tween);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Timeline = function () {
+	function Timeline() {
+		_classCallCheck(this, Timeline);
+
+		this._private = {
+			tweens: [],
+			fullTime: 0
+		};
+		return this;
+	}
+
+	_createClass(Timeline, [{
+		key: "add",
+		value: function add(tween) {
+			var _this = this;
+
+			if (tween instanceof _Tween2.default) {
+				this._private.tweens.push(tween);
+			} else if (!Array.isArray(tween) && (typeof tween === "undefined" ? "undefined" : _typeof(tween)) === "object") {
+				var tweenExample = new _Tween2.default({ x: 0 });
+				for (var p in tween) {
+					tweenExample[p](tween[p]);
+				}
+			} else if ((typeof tween === "undefined" ? "undefined" : _typeof(tween)) === "object") {
+				tween.map(function (add) {
+					Timeline.add.call(_this, add);
+				});
+			}
+			return this;
+		}
+	}, {
+		key: "start",
+		value: function start() {
+			var _this2 = this;
+
+			this._private.tweens.map(function (tween) {
+				tween.start(_this2._private.fullTime);
+			});
+			this._private.fullTime = Math.max.apply(0, this._private.tweens.reduce(function (prev, curr) {
+				return curr._duration > prev ? curr._duration : prev;
+			}, 0));
+			return this;
+		}
+	}]);
+
+	return Timeline;
+}();
+
+exports.default = Timeline;
+;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 if (Array.isArray === undefined) {
@@ -1564,7 +1781,7 @@ if (Array.isArray === undefined) {
 }
 
 /***/ }),
-/* 7 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1587,7 +1804,7 @@ if (Object.assign === undefined) {
 }
 
 /***/ }),
-/* 8 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1645,7 +1862,7 @@ if (ROOT.cancelAnimationFrame === undefined && (ROOT.cancelAnimationFrame = ROOT
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
-/* 9 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1832,7 +2049,7 @@ process.umask = function () {
 };
 
 /***/ }),
-/* 10 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1851,7 +2068,7 @@ function joinToString(__array__like) {
 }
 
 /***/ }),
-/* 11 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1867,7 +2084,7 @@ function toNumber(val) {
 }
 
 /***/ }),
-/* 12 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1876,31 +2093,39 @@ function toNumber(val) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Interpolation = exports.Easing = exports.Tween = exports.emit = exports.off = exports.once = exports.on = exports.autoPlay = exports.update = exports.now = exports.add = exports.remove = exports.removeAll = exports.getAll = undefined;
+exports.Plugins = exports.Timeline = exports.Composite = exports.Interpolation = exports.Easing = exports.Tween = exports.emit = exports.off = exports.once = exports.on = exports.autoPlay = exports.update = exports.now = exports.add = exports.remove = exports.removeAll = exports.getAll = undefined;
 
-__webpack_require__(7);
+__webpack_require__(10);
 
-__webpack_require__(8);
+__webpack_require__(11);
 
-__webpack_require__(6);
+__webpack_require__(9);
 
 var _core = __webpack_require__(4);
 
-var _Easing = __webpack_require__(0);
+var _Easing = __webpack_require__(1);
 
 var _Easing2 = _interopRequireDefault(_Easing);
 
-var _Tween = __webpack_require__(2);
+var _Tween = __webpack_require__(0);
 
 var _Tween2 = _interopRequireDefault(_Tween);
 
-var _Interpolation = __webpack_require__(1);
+var _Interpolation = __webpack_require__(2);
 
 var _Interpolation2 = _interopRequireDefault(_Interpolation);
 
-var _clone = __webpack_require__(3);
+var _Composite = __webpack_require__(7);
 
-var _clone2 = _interopRequireDefault(_clone);
+var _Composite2 = _interopRequireDefault(_Composite);
+
+var _Timeline = __webpack_require__(8);
+
+var _Timeline2 = _interopRequireDefault(_Timeline);
+
+var _Plugins = __webpack_require__(3);
+
+var _Plugins2 = _interopRequireDefault(_Plugins);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1918,6 +2143,9 @@ exports.emit = _core.emit;
 exports.Tween = _Tween2.default;
 exports.Easing = _Easing2.default;
 exports.Interpolation = _Interpolation2.default;
+exports.Composite = _Composite2.default;
+exports.Timeline = _Timeline2.default;
+exports.Plugins = _Plugins2.default;
 
 /***/ })
 /******/ ]);

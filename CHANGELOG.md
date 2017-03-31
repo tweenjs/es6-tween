@@ -1,5 +1,35 @@
 # CHANGELOG
 
+## v1.10.3: Much new features
+
+#### Fixes
+- Fixed bug where `Composite` plugin sometime doesn't worked
+
+#### NEW features
+- Added `Timeline` feature
+- Added `Plugins` feature
+- Added `Composite Scroll` feature
+- Added function argument passing feature
+- Added `Composite#Render` feature
+
+#### Deprecation
+- Deprecated `Composite#setStyle`
+- Deprecated `Composite#style`
+
+
+## v1.5.1: New `Composite` and deprecated function
+
+#### Fixes (Triggered v1.5.x+1)
+- To avoid error for tests, we removed `TWEEN.cloneTween(tween)` method
+
+#### NEW (Triggered v1.x+1.?:0)
+- feat(Composite): New `Composite` feature for working with DOM or drawers
+
+## v1.4.1: Fix small issue
+
+#### Fixes
+- Fixed `NPM_TOKEN` issue and now removed from `README`
+
 ## v1.4.0: Improvements
 
 #### Fixes

@@ -1,6 +1,6 @@
 {
 	"name": "es6-tween",
-	"version": "1.4.1",
+	"version": "1.10.3",
 	"description": "ES6 implementation of amazing tween.js",
 	"main": "dist/Tween.js",
 	"directories": {
@@ -15,12 +15,11 @@
 		"test": "npm run test-unit && npm run test-correctness && npm run test-style",
 		"test-unit": "nodeunit test/unit/nodeunitheadless.js",
 		"test-correctness": "jshint --config test/jshintrc src/Tween.js",
-		"test-style": "jscs --config test/jscs.json src/Tween.js",
-		"semantic-release": "semantic-release pre && npm publish && semantic-release post"
+		"test-style": "jscs --config test/jscs.json src/Tween.js"
 	},
 	"release": {
 		"debug": false,
-		"githubToken": "32558a13585b92da451b3d55f1623f36513586ea"
+		"githubToken": "00000"
 	},
 	"repository": {
 		"type": "git",

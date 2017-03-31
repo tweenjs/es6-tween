@@ -38,8 +38,10 @@
 	  frag = document.createDocumentFragment();
 	  
 	  const update = (object) => {
-		object.dom.style.transform = 'translate3d(' + object.x + 'px, 0px, 0px)';
+		object.dom.style.transform = object.transform;
 	  }
+
+	  const Style = TWEEN.Plugins.DOM;
 
 	  function createTest(count) {
 	  	var i;
@@ -57,14 +59,15 @@
 	  		div.style.backgroundColor = bgC;
 	  		nodes.push(div);
 	  		frag.appendChild(div);
-			var a = new TWEEN.Tween({ x : l, dom:div }).to({
-	  				x : tl
-	  			}, 1000).easing(TWEEN.Easing.Quadratic.InOut).on('update', update).repeat(Infinity).yoyo(true).start();
+			var layer = new TWEEN.Composite(div).applyPlugin('DOM');
+			var a = new TWEEN.Tween({ transform : `translate3d(${ l }px, 0px, 0px)`,dom:div }).to({
+	  				transform : `translate3d(${ tl }px, 0px, 0px)`
+	  			}, 1000).easing(TWEEN.Easing.Quadratic.InOut).on('update', layer.render).repeat(Infinity).yoyo(true).start();
 
 	  	}
 	  	c.appendChild(frag);
 	  }
-	  createTest(200);
+	  createTest(2);
       </script>
    
 </body></html>

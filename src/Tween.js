@@ -12,6 +12,10 @@ import Tween from './dist/Tween';
 
 import Interpolation from './dist/Interpolation';
 
-import cloneTween from './dist/clone';
+import Composite from './dist/Composite';
 
-export { getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit, Tween, Easing, Interpolation };
+import Timeline from './dist/Timeline';
+
+import Plugins from './dist/Plugins';
+
+export { getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit, Tween, Easing, Interpolation, Composite, Timeline, Plugins };
