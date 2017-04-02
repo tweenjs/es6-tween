@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.10.6
+
+#### Fixes
+- Fixed `dist` folder files (changed to latest)
+
+
 ## v1.10.5
 
 #### Improvements
