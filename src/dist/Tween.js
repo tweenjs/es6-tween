@@ -239,6 +239,7 @@ class Tween {
 						.start()
 						.stop();
 
+					this._valuesStart[property] = 1;
 					this._valuesEnd[property] = clonedTween;
 				}
 			} else if (typeof _valuesEnd[property] === "string" && typeof object[property] === "string" && Number_Match_RegEx.test(object[property]) && Number_Match_RegEx.test(_valuesEnd[property])) {
@@ -256,8 +257,19 @@ class Tween {
 					.stop();
 
 				clonedTween.join = true; // For string tweening
+				this._valuesStart[property] = 1;
 				this._valuesEnd[property] = clonedTween;
 
+			}
+
+			// If value presented as function,
+			// we should convert to value again by passing function
+			if (typeof object[property] === "function") {
+				object[property] = this.object[property] = object[property](this);
+			}
+
+			if (typeof _valuesEnd[property] === "function") {
+				this._valuesEnd[property] = _valuesEnd[property](this);
 			}
 
 			// If `to()` specifies a property that doesn't exist in the source object,
@@ -267,7 +279,7 @@ class Tween {
 			}
 
 			// If duplicate or non-tweening numerics matched,
-			// we should delete from _valuesEnd
+			// we should skip from adding to _valuesStart
 			if (object[property] === _valuesEnd[property]) {
 				continue;
 			}
@@ -494,7 +506,7 @@ class Tween {
 				this.emit(_reversed ? 'reverse' : 'repeat', object);
 
 				if (_yoyo) {
-					this.reverse();
+					this._reversed = !_reversed;
 				}
 
 				if (!_reversed && _repeatDelayTime) {
@@ -502,7 +514,7 @@ class Tween {
 				} else if (_reversed && _reverseDelayTime) {
 					this._startTime += _duration + _reverseDelayTime;
 				} else {
-					this._startTime += _duration + _delayTime;
+					this._startTime += _duration;
 				}
 
 				return true;

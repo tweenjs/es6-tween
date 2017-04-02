@@ -7,7 +7,6 @@ export default class Composite {
 
 		let self = this;
 
-		this.mode = 'dom';
 		this.domNode = domNode;
 		this.plugins = {};
 		let pluginList = this.plugins;
@@ -22,17 +21,24 @@ export default class Composite {
 
 			return this;
 		};
+
+		this.init = function (object) {
+
+			for (let p in pluginList) {
+
+				pluginList[p] && pluginList[p].init && pluginList[p].init(this, object);
+
+			}
+
+			return this;
+		}
+
 		return this;
 	}
 	applyPlugin(name) {
 		if (Plugins[name] !== undefined) {
 			this.plugins[name] = Plugins[name](this);
 		}
-		return this;
-	}
-	drawMode(mode = 'dom') {
-		// TO-DO: Implement SVG and Canvas mode
-		this.mode = mode;
 		return this;
 	}
 	set object(obj) {

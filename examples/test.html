@@ -1,73 +1,87 @@
-<html><head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, minimum-scale=1.0">
-      <title>Unim.js</title>
-	  <style>
-	  #container {
-	  width: 200px;
-	  height: auto;
-	  margin: 0 auto;
-	  position: relative;
-	  display: block;
-	  }
-	  
-	  .line {
-	  width: 200px;
-	  height: 2px;
-	  position: absolute;
-	  }
-	  </style>
-   </head>
-   <body>
+<html>
 
-	 <div id="container"></div>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0">
+	<title>TWEEN.js</title>
+	<style>
+		#container {
+			width: 200px;
+			height: auto;
+			margin: 0 auto;
+			position: relative;
+			display: block;
+		}
+		
+		.line {
+			width: 200px;
+			height: 2px;
+			position: absolute;
+		}
+	</style>
+</head>
 
-      <script src="../dist/Tween.js"></script>
-      <script>
-	  
-	  TWEEN.autoPlay(true);
+<body>
 
-	  function random(min, max) {
-	  	return Math.random() * (max - min) + min;
-	  }
+	<div id="container"></div>
 
-	  var nodes = [],
-	  c = document.getElementById("container"),
-	  easing = "quadraticInOut",
-	  wIh = window.innerHeight || screen.height - 40,
-	  frag = document.createDocumentFragment();
-	  
-	  const update = (object) => {
-		object.dom.style.transform = object.transform;
-	  }
+	<script src="../dist/Tween.js"></script>
+	<script>
+		TWEEN.autoPlay(true);
 
-	  const Style = TWEEN.Plugins.DOM;
+		function random(min, max) {
+			return Math.random() * (max - min) + min;
+		}
 
-	  function createTest(count) {
-	  	var i;
-	  	for (i = 0; i < count; i++) {
-	  		var div = document.createElement("div"),
-	  		bg = (Math.random() * 0xffffff) >> 0,
-	  		bgC = "#" + bg.toString(16),
-	  		l = Math.floor(random(-200, 200)),
-	  		dl = Math.floor(Math.random() * 1000),
-	  		tl = Math.floor(random(-200, 200));
-	  		div.setAttribute("class", "line");
-	  		div.style.top = [(Math.random() * wIh), "px"].join("");
-	  		div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
-	  		//div.style.left = l + "px";
-	  		div.style.backgroundColor = bgC;
-	  		nodes.push(div);
-	  		frag.appendChild(div);
-			var layer = new TWEEN.Composite(div).applyPlugin('DOM');
-			var a = new TWEEN.Tween({ transform : `translate3d(${ l }px, 0px, 0px)`,dom:div }).to({
-	  				transform : `translate3d(${ tl }px, 0px, 0px)`
-	  			}, 1000).easing(TWEEN.Easing.Quadratic.InOut).on('update', layer.render).repeat(Infinity).yoyo(true).start();
+		var nodes = [],
+			c = document.getElementById("container"),
+			easing = "quadraticInOut",
+			ratio = 0.9,
+			wIh = (window.innerHeight || screen.height - 40) * ratio,
+			wIw = window.innerWidth,
+			hwiw = (wIw / 5) * ratio,
+			frag = document.createDocumentFragment();
 
-	  	}
-	  	c.appendChild(frag);
-	  }
-	  createTest(2);
-      </script>
-   
-</body></html>
+		const update = (object) => {
+			object.dom.style.transform = object.transform;
+		}
+
+		const Style = TWEEN.Plugins.DOM;
+
+		function createTest(count) {
+			var i;
+			for (i = 0; i < count; i++) {
+				var div = document.createElement("div"),
+					bg = (Math.random() * 0xffffff) >> 0,
+					bgC = "#" + bg.toString(16),
+					l = Math.floor(random(-200, 200)),
+					dl = Math.floor(Math.random() * 1000),
+					tl = Math.floor(random(-200, 200));
+				div.setAttribute("class", "line");
+				div.style.top = [(Math.random() * wIh), "px"].join("");
+				div.style.transform = "translate3d(" + -hwiw + "px, 0px, 0px)";
+				//div.style.left = l + "px";
+				div.style.backgroundColor = bgC;
+				var layer = new TWEEN.Composite(div).applyPlugin('DOM');
+				var a = new TWEEN.Tween({ transform: `translate3d(${ -hwiw }px, 0px, 0px)` }).to({
+					transform: `translate3d(${hwiw}px, 0px, 0px)`
+				}, 1000).easing(TWEEN.Easing.Circular.InOut).on('update', layer.render).repeat(Infinity).yoyo(true);
+				nodes.push({ layer: layer, node: div, tween: a });
+
+			}
+			nodes.sort((a, b) => {
+				return parseFloat(a.node.style.top) - parseFloat(b.node.style.top);
+			}).map((node, i) => {
+				frag.appendChild(node.node);
+				node.tween.delay(delay => {
+					return (i * (i % 2 ? 15 : -15));
+				}).start();
+			})
+			c.appendChild(frag);
+		}
+		createTest(200);
+	</script>
+
+</body>
+
+</html>

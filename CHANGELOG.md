@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## v1.10.5
+
+#### Improvements
+- Improved demo with more real example
+
+#### NEW features
+- Added `Composite#Init` feature
+
 ## v1.10.3: Much new features
 
 #### Fixes

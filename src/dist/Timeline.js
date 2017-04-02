@@ -16,9 +16,10 @@ export default class Timeline {
 				for ( let p in tween ) {
 					tweenExample[p](tween[p]);
 				}
+			this.add(tweenExample)
 		} else if (typeof tween === "object") {
 			tween.map(add => {
-			Timeline.add.call(this, add);
+				this.add(add);
 			});
 		}
 		return this;

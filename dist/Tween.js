@@ -366,6 +366,7 @@ var Tween = function () {
 							_events: {}
 						}).start().stop();
 
+						this._valuesStart[property] = 1;
 						this._valuesEnd[property] = _clonedTween;
 					}
 				} else if (typeof _valuesEnd[property] === "string" && typeof object[property] === "string" && Number_Match_RegEx.test(object[property]) && Number_Match_RegEx.test(_valuesEnd[property])) {
@@ -381,7 +382,18 @@ var Tween = function () {
 					}).start().stop();
 
 					_clonedTween2.join = true; // For string tweening
+					this._valuesStart[property] = 1;
 					this._valuesEnd[property] = _clonedTween2;
+				}
+
+				// If value presented as function,
+				// we should convert to value again by passing function
+				if (typeof object[property] === "function") {
+					object[property] = this.object[property] = object[property](this);
+				}
+
+				if (typeof _valuesEnd[property] === "function") {
+					this._valuesEnd[property] = _valuesEnd[property](this);
 				}
 
 				// If `to()` specifies a property that doesn't exist in the source object,
@@ -391,7 +403,7 @@ var Tween = function () {
 				}
 
 				// If duplicate or non-tweening numerics matched,
-				// we should delete from _valuesEnd
+				// we should skip from adding to _valuesStart
 				if (object[property] === _valuesEnd[property]) {
 					continue;
 				}
@@ -622,7 +634,7 @@ var Tween = function () {
 					this.emit(_reversed ? 'reverse' : 'repeat', object);
 
 					if (_yoyo) {
-						this.reverse();
+						this._reversed = !_reversed;
 					}
 
 					if (!_reversed && _repeatDelayTime) {
@@ -630,7 +642,7 @@ var Tween = function () {
 					} else if (_reversed && _reverseDelayTime) {
 						this._startTime += _duration + _reverseDelayTime;
 					} else {
-						this._startTime += _duration + _delayTime;
+						this._startTime += _duration;
 					}
 
 					return true;
@@ -1634,7 +1646,6 @@ var Composite = function () {
 
 		var self = this;
 
-		this.mode = 'dom';
 		this.domNode = domNode;
 		this.plugins = {};
 		var pluginList = this.plugins;
@@ -1648,6 +1659,17 @@ var Composite = function () {
 
 			return this;
 		};
+
+		this.init = function (object) {
+
+			for (var p in pluginList) {
+
+				pluginList[p] && pluginList[p].init && pluginList[p].init(this, object);
+			}
+
+			return this;
+		};
+
 		return this;
 	}
 
@@ -1657,15 +1679,6 @@ var Composite = function () {
 			if (_Plugins2.default[name] !== undefined) {
 				this.plugins[name] = _Plugins2.default[name](this);
 			}
-			return this;
-		}
-	}, {
-		key: 'drawMode',
-		value: function drawMode() {
-			var mode = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'dom';
-
-			// TO-DO: Implement SVG and Canvas mode
-			this.mode = mode;
 			return this;
 		}
 	}, {
@@ -1737,9 +1750,10 @@ var Timeline = function () {
 				for (var p in tween) {
 					tweenExample[p](tween[p]);
 				}
+				this.add(tweenExample);
 			} else if ((typeof tween === "undefined" ? "undefined" : _typeof(tween)) === "object") {
 				tween.map(function (add) {
-					Timeline.add.call(_this, add);
+					_this.add(add);
 				});
 			}
 			return this;
