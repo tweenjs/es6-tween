@@ -22,6 +22,23 @@ export default class Composite {
 			return this;
 		};
 
+		this.fetch = function () {
+
+			if (Object.keys(this.object).length) {
+
+				return this;
+
+			}
+
+			for (let p in pluginList) {
+
+				pluginList[p] && pluginList[p].fetch && pluginList[p].fetch(this);
+
+			}
+
+			return this;
+		};
+
 		this.init = function (object) {
 
 			for (let p in pluginList) {

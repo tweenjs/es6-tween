@@ -281,22 +281,6 @@
 
 			},
 
-			'Tween function property': function(test) {
-
-				var my_function = function() {};
-
-				var obj = { x: my_function },
-					t = new TWEEN.Tween( obj );
-
-				t.to( { x: my_function } );
-				t.start( 0 );
-				t.update( 1000 );
-
-				test.ok( obj.x === my_function );
-				test.done();
-
-			},
-
 			'Tween boolean property': function(test) {
 
 				var obj = { x: true },
@@ -1005,7 +989,7 @@
 
 			},
 
-			'Test delay adds delay before each repeat': function(test) {
+			'Test delay not adds delay before each repeat': function(test) {
 
 				// If repeatDelay isn't specified then delay is used since
 				// that's the way it worked before repeatDelay was added.
@@ -1027,15 +1011,12 @@
 				test.equal( obj.x, 100 );
 
 				TWEEN.update( 250 );
-				test.equal( obj.x, 100 );
-
-				TWEEN.update( 300 );
 				test.equal( obj.x, 0 );
 
-				TWEEN.update( 350 );
+				TWEEN.update( 300 );
 				test.equal( obj.x, 50 );
 
-				TWEEN.update( 400 );
+				TWEEN.update( 350 );
 				test.equal( obj.x, 100 );
 
 				test.done();

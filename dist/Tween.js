@@ -1321,13 +1321,44 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var cache = {
+	filter: {
+		grayscale: 1,
+		brightness: 1,
+		sepia: 1,
+		invert: 1,
+		saturate: 1,
+		contrast: 1,
+		blur: 1,
+		hueRotate: 1,
+		dropShadow: 1
+	},
+	transform: {
+		translate: 1,
+		translateX: 1,
+		translateY: 1,
+		translateZ: 1,
+		rotate: 1,
+		rotateX: 1,
+		rotateY: 1,
+		rotateZ: 1,
+		scale: 1,
+		scaleX: 1,
+		scaleY: 1,
+		scaleZ: 1,
+		skew: 1,
+		skewX: 1,
+		skewY: 1
+	}
+};
+
 var Plugins = function () {
 	function Plugins() {
 		_classCallCheck(this, Plugins);
 	}
 
 	_createClass(Plugins, null, [{
-		key: "DOM",
+		key: 'DOM',
 		value: function DOM(Composite) {
 			var layer = Composite.domNode,
 			    style = layer.style;
@@ -1340,7 +1371,47 @@ var Plugins = function () {
 			};
 		}
 	}, {
-		key: "Scroll",
+		key: 'Transform',
+		value: function Transform(Composite) {
+			var layer = Composite.domNode,
+			    style = layer.style;
+			return {
+				update: function update(Tween, RenderObject) {
+					var transform = '';
+					for (var p in RenderObject) {
+						if (p === 'x' || p === 'y' || p === 'z') {
+							transform += ' translate3d( ' + (RenderObject.x || '0px') + ', ' + (RenderObject.y || '0px') + ', ' + (RenderObject.z || '0px') + ')';
+						} else if (cache.transform[p]) {
+							transform += ' ' + p + '( ' + RenderObject[p] + ')';
+						}
+					}
+					if (transform) {
+						style.transform = transform;
+					}
+				}
+			};
+		}
+	}, {
+		key: 'Filter',
+		value: function Filter(Composite) {
+			var layer = Composite.domNode,
+			    style = layer.style;
+			return {
+				update: function update(Tween, RenderObject) {
+					var filter = '';
+					for (var p in RenderObject) {
+						if (cache.filter[p]) {
+							filter += ' ' + p + '( ' + RenderObject[p] + ')';
+						}
+					}
+					if (filter) {
+						style.webkitFilter = style.filter = filter;
+					}
+				}
+			};
+		}
+	}, {
+		key: 'Scroll',
 		value: function Scroll(Composite) {
 			var layer = Composite.domNode;
 			return {
@@ -1623,7 +1694,7 @@ function cloneTween() {
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+			value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -1641,65 +1712,80 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Composite = function () {
-	function Composite(domNode) {
-		_classCallCheck(this, Composite);
+			function Composite(domNode) {
+						_classCallCheck(this, Composite);
 
-		var self = this;
+						var self = this;
 
-		this.domNode = domNode;
-		this.plugins = {};
-		var pluginList = this.plugins;
+						this.domNode = domNode;
+						this.plugins = {};
+						var pluginList = this.plugins;
 
-		this.render = function (object) {
+						this.render = function (object) {
 
-			for (var p in pluginList) {
+									for (var p in pluginList) {
 
-				pluginList[p] && pluginList[p].update && pluginList[p].update(this, object);
+												pluginList[p] && pluginList[p].update && pluginList[p].update(this, object);
+									}
+
+									return this;
+						};
+
+						this.fetch = function () {
+
+									if (Object.keys(this.object).length) {
+
+												return this;
+									}
+
+									for (var p in pluginList) {
+
+												pluginList[p] && pluginList[p].fetch && pluginList[p].fetch(this);
+									}
+
+									return this;
+						};
+
+						this.init = function (object) {
+
+									for (var p in pluginList) {
+
+												pluginList[p] && pluginList[p].init && pluginList[p].init(this, object);
+									}
+
+									return this;
+						};
+
+						return this;
 			}
 
-			return this;
-		};
+			_createClass(Composite, [{
+						key: 'applyPlugin',
+						value: function applyPlugin(name) {
+									if (_Plugins2.default[name] !== undefined) {
+												this.plugins[name] = _Plugins2.default[name](this);
+									}
+									return this;
+						}
+			}, {
+						key: 'cloneLayer',
+						value: function cloneLayer() {
+									return (0, _clone2.default)(this, {}, Composite);
+						}
+			}, {
+						key: 'appendTo',
+						value: function appendTo(node) {
+									node.appendChild(this.domNode);
+									return this;
+						}
+			}, {
+						key: 'object',
+						set: function set(obj) {
+									return this.render(obj);
+						}
+			}]);
 
-		this.init = function (object) {
-
-			for (var p in pluginList) {
-
-				pluginList[p] && pluginList[p].init && pluginList[p].init(this, object);
-			}
-
-			return this;
-		};
-
-		return this;
-	}
-
-	_createClass(Composite, [{
-		key: 'applyPlugin',
-		value: function applyPlugin(name) {
-			if (_Plugins2.default[name] !== undefined) {
-				this.plugins[name] = _Plugins2.default[name](this);
-			}
-			return this;
-		}
-	}, {
-		key: 'cloneLayer',
-		value: function cloneLayer() {
-			return (0, _clone2.default)(this, {}, Composite);
-		}
-	}, {
-		key: 'appendTo',
-		value: function appendTo(node) {
-			node.appendChild(this.domNode);
-			return this;
-		}
-	}, {
-		key: 'object',
-		set: function set(obj) {
-			return this.render(obj);
-		}
-	}]);
-
-	return Composite;
+			return Composite;
 }();
 
 exports.default = Composite;

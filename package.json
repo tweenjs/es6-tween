@@ -1,6 +1,6 @@
 {
 	"name": "es6-tween",
-	"version": "1.10.6",
+	"version": "1.11.1",
 	"description": "ES6 implementation of amazing tween.js",
 	"main": "dist/Tween.js",
 	"directories": {
@@ -17,10 +17,6 @@
 		"test-correctness": "jshint --config test/jshintrc src/Tween.js",
 		"test-style": "jscs --config test/jscs.json src/Tween.js"
 	},
-	"release": {
-		"debug": false,
-		"githubToken": "00000"
-	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/tweenjs/es6-tween.git"
@@ -34,7 +30,7 @@
 		"easing",
 		"emit"
 	],
-	"author": "sole, dalisoft",
+	"author": "es6-tween contributors",
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/tweenjs/es6-tween/issues"
@@ -56,8 +52,7 @@
 		"yargs": "6.6.0",
 		"jscs": "^2.2.0",
 		"jshint": "^2.8.0",
-		"nodeunit": "^0.9.1",
-		"semantic-release": "^6.3.2"
+		"nodeunit": "^0.9.1"
 	},
 	"dependencies": {}
 }

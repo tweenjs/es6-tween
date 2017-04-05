@@ -48,6 +48,28 @@
 
 		const Style = TWEEN.Plugins.DOM;
 
+		const { Plugins } = TWEEN;
+
+		class Morph extends Plugins {
+			static Morph(Composite) {
+				let layer = Composite.domNode,
+				style = layer.style;
+				return {
+					update(Tween, RenderObject) {
+						let filter = '';
+						for (let p in RenderObject) {
+							if (p.indexOf('blur') !== -1 || p.indexOf('rotate') !== -1 || p.indexOf('shadow') !== -1 || p.indexOf('brightness') !== -1) {
+								filter += ` ${ p }( ${ RenderObject[p] })`;
+							}
+						}
+						if (filter) {
+							style.filter = filter;
+						}
+					}
+				}
+			}
+		}
+
 		function createTest(count) {
 			var i;
 			for (i = 0; i < count; i++) {
@@ -62,10 +84,10 @@
 				div.style.transform = "translate3d(" + -hwiw + "px, 0px, 0px)";
 				//div.style.left = l + "px";
 				div.style.backgroundColor = bgC;
-				var layer = new TWEEN.Composite(div).applyPlugin('DOM');
-				var a = new TWEEN.Tween({ transform: `translate3d(${ -hwiw }px, 0px, 0px)` }).to({
-					transform: `translate3d(${hwiw}px, 0px, 0px)`
-				}, 1000).easing(TWEEN.Easing.Circular.InOut).on('update', layer.render).repeat(Infinity).yoyo(true);
+				var layer = new TWEEN.Composite(div).applyPlugin('Transform');
+				var a = new TWEEN.Tween({ x: -hwiw + 'px' }).to({
+					x: hwiw + 'px'
+				}, 1000).easing(TWEEN.Easing.Circular.InOut).on('update', layer.render).delay(15).repeat(Infinity).yoyo(true);
 				nodes.push({ layer: layer, node: div, tween: a });
 
 			}
@@ -74,7 +96,7 @@
 			}).map((node, i) => {
 				frag.appendChild(node.node);
 				node.tween.delay(delay => {
-					return (i * (i % 2 ? 15 : -15));
+					return (i * (i % 2 ? delay : -delay));
 				}).start();
 			})
 			c.appendChild(frag);
