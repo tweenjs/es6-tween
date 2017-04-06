@@ -65,22 +65,14 @@ Sorry for that, but `cdnjs` doesn't accept none of my app, so if someone can fro
 import * as TWEEN from './node_modules/es6-tween/src/Tween';
 ```
 
-#### Use `yarn`
-```bash
-yarn add es6-tween
-```
-
-
-#### Use `npm` or `bower`
+#### Using `npm`, `yarn` or `bower`
 
 ```bash
-npm install es6-tween
-```
-
-or
-
-```bash
-bower install es6-tween
+$ yarn add es6-tween
+# or
+$ npm install es6-tween
+# or
+$ bower install es6-tween
 ```
 
 Then include the Tween.js module with the standard node.js `require`:

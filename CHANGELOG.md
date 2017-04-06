@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## v1.11.2
+
+#### NEW
+- Moved to comment like `semantic-release`
+
+#### Commits
+* feat(Composite): added `#fetch` method
+* fix(Tween#delay): delay now adds only at start
+* fix(TWEEN#plugins): fixed `Transform` plugin
+* feat(TWEEN#plugins): added `Filter` plugin
+
 ## v1.10.6
 
 #### Fixes
