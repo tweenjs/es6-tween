@@ -52,9 +52,13 @@ You can also reference a @jsdelivr-hosted version in your code, thanks to [jsdel
 <script src="https://cdn.jsdelivr.net/es6-tween/latest/Tween.min.js"></script>
 ```
 
-#### Using `cdnjs` (TO-DO)
+#### Using [cdnjs](https://github.com/cdnjs) hosted version
 
-Sorry for that, but `cdnjs` doesn't accept none of my app, so if someone can from `cdnjs` contributors, would be nice.
+You can also reference a @cdnjs-hosted version in your code, thanks to [cdnjs](https://github.com/cdnjs). For example:
+
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/es6-tween/1.11.2/Tween.min.js"></script>
+```
 
 
 ### More advanced users might want to...
