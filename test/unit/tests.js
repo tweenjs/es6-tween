@@ -1011,10 +1011,10 @@
 				test.equal( obj.x, 100 );
 
 				TWEEN.update( 250 );
-				test.equal( obj.x, 0 );
+				test.equal( obj.x, 50 );
 
 				TWEEN.update( 300 );
-				test.equal( obj.x, 50 );
+				test.equal( obj.x, 100 );
 
 				TWEEN.update( 350 );
 				test.equal( obj.x, 100 );

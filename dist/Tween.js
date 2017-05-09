@@ -125,6 +125,7 @@ var Number_Match_RegEx = /\s+|([A-Za-z?().,{}:""\[\]#]+)|([-+\/*%]+=)?([-+*\/%]+
 var Tween = function () {
 	function Tween() {
 		var object = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+		var instate = arguments[1];
 
 		_classCallCheck(this, Tween);
 
@@ -148,6 +149,11 @@ var Tween = function () {
 		this._onStartCallbackFired = false;
 		this._events = {};
 		this._pausedTime = 0;
+
+		if (instate && instate.to) {
+
+			return new Tween(object).to(instate.to, instate);
+		}
 
 		return this;
 	}
@@ -323,7 +329,9 @@ var Tween = function () {
 				this._duration = typeof duration === "function" ? duration(this._duration) : duration;
 			} else if ((typeof duration === 'undefined' ? 'undefined' : _typeof(duration)) === "object") {
 				for (var prop in duration) {
-					this[prop](typeof duration[prop] === "function" ? duration[prop](this._duration) : duration);
+					if (this[prop]) {
+						this[prop](typeof duration[prop] === "function" ? duration[prop](this._duration) : duration);
+					}
 				}
 			}
 
