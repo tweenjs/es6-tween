@@ -16,7 +16,7 @@ import toNumber from './toNumber';
 const Number_Match_RegEx = /\s+|([A-Za-z?().,{}:""\[\]#]+)|([-+\/*%]+=)?([-+*\/%]+)?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/gi;
 
 class Tween {
-	constructor(object = {}) {
+	constructor(object = {}, instate) {
 
 		this.object = object;
 		this._valuesStart = Tween.createEmptyConst(object);
@@ -38,6 +38,12 @@ class Tween {
 		this._onStartCallbackFired = false;
 		this._events = {};
 		this._pausedTime = 0;
+
+		if (instate && instate.to) {
+
+			return new Tween(object).to(instate.to, instate);
+
+		}
 
 		return this;
 
@@ -191,7 +197,9 @@ class Tween {
 			this._duration = typeof(duration) === "function" ? duration(this._duration) : duration;
 		} else if (typeof duration === "object") {
 			for (let prop in duration) {
+				if (this[prop]) {
 				this[prop](typeof duration[prop] === "function" ? duration[prop](this._duration) : duration);
+				}
 			}
 		}
 
