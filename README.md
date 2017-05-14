@@ -180,7 +180,7 @@ Maintainers: [sole](https://github.com/sole), [dalisoft](https://github.com/dali
 * @sole (author of this library)
 * [tween.js contributors](https://github.com/tweenjs/tween.js/graphs/contributors)
 * @michaelvillar for physics easing
-* Webpack, Babel, Travis CI, semantic-release and their teams, devs and supporters
+* Webpack, Babel, Travis CI, semantic-release and others (make issue, if i'm missed you) with their teams, devs and supporters
 
 ## Projects using tween.js
 
