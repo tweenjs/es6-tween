@@ -16,7 +16,7 @@
 		"test-unit": "nodeunit test/unit/nodeunitheadless.js",
 		"test-correctness": "jshint --config test/jshintrc src/Tween.js",
 		"test-style": "jscs --config test/jscs.json src/Tween.js",
-		"semantic-release": "semantic-release pre && npm publish && semantic-release post --owner=sole --user=dalisoft",
+		"semantic-release": "semantic-release pre && npm publish && semantic-release post --owner=sole --user=dalisoft"
 	},
 	"repository": {
 		"type": "git",
