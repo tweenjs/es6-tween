@@ -9,12 +9,13 @@ node_js:
   - "6"
 before_install:
   - npm i -g npm@^2.0.0
-before_deploy:
-  - npm run dist
 before_script:
   - npm prune
 script:
   - npm run test
 after_success:
   - npm run semantic-release
-skip_cleanup: true
+deploy:
+  skip_cleanup: true
+  before_deploy:
+	- npm run dist
