@@ -1,4 +1,4 @@
-/* Shims will be deprecated in next update */
+/* Shims will be deprecated in next update, please update browser */
 
 import './shim/object_assign';
 
