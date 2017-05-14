@@ -7,15 +7,12 @@ notifications:
   email: false
 node_js:
   - "6"
-before_deploy:
-  - npm run dist
 before_install:
   - npm i -g npm@^2.0.0
 before_script:
   - npm prune
+  - npm run dist
 script:
   - npm run test
 after_success:
   - npm run semantic-release
-deploy:
-  skip_cleanup: true
