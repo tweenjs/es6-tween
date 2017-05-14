@@ -15,7 +15,8 @@
 		"test": "npm run test-unit && npm run test-correctness && npm run test-style",
 		"test-unit": "nodeunit test/unit/nodeunitheadless.js",
 		"test-correctness": "jshint --config test/jshintrc src/Tween.js",
-		"test-style": "jscs --config test/jscs.json src/Tween.js"
+		"test-style": "jscs --config test/jscs.json src/Tween.js",
+		"semantic-release": "semantic-release pre && npm publish && semantic-release post --owner=sole --user=dalisoft",
 	},
 	"repository": {
 		"type": "git",
@@ -35,6 +36,9 @@
 	"bugs": {
 		"url": "https://github.com/tweenjs/es6-tween/issues"
 	},
+	"release": {
+		"branch": "master"
+	},
 	"homepage": "https://github.com/tweenjs/es6-tween#readme",
 	"devDependencies": {
 		"babel": "6.5.2",
@@ -52,7 +56,8 @@
 		"yargs": "6.6.0",
 		"jscs": "^2.2.0",
 		"jshint": "^2.8.0",
-		"nodeunit": "^0.9.1"
+		"nodeunit": "^0.9.1",
+		"semantic-release": "latest"
 	},
 	"dependencies": {}
 }

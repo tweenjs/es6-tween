@@ -1,3 +1,5 @@
+/* Shims will be deprecated in next update */
+
 import './shim/object_assign';
 
 import './shim/raf';
