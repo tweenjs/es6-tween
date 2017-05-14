@@ -162,15 +162,25 @@ if running the tests for the first time, to install additional dependencies for 
 npm test
 ```
 
+or you can go [here](https://travis-ci.org/tweenjs/es6-tween) for more information, tests and etc...
+
 every time you want to run the tests.
 
 If you want to add any feature or change existing features, you *must* run the tests to make sure you didn't break anything else. If you send a PR to add something new and it doesn't have tests, or the tests don't pass, the PR won't be accepted. See [contributing](CONTRIBUTING.md) for more information.
+
+Every PR, Commits and Update now automacilly updates the version based on commit message with `semantic-release` with `Travis CI`
 
 ## People
 
 Maintainers: [sole](https://github.com/sole), [dalisoft](https://github.com/dalisoft).
 
 [All contributors](http://github.com/tweenjs/tween.js/contributors).
+
+## Thanks to: 
+* @sole (author of this library)
+* [tween.js contributors](https://github.com/tweenjs/tween.js/graphs/contributors)
+* @michaelvillar for physics easing
+* Webpack, Babel, Travis CI, semantic-release and their teams, devs and supporters
 
 ## Projects using tween.js
 
