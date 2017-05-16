@@ -66,7 +66,7 @@ You can also reference a @cdnjs-hosted version in your code, thanks to [cdnjs](h
 #### Use `import`
 
 ```javascript
-import * as TWEEN from './node_modules/es6-tween/src/Tween';
+import TWEEN, { Easing, Interpolation, Tween } from 'es6-tween';
 ```
 
 #### Using `npm`, `yarn` or `bower`
@@ -94,7 +94,7 @@ t.start();
 
 You can run script commands to build modules into single `UMD` compatible file:
 
-#### Use `Webpack + Babel Transpiler`
+#### Use `Rollup + Buble Transpiler`
 
 ```bash
 npm run build
@@ -180,7 +180,7 @@ Maintainers: [sole](https://github.com/sole), [dalisoft](https://github.com/dali
 * @sole (author of this library)
 * [tween.js contributors](https://github.com/tweenjs/tween.js/graphs/contributors)
 * @michaelvillar for physics easing
-* Webpack, Babel, Travis CI, semantic-release and others (make issue, if i'm missed you) with their teams, devs and supporters
+* Rollup, Buble, Travis CI, semantic-release and others (make issue, if i'm missed you) with their teams, devs and supporters
 
 ## Projects using tween.js
 
