@@ -1,4 +1,4 @@
-let ROOT = typeof(window) !== "undefined" ? window : typeof(global) !== "undefined" ? global : this;
+let ROOT = typeof(window) !== "undefined" ? window : typeof(global) !== "undefined" ? global : {};
 let _vendor = ['webkit', 'moz', 'ms', 'o'];
 let animFrame = 'AnimationFrame';
 let rafSuffixForVendor = 'Request' + animFrame;
