@@ -1,10 +1,11 @@
-// TWEEN.js
+
+
 let _tweens = [];
 let isStarted = false;
 let _autoPlay = false;
 let _tick;
 let _events = {};
-let root = typeof (window) !== "undefined" ? window : typeof (global) !== "undefined" ? global : this;
+let root = typeof (window) !== "undefined" ? window : typeof (global) !== "undefined" ? global : {};
 
 const getAll = () => {
 	return _tweens;
@@ -18,7 +19,7 @@ const removeAll = () => {
 	_tweens = []
 }
 
-const emit = (name, a, b, c, d, e) => {
+const emit = function(name, a, b, c, d, e) {
 	let eventFn = _events[name];
 
 	if (eventFn) {
