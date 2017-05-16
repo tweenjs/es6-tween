@@ -31,7 +31,8 @@
 		"numeric",
 		"interpolation",
 		"easing",
-		"emit"
+		"emit",
+		"lightweight"
 	],
 	"author": "es6-tween contributors",
 	"license": "MIT",
