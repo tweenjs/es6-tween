@@ -10,7 +10,7 @@
 	"scripts": {
 		"build": "rollup -c --environment BUILD:prod",
 		"source": "rollup -c --sourcemap",
-		"prepublish": "npm run source && npm run build && yarn",
+		"prepublish": "npm run source && npm run build",
 		"dev": "rollup -c -w --sourcemap",
 		"dist_test": "npm run dist && npm run test",
 		"test": "npm run test-unit && npm run test-correctness && npm run test-style",
