@@ -8,10 +8,9 @@
 		"example": "examples"
 	},
 	"scripts": {
-		"build": "webpack --env build",
 		"build": "rollup -c --environment BUILD:prod",
 		"source": "rollup -c --sourcemap",
-		"dist": "npm run source && npm run build",
+		"prepublish": "npm run source && npm run build && yarn",
 		"dev": "rollup -c -w --sourcemap",
 		"dist_test": "npm run dist && npm run test",
 		"test": "npm run test-unit && npm run test-correctness && npm run test-style",

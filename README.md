@@ -36,28 +36,12 @@ Download the [library](https://raw.githubusercontent.com/tweenjs/es6-tween/maste
 
 ### CDN-Hosted version
 
-#### Using `unpkg` hosted version
-
-You can also reference a `unpkg`-hosted version in your code, thanks to <a href="https://unpkg.com/#/">unpkg</a>. For example:
+* See [cdnjs-hosted version](cdnjs.com/libraries/es6-tween) for get which result you want
 
 ```html
-<script src="https://unpkg.com/es6-tween/dist/Tween.min.js"></script>
-```
-
-#### Using [jsdelivr](https://github.com/jsdelivr) hosted version
-
-You can also reference a @jsdelivr-hosted version in your code, thanks to [jsdelivr](https://github.com/jsdelivr). For example:
-
-```html
-<script src="https://cdn.jsdelivr.net/es6-tween/latest/Tween.min.js"></script>
-```
-
-#### Using [cdnjs](https://github.com/cdnjs) hosted version
-
-You can also reference a @cdnjs-hosted version in your code, thanks to [cdnjs](https://github.com/cdnjs). For example:
-
-```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/es6-tween/1.11.2/Tween.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-tween@latest/dist/Tween.min.js" defer></script>
+<!-- or may you want -->
+<script src="https://unpkg.com/es6-tween@latest/dist/Tween.min.js" defer></script>
 ```
 
 
@@ -82,22 +66,24 @@ $ bower install es6-tween
 Then include the Tween.js module with the standard node.js `require`:
 
 ```javascript
-let TWEEN = require('es6-tween');
+const TWEEN = require('es6-tween');
 ```
 
 And you can use Tween.js as in all other examples--for example:
 
 ```javascript
-let t = new TWEEN.Tween( /* etc */ );
+const t = new TWEEN.Tween( /* etc */ );
 t.start();
 ```
 
 You can run script commands to build modules into single `UMD` compatible file:
 
-#### Use `Rollup + Buble Transpiler`
+#### Using commands
 
 ```bash
-npm run build
+$ npm run build # builds production files
+# or
+$ npm run dev # builds and watchs development files
 ```
 
 Then reference the library source:
