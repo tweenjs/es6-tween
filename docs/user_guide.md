@@ -50,8 +50,8 @@ This will take care of updating all active tweens; after 1 second (i.e. 1000 mil
 But unless you print the value of `x` to the console, you can't see its value changing. You might want to use the `onUpdate` callback:
 
 ````javascript
-tween.on('update', (object) => {
-	console.log(object.x);
+tween.on('update', ({x}) => {
+	console.log(x);
 });
 ````
 
@@ -288,9 +288,9 @@ let trickyObjTween = new TWEEN.Tween({
 	propertyB: trickyObj.getPropertyB()
 })
 	.to({ propertyA: 100, propertyB: 200 })
-	.on('update', (object) => {
-		object.setA( object.propertyA );
-		object.setB( object.propertyB );
+	.on('update', ({propertyA, propertyB) => {
+		object.setA( propertyA );
+		object.setB( propertyB );
 	});
 ````
 
@@ -405,9 +405,9 @@ When you try to animate the position of an element in the page, the easiest solu
 let element = document.getElementById('myElement');
 let tween = new TWEEN.Tween({ top: 0, left: 0 })
 	.to({ top: 100, left: 100 }, 1000)
-	.on('update', (object) => {
-		element.style.top = object.top + 'px';
-		element.style.left = object.left + 'px';
+	.on('update', ({top, left}) => {
+		element.style.top = top + 'px';
+		element.style.left = left + 'px';
 	});
 ```
 
@@ -415,10 +415,10 @@ but this is really inefficient because altering these properties forces the brow
 
 ```javascript
 let element = document.getElementById('myElement');
-let tween = new TWEEN.Tween({ top: 0, left: 0 })
-	.to({ top: 100, left: 100 }, 1000)
-	.on('update', (object) => {
-		element.style.transform = 'translate(' + object.left + 'px, ' + object.top + 'px);';
+let tween = new TWEEN.Tween({ x: 0, y: 0 })
+	.to({ x: 100, y: 100 }, 1000)
+	.on('update', ({x, y}) => {
+		element.style.transform = `translate3d(${x}px, ${y}px,0);`;
 	});
 ```
 
