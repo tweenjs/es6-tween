@@ -20,4 +20,6 @@ import Timeline from './dist/Timeline';
 
 import Plugins from './dist/Plugins';
 
-export { getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit, Tween, Easing, Interpolation, Composite, Timeline, Plugins };
+import { TweenInit } from './dist/Decorators';
+
+export { TweenInit, getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit, Tween, Easing, Interpolation, Composite, Timeline, Plugins };
