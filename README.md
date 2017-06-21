@@ -13,16 +13,12 @@ ES6 implementation of <a href="https://github.com/tweenjs/tween.js">tween.js</a>
 let coords = { x: 0, y: 0 };
 let tween = new TWEEN.Tween(coords)
 	.to({ x: 100, y: 100 }, 1000)
-	.on('update', object => {
-		console.log(object.x, object.y);
+	.on('update', ({x, y}) => {
+		console.log(`The values is x: ${x} and y: ${y}`);
 	})
 	.start();
 
-requestAnimationFrame(animate);
-
-function animate(time) {
-	requestAnimationFrame(animate);
-	TWEEN.update(time);
+TWEEN.autoPlay(true); // simplify the your code
 }
 ```
 
@@ -47,10 +43,29 @@ Download the [library](https://raw.githubusercontent.com/tweenjs/es6-tween/maste
 
 ### More advanced users might want to...
 
-#### Use `import`
+#### Using `grunt`
+
+PR are welcome...
+
+#### Using `gulp`
+
+PR are welcome...
+
+#### Using `import`
 
 ```javascript
-import TWEEN, { Easing, Interpolation, Tween } from 'es6-tween';
+import { Easing, Interpolation, Tween, autoPlay } from 'es6-tween';
+```
+
+#### Using [getlibs](https://github.com/activewidgets/getlibs)
+
+```html
+<script src="https://unpkg.com/getlibs"></script>
+<script type="x-module">
+import { Easing, Interpolation, Tween, autoPlay } from 'es6-tween';
+// or you can follow second way
+// const { Tween, Easing, Interpolation, autoPlay } = require('es6-tween');
+</script>
 ```
 
 #### Using `npm`, `yarn` or `bower`
@@ -66,13 +81,13 @@ $ bower install es6-tween
 Then include the Tween.js module with the standard node.js `require`:
 
 ```javascript
-const TWEEN = require('es6-tween');
+const { Tween, Easing, Interpolation, autoPlay } = require('es6-tween');
 ```
 
 And you can use Tween.js as in all other examples--for example:
 
 ```javascript
-const t = new TWEEN.Tween( /* etc */ );
+const t = new Tween( /* etc */ );
 t.start();
 ```
 
@@ -105,10 +120,11 @@ git reset --hard
 ## Features
 
 * Does one thing and one thing only: tween properties
-* Doesn't take care of CSS units (e.g. appending `px`)
-* Doesn't interpolate colours
+* Takes care of CSS units (e.g. appending `px`)
+* Can interpolate colours (partially)
 * Easing functions are reusable outside of Tween
 * Can also use custom easing functions
+* Much of easings
 
 ## Documentation
 
@@ -120,20 +136,7 @@ git reset --hard
 
 ## Examples
 
-[![Custom functions](http://tweenjs.github.io/tween.js/assets/examples/03_graphs.png)](http://tweenjs.github.io/tween.js/examples/12_graphs_custom_functions.html)
-[source](./examples/12_graphs_custom_functions.html)
-[![Stop all chained tweens](http://tweenjs.github.io/tween.js/assets/examples/11_stop_all_chained_tweens.png)](http://tweenjs.github.io/tween.js/examples/11_stop_all_chained_tweens.html) [source](./examples/11_stop_all_chained_tweens.html)
-[![Yoyo](http://tweenjs.github.io/tween.js/assets/examples/10_yoyo.png)](http://tweenjs.github.io/tween.js/examples/10_yoyo.html) [source](./examples/10_yoyo.html)
-[![Relative values](http://tweenjs.github.io/tween.js/assets/examples/09_relative.png)](http://tweenjs.github.io/tween.js/examples/09_relative_values.html) [source](./examples/09_relative_values.html)
-[![Repeat](http://tweenjs.github.io/tween.js/assets/examples/08_repeat.png)](http://tweenjs.github.io/tween.js/examples/08_repeat.html) [source](./examples/08_repeat.html)
-[![Dynamic to](http://tweenjs.github.io/tween.js/assets/examples/07_dynamic_to.png)](http://tweenjs.github.io/tween.js/examples/07_dynamic_to.html) [source](./examples/07_dynamic_to.html)
-[![Array interpolation](http://tweenjs.github.io/tween.js/assets/examples/03_graphs.png)](http://tweenjs.github.io/tween.js/examples/06_array_interpolation.html) [source](./examples/06_array_interpolation.html)
-[![Video and time](http://tweenjs.github.io/tween.js/assets/examples/06_video_and_time.png)](http://tweenjs.github.io/tween.js/examples/05_video_and_time.html) [source](./examples/05_video_and_time.html)
-[![Simplest possible example](http://tweenjs.github.io/tween.js/assets/examples/04_simplest.png)](http://tweenjs.github.io/tween.js/examples/04_simplest.html) [source](./examples/04_simplest.html)
-[![Graphs](http://tweenjs.github.io/tween.js/assets/examples/03_graphs.png)](http://tweenjs.github.io/tween.js/examples/03_graphs.html) [source](./examples/03_graphs.html)
-[![Black and red](http://tweenjs.github.io/tween.js/assets/examples/02_black_and_red.png)](http://tweenjs.github.io/tween.js/examples/02_black_and_red.html) [source](./examples/02_black_and_red.html)
-[![Bars](http://tweenjs.github.io/tween.js/assets/examples/01_bars.png)](http://tweenjs.github.io/tween.js/examples/01_bars.html) [source](./examples/01_bars.html)
-[![hello world](http://tweenjs.github.io/tween.js/assets/examples/00_hello_world.png)](http://tweenjs.github.io/tween.js/examples/00_hello_world.html) [source](./examples/00_hello_world.html)
+Demos with this version are not yet implemented, sorry.
 
 ## Tests
 
@@ -159,8 +162,6 @@ Every PR, Commits and Update now automacilly updates the version based on commit
 
 ## People
 
-Maintainers: [sole](https://github.com/sole), [dalisoft](https://github.com/dalisoft).
-
 [All contributors](http://github.com/tweenjs/tween.js/contributors).
 
 ## Thanks to: 
@@ -171,16 +172,7 @@ Maintainers: [sole](https://github.com/sole), [dalisoft](https://github.com/dali
 
 ## Projects using tween.js
 
-[![A-Frame VR](http://tweenjs.github.io/tween.js/assets/projects/10_aframe.png)](https://aframe.io)
-[![MOMA Inventing Abstraction 1910-1925](http://tweenjs.github.io/tween.js/assets/projects/09_moma.png)](http://www.moma.org/interactives/exhibitions/2012/inventingabstraction/)
-[![Web Lab](http://tweenjs.github.io/tween.js/assets/projects/08_web_lab.png)](http://www.chromeweblab.com/)
-[![MACCHINA I](http://tweenjs.github.io/tween.js/assets/projects/07_macchina.png)](http://5013.es/toys/macchina)
-[![Minesweeper 3D](http://tweenjs.github.io/tween.js/assets/projects/06_minesweeper3d.png)](http://egraether.com/mine3d/)
-[![ROME](http://tweenjs.github.io/tween.js/assets/projects/05_rome.png)](http://ro.me)
-[![WebGL Globe](http://tweenjs.github.io/tween.js/assets/projects/04_webgl_globe.png)](http://data-arts.appspot.com/globe)
-[![Androidify](http://tweenjs.github.io/tween.js/assets/projects/03_androidify.png)](http://www.androidify.com/)
-[![The Wilderness Downtown](http://tweenjs.github.io/tween.js/assets/projects/01_wilderness.png)](http://thewildernessdowntown.com/)
-[![Linechart](http://tweenjs.github.io/tween.js/assets/projects/00_linechart.png)](http://dejavis.org/linechart)
+If you using our app and happy with this and share your app? Please make PR and we append to there your project
 
 [npm-image]: https://img.shields.io/npm/v/es6-tween.svg
 [npm-url]: https://npmjs.org/package/es6-tween

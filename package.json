@@ -2,8 +2,7 @@
 	"name": "es6-tween",
 	"version": "1.11.3",
 	"description": "ES6 implementation of amazing tween.js",
-	"main": "dist/Tween.js",
-	"module": "src/Tween.js",
+	"main": "dist/TWEEN.js",
 	"directories": {
 		"example": "examples"
 	},
