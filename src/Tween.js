@@ -2,6 +2,8 @@
 
 import './shim/object_assign';
 
+import './shim/raf';
+
 import './shim/isArray';
 
 import { getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit } from './dist/core';
