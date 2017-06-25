@@ -37,7 +37,9 @@ Download the [library](https://raw.githubusercontent.com/tweenjs/es6-tween/maste
 ```html
 <script src="https://cdn.jsdelivr.net/npm/es6-tween@latest/dist/Tween.min.js" defer></script>
 <!-- or may you want -->
-<script src="https://unpkg.com/es6-tween@latest/dist/Tween.min.js" defer></script>
+<script src="https://unpkg.com/es6-tween@latest" defer></script>
+<!-- or like this -->
+<script src="https://npmcdn.com/es6-tween@latest" defer></script>
 ```
 
 

@@ -2,7 +2,10 @@
 	"name": "es6-tween",
 	"version": "0.0.0-semantically-released",
 	"description": "ES6 implementation of amazing tween.js",
-	"main": "dist/Tween.min.js",
+	"jsdelivr": "dist/Tween.min.js",
+	"browser": "dist/Tween.min.js",
+	"cdn": "dist/Tween.min.js",
+	"main": "dist/Tween.min.js"
 	"directories": {
 		"example": "examples"
 	},
