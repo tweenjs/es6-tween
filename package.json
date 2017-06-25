@@ -5,7 +5,7 @@
 	"jsdelivr": "dist/Tween.min.js",
 	"browser": "dist/Tween.min.js",
 	"cdn": "dist/Tween.min.js",
-	"main": "dist/Tween.min.js"
+	"main": "dist/Tween.min.js",
 	"directories": {
 		"example": "examples"
 	},
