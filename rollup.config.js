@@ -6,7 +6,7 @@ const { BUILD } = process.env;
 
 const plugins = [ buble() ];
 
-let moduleName = 'Tween';
+let moduleName = 'TWEEN';
 let destFile = 'dist/' + moduleName;
 
 if ( BUILD === 'prod' ) {
@@ -20,6 +20,6 @@ export default {
   entry: 'src/Tween.js',
   format: 'umd',
   dest: destFile, // equivalent to --output
-  moduleName: moduleName.toUpperCase(),
+  moduleName: moduleName,
   plugins: plugins
 }

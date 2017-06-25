@@ -9,7 +9,7 @@
 	"scripts": {
 		"build": "rollup -c --environment BUILD:prod",
 		"source": "rollup -c --sourcemap",
-		"prepublish": "npm run source && npm run build",
+		"prepublishOnly": "npm run source && npm run build",
 		"dev": "rollup -c -w --sourcemap",
 		"test": "npm run test-unit && npm run test-correctness && npm run test-style",
 		"test-unit": "nodeunit test/unit/nodeunitheadless.js",
