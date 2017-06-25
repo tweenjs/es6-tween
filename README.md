@@ -33,9 +33,10 @@ Download the [library](https://raw.githubusercontent.com/tweenjs/es6-tween/maste
 ### CDN-Hosted version
 
 * See [cdnjs-hosted version](cdnjs.com/libraries/es6-tween) for get which result you want
+* NOTE: `@latest` suffix sometimes saves life by loading latest, because sometimes CDN services will not load the latest
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/es6-tween@latest/dist/Tween.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-tween@latest" defer></script>
 <!-- or may you want -->
 <script src="https://unpkg.com/es6-tween@latest" defer></script>
 <!-- or like this -->
