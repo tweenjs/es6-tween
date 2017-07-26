@@ -5,7 +5,7 @@ import { minify } from 'uglify-js-harmony'
 const { BUILD } = process.env
 
 const plugins = [ buble({
-	objectAssign: 'Object.assign'
+  objectAssign: 'Object.assign'
 }) ]
 
 let moduleName = 'Tween'

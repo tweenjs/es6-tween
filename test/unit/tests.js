@@ -216,7 +216,7 @@
         var obj = { x: true },
           t = new TWEEN.Tween(obj)
 
-        t.to({ x: function () {} })
+        t.to({ x: false })
         t.start(0)
         t.update(1000)
 

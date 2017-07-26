@@ -233,11 +233,11 @@ class Tween {
 
             this._startTime = _startTime;
 
+			if (typeof _valuesEnd === "object") {
+
             for (let property in _valuesEnd) {
 
-				property = object[+property] !== undefined ? +property : property;
-
-                if (typeof _valuesEnd[property] === "object") {
+                if (typeof _valuesEnd[property] === "object" && _valuesEnd[property]) {
 
                     this._valuesEnd[property] = SubTween(object[property], _valuesEnd[property]);
 
@@ -268,6 +268,8 @@ class Tween {
                 this._valuesStart[property] = object[property];
 
             }
+
+			}
 
             add(this);
 
@@ -452,7 +454,7 @@ class Tween {
                     if (typeof(end) === 'number') {
                         object[property] = start + (end - start) * value;
                     }
-                } else if (typeof(end) === 'number') {
+                } else if (typeof(start) === 'number') {
                     object[property] = start + (end - start) * value;
                 }
 
