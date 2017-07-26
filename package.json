@@ -1,8 +1,8 @@
 {
 	"standard": {
 		"ignore": [
-			"/dist/",
-			"/test/"
+			"dist/",
+			"test/"
 		]
 	},
 	"name": "es6-tween",
@@ -19,8 +19,8 @@
 		"source": "rollup -c --sourcemap",
 		"bundle": "npm run source && npm run build",
 		"dev": "rollup -c -w --sourcemap",
-		"test": "npm run test-unit && npm run lint",
 		"test-unit": "nodeunit test/unit/nodeunitheadless.js",
+		"test": "npm run test-unit && npm run fix && npm run lint",
 		"fix": "standard --fix",
 		"lint": "standard --verbose | snazzy",
 		"semantic-release": "semantic-release pre && npm publish && semantic-release post --owner=sole --user=dalisoft"

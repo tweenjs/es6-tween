@@ -327,7 +327,6 @@ class Tween {
             remove(this);
             this._isPlaying = false;
 
-            this.stopChainedTweens();
             return this.emit('stop', object);
 
         }
@@ -339,17 +338,6 @@ class Tween {
             } = this;
 
             return this.update(_startTime + _duration);
-
-        }
-        stopChainedTweens() {
-
-            let {
-                _chainedTweens = []
-            } = this;
-
-            _chainedTweens.map(item => item.stop());
-
-            return this;
 
         }
         delay(amount) {
@@ -402,13 +390,6 @@ class Tween {
             return this;
 
         }
-        chain(...args) {
-
-            this._chainedTweens = args;
-
-            return this;
-
-        }
         get(time) {
             this.update(time);
             return this.object;
@@ -417,7 +398,6 @@ class Tween {
 
             let {
                 _onStartCallbackFired,
-                _chainedTweens,
                 _easingFunction,
                 _interpolationFunction,
                 _repeat,
@@ -540,10 +520,6 @@ class Tween {
                 } else {
 
                     this.emit('complete', object);
-
-                    if (_chainedTweens) {
-                        _chainedTweens.map(tween => tween.start(_startTime + _duration));
-                    }
 
                     return false;
 

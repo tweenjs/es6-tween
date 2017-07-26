@@ -8,22 +8,11 @@ let _events = {};
 let root = typeof (window) !== "undefined" ? window : typeof (global) !== "undefined" ? global : {};
 let _nextId = 0;
 
-const nextId = () => {
-	_nextId++;
-	return _nextId;
-}
-
-const getAll = () => {
-	return _tweens;
-}
-
-const autoPlay = (state) => {
-	_autoPlay = state;
-}
-
-const removeAll = () => {
-	_tweens = {}
-}
+Object.defineProperty(_tweens, "length", {
+	enumerable: false,
+	writable: true,
+	value: 0
+});
 
 const emit = function(name, a, b, c, d, e) {
 	let eventFn = _events[name];
@@ -34,6 +23,23 @@ const emit = function(name, a, b, c, d, e) {
 			eventFn[i].call(this, a, b, c, d, e);
 		}
 	}
+}
+
+const on = (ev, fn) => {
+	if (_events[ev] === undefined) {
+		_events[ev] = [];
+	}
+	_events[ev].push(fn);
+}
+
+const once = (ev, fn) => {
+	if (_events[ev] === undefined) {
+		_events[ev] = [];
+	}
+	on(ev, (...args) => {
+		fn(...args);
+		off(ev);
+	});
 }
 
 const off = (ev, fn) => {
@@ -54,9 +60,10 @@ const off = (ev, fn) => {
 	}
 }
 
-const add = (tween) => {
+const add = tween => {
 	let { id } = tween;
 	_tweens[id] = tween;
+	_tweens.length++;
 
 	if (_autoPlay && !isStarted) {
 		update();
@@ -67,28 +74,57 @@ const add = (tween) => {
 
 }
 
-const on = (ev, fn) => {
-	if (_events[ev] === undefined) {
-		_events[ev] = [];
-	}
-	_events[ev].push(fn);
+const nextId = () => {
+	let id = _nextId;
+	_nextId++;
+	return id;
 }
 
-const once = (ev, fn) => {
-	if (_events[ev] === undefined) {
-		_events[ev] = [];
-	}
-	on(ev, (...args) => {
-		fn(...args);
-		off(ev);
+const getAll = () => {
+	return _tweens;
+}
+
+const autoPlay = (state) => {
+	_autoPlay = state;
+}
+
+const removeAll = () => {
+	_tweens = {}
+
+	Object.defineProperty(_tweens, "length", {
+		enumerable: false,
+		writable: true,
+		value: 0
 	});
 }
 
-const remove = (tween) => {
+const get = tween => {
+
 	for ( let searchTween in _tweens ) {
-		if (tween.id === searchTween.id) {
-			_tweens[searchTween] = null;
-			delete _tweens[searchTween];
+
+	if (tween.id === +searchTween) {
+
+		return _tweens[+searchTween];
+
+	}
+
+	}
+
+	return null;
+
+}
+
+const has = tween => {
+
+	return get(tween) !== null;
+
+}
+
+const remove = tween => {
+	for ( let searchTween in _tweens ) {
+		if (tween.id === +searchTween) {
+			delete _tweens[+searchTween];
+			_tweens.length--;
 		}
 	}
 }
@@ -142,8 +178,8 @@ const update = (time, preserve) => {
 		if (_tweens[i].update(time) || preserve) {
 			i++;
 		} else {
-			_tweens[i] = null;
-			delete _tweens[i];
+			delete _tweens[+i];
+			_tweens.length--;
 		}
 
 	}
@@ -162,11 +198,16 @@ if (root.document) {
 			timePause = now();
 		} else {
 			timeDiff = now() - timePause;
-			_tweens.map(tween => tween._startTime += timeDiff)
+
+			for ( let tween in _tweens ) {
+
+			tween._startTime += timeDiff
+
+			}
 
 		}
 		return true;
 	})
 }
 
-export { nextId, getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit };
+export { get, has, nextId, getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit };

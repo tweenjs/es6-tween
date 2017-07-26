@@ -8,7 +8,7 @@
 
 			// TWEEN tests
       'TWEEN.getAll': function (test) {
-        test.ok(TWEEN.getAll() instanceof Array)
+        test.ok(typeof TWEEN.getAll() === "object")
         test.done()
       },
 
@@ -61,13 +61,13 @@
 
         TWEEN.add(t)
 
-        test.ok(all.indexOf(t) != -1)
+        test.ok(TWEEN.has(t))
 
         TWEEN.remove(t)
 
         test.equal(numTweens, TWEEN.getAll().length)
         test.equal(all, TWEEN.getAll())
-        test.equal(all.indexOf(t), -1)
+        test.equal(TWEEN.has(t), false)
         test.done()
       },
 
@@ -109,8 +109,8 @@
 
         TWEEN.update(1000)
         test.equal(TWEEN.getAll().length, 1)
-        test.equal(TWEEN.getAll().indexOf(t1), -1)
-        test.ok(TWEEN.getAll().indexOf(t2) != -1)
+        test.equal(TWEEN.has(t1), false)
+        test.ok(TWEEN.has(t2))
         test.done()
       },
       'TWEEN.update() does not remove tweens when they are finished with preserve flag': function (test) {
@@ -137,8 +137,8 @@
 
         TWEEN.update(1001, true)
         test.equal(TWEEN.getAll().length, 2)
-        test.ok(TWEEN.getAll().indexOf(t1) != -1)
-        test.ok(TWEEN.getAll().indexOf(t2) != -1)
+        test.ok(TWEEN.has(t1))
+        test.ok(TWEEN.has(t2))
         test.done()
       },
 
@@ -171,45 +171,6 @@
         var t = new TWEEN.Tween({})
 
         test.ok(t instanceof TWEEN.Tween, 'Pass')
-        test.done()
-      },
-
-      'Return the same tween instance for method chaining': function (test) {
-        var t = new TWEEN.Tween({})
-
-        test.ok(t.to({}, 0) instanceof TWEEN.Tween)
-        test.equal(t.to({}, 0), t)
-
-        test.ok(t.start() instanceof TWEEN.Tween)
-        test.equal(t.start(), t)
-
-        test.ok(t.stop() instanceof TWEEN.Tween)
-        test.equal(t.stop(), t)
-
-        test.ok(t.delay() instanceof TWEEN.Tween)
-        test.equal(t.delay(), t)
-
-        test.ok(t.easing() instanceof TWEEN.Tween)
-        test.equal(t.easing(), t)
-
-        test.ok(t.interpolation() instanceof TWEEN.Tween)
-        test.equal(t.interpolation(), t)
-
-        test.ok(t.chain() instanceof TWEEN.Tween)
-        test.equal(t.chain(), t)
-
-        test.ok(t.on('start') instanceof TWEEN.Tween)
-        test.equal(t.on('start'), t)
-
-        test.ok(t.on('stop') instanceof TWEEN.Tween)
-        test.equal(t.on('stop'), t)
-
-        test.ok(t.on('update') instanceof TWEEN.Tween)
-        test.equal(t.on('update'), t)
-
-        test.ok(t.on('complete') instanceof TWEEN.Tween)
-        test.equal(t.on('complete'), t)
-
         test.done()
       },
 
@@ -336,7 +297,7 @@
         t.start(0)
 
         test.equal(TWEEN.getAll().length, 1) // TODO ditto
-        test.equal(TWEEN.getAll()[0], t)
+        test.equal(TWEEN.get(t), t)
         test.done()
       },
 
@@ -388,138 +349,6 @@
         t.start(0)
         t.update(500)
         test.equal(obj.x, TWEEN.Easing.Quadratic.In(0.5))
-        test.done()
-      },
-
-			// TODO test interpolation()
-
-      'Test TWEEN.Tween.chain --with one tween': function (test) {
-        var t = new TWEEN.Tween({}),
-          tStarted = false,
-          tCompleted = false,
-          t2 = new TWEEN.Tween({}),
-          t2Started = false
-
-        TWEEN.removeAll()
-
-        t.to({}, 1000)
-        t2.to({}, 1000)
-
-        t.chain(t2)
-
-        t.on('start', function () {
-          tStarted = true
-        })
-
-        t.on('complete', function () {
-          tCompleted = true
-        })
-
-        t2.on('start', function () {
-          test.equal(tStarted, true)
-          test.equal(tCompleted, true)
-          test.equal(t2Started, false)
-          t2Started = true
-        })
-
-        test.equal(tStarted, false)
-        test.equal(t2Started, false)
-
-        t.start(0)
-        TWEEN.update(0)
-
-        test.equal(tStarted, true)
-        test.equal(t2Started, false)
-
-        TWEEN.update(1000)
-
-        test.equal(tCompleted, true)
-
-        TWEEN.update(1001)
-
-        test.equal(t2Started, true, 't2 is automatically started by t')
-        test.done()
-      },
-
-      'Test TWEEN.Tween.chain --with several tweens in an array': function (test) {
-        var t = new TWEEN.Tween({}),
-          chainedTweens = [],
-          numChained = 3,
-          numChainedStarted = 0
-
-        TWEEN.removeAll()
-
-        t.to({}, 1000)
-
-        function onChainedStart () {
-          numChainedStarted++
-        }
-
-        for (var i = 0; i < numChained; i++) {
-          var chained = new TWEEN.Tween({})
-          chained.to({}, 1000)
-
-          chainedTweens.push(chained)
-
-          chained.on('start', onChainedStart)
-        }
-
-				// NOTE: This is not the normal way to chain several tweens simultaneously
-				// The usual way would be to specify them explicitly:
-				// t.chain( tween1, tween2, ... tweenN)
-				// ... not to use apply to send an array of tweens
-        t.chain.apply(t, chainedTweens)
-
-        test.equal(numChainedStarted, 0)
-
-        t.start(0)
-        TWEEN.update(0)
-        TWEEN.update(1000)
-        TWEEN.update(1001)
-
-        test.equal(numChainedStarted, numChained, 'All chained tweens have been started')
-        test.done()
-      },
-
-      'Test TWEEN.Tween.chain allows endless loops': function (test) {
-        var obj = { x: 0 },
-          t1 = new TWEEN.Tween(obj).to({ x: 100 }, 1000),
-          t2 = new TWEEN.Tween(obj).to({ x: 0 }, 1000)
-
-        TWEEN.removeAll()
-
-        t1.chain(t2)
-        t2.chain(t1)
-
-        test.equal(obj.x, 0)
-
-				// x == 0
-        t1.start(0)
-        TWEEN.update(0)
-
-        test.equal(obj.x, 0)
-
-        TWEEN.update(500)
-        test.equal(obj.x, 50)
-
-				// there... (x == 100)
-
-        TWEEN.update(1000)
-        test.equal(obj.x, 100)
-
-        TWEEN.update(1500)
-        test.equal(obj.x, 50)
-
-				// ... and back again (x == 0)
-
-        TWEEN.update(2000)
-        test.equal(obj.x, 0)
-
-        TWEEN.update(2500)
-        test.equal(obj.x, 50)
-
-        TWEEN.update(3000)
-        test.equal(obj.x, 100) // and x == 100 again
         test.done()
       },
 
@@ -842,26 +671,6 @@
         test.equal(tStarted, true)
         test.equal(t2Started, false)
         test.equal(TWEEN.getAll().length, 0)
-        test.done()
-      },
-
-      'Test TWEEN.Tween.chain progressess into chained tweens': function (test) {
-        var obj = { t: 1000 }
-
-				// 1000 of nothing
-        var blank = new TWEEN.Tween({}).to({}, 1000)
-
-				// tween obj.t from 1000 -> 2000 (in time with update time)
-        var next = new TWEEN.Tween(obj).to({ t: 2000 }, 1000)
-
-        blank.chain(next).start(0)
-
-        TWEEN.update(1500)
-        test.equal(obj.t, 1500)
-
-        TWEEN.update(2000)
-        test.equal(obj.t, 2000)
-
         test.done()
       },
 
