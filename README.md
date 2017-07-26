@@ -22,6 +22,11 @@ TWEEN.autoPlay(true); // simplify the your code
 }
 ```
 
+
+## Demos
+
+* Play at [Codepen](https://codepen.io/dalisoft/pen/mMJmxX)
+
 ## Installation
 
 Download the [library](https://raw.githubusercontent.com/tweenjs/es6-tween/master/src/Tween.js) and include it in your code:
