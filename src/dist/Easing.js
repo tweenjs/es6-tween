@@ -2,7 +2,7 @@ const Easing = {
 
 	Linear: {
 
-		None: k => {
+		None(k) {
 
 			return k;
 
@@ -12,19 +12,19 @@ const Easing = {
 
 	Quadratic: {
 
-		In: k => {
+		In(k) {
 
 			return k * k;
 
 		},
 
-		Out: k => {
+		Out(k) {
 
 			return k * (2 - k);
 
 		},
 
-		InOut: k => {
+		InOut(k) {
 
 			if ((k *= 2) < 1) {
 				return 0.5 * k * k;
@@ -38,19 +38,19 @@ const Easing = {
 
 	Cubic: {
 
-		In: k => {
+		In(k) {
 
 			return k * k * k;
 
 		},
 
-		Out: k => {
+		Out(k) {
 
 			return --k * k * k + 1;
 
 		},
 
-		InOut: k => {
+		InOut(k) {
 
 			if ((k *= 2) < 1) {
 				return 0.5 * k * k * k;
@@ -64,19 +64,19 @@ const Easing = {
 
 	Quartic: {
 
-		In: k => {
+		In(k) {
 
 			return k * k * k * k;
 
 		},
 
-		Out: k => {
+		Out(k) {
 
 			return 1 - (--k * k * k * k);
 
 		},
 
-		InOut: k => {
+		InOut(k) {
 
 			if ((k *= 2) < 1) {
 				return 0.5 * k * k * k * k;
@@ -90,19 +90,19 @@ const Easing = {
 
 	Quintic: {
 
-		In: k => {
+		In(k) {
 
 			return k * k * k * k * k;
 
 		},
 
-		Out: k => {
+		Out(k) {
 
 			return --k * k * k * k * k + 1;
 
 		},
 
-		InOut: k => {
+		InOut(k) {
 
 			if ((k *= 2) < 1) {
 				return 0.5 * k * k * k * k * k;
@@ -116,19 +116,19 @@ const Easing = {
 
 	Sinusoidal: {
 
-		In: k => {
+		In(k) {
 
 			return 1 - Math.cos(k * Math.PI / 2);
 
 		},
 
-		Out: k => {
+		Out(k) {
 
 			return Math.sin(k * Math.PI / 2);
 
 		},
 
-		InOut: k => {
+		InOut(k) {
 
 			return 0.5 * (1 - Math.cos(Math.PI * k));
 
@@ -138,19 +138,19 @@ const Easing = {
 
 	Exponential: {
 
-		In: k => {
+		In(k) {
 
 			return k === 0 ? 0 : Math.pow(1024, k - 1);
 
 		},
 
-		Out: k => {
+		Out(k) {
 
 			return k === 1 ? 1 : 1 - Math.pow(2, - 10 * k);
 
 		},
 
-		InOut: k => {
+		InOut(k) {
 
 			if (k === 0) {
 				return 0;
@@ -172,19 +172,19 @@ const Easing = {
 
 	Circular: {
 
-		In: k => {
+		In(k) {
 
 			return 1 - Math.sqrt(1 - k * k);
 
 		},
 
-		Out: k => {
+		Out(k) {
 
 			return Math.sqrt(1 - (--k * k));
 
 		},
 
-		InOut: k => {
+		InOut(k) {
 
 			if ((k *= 2) < 1) {
 				return - 0.5 * (Math.sqrt(1 - k * k) - 1);
@@ -198,7 +198,7 @@ const Easing = {
 
 	Elastic: {
 
-		In: k => {
+		In(k) {
 
 			if (k === 0) {
 				return 0;
@@ -212,7 +212,7 @@ const Easing = {
 
 		},
 
-		Out: k => {
+		Out(k) {
 
 			if (k === 0) {
 				return 0;
@@ -226,7 +226,7 @@ const Easing = {
 
 		},
 
-		InOut: k => {
+		InOut(k) {
 
 			if (k === 0) {
 				return 0;
@@ -250,7 +250,7 @@ const Easing = {
 
 	Back: {
 
-		In: k => {
+		In(k) {
 
 			let s = 1.70158;
 
@@ -258,7 +258,7 @@ const Easing = {
 
 		},
 
-		Out: k => {
+		Out(k) {
 
 			let s = 1.70158;
 
@@ -266,7 +266,7 @@ const Easing = {
 
 		},
 
-		InOut: k => {
+		InOut(k) {
 
 			let s = 1.70158 * 1.525;
 
@@ -282,13 +282,13 @@ const Easing = {
 
 	Bounce: {
 
-		In: k => {
+		In(k) {
 
 			return 1 - Easing.Bounce.Out(1 - k);
 
 		},
 
-		Out: k => {
+		Out(k) {
 
 			if (k < (1 / 2.75)) {
 				return 7.5625 * k * k;
@@ -302,7 +302,7 @@ const Easing = {
 
 		},
 
-		InOut: k => {
+		InOut(k) {
 
 			if (k < 0.5) {
 				return Easing.Bounce.In(k * 2) * 0.5;

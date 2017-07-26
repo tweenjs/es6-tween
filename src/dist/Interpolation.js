@@ -1,6 +1,6 @@
 const Interpolation = {
 
-	Linear: (v, k) => {
+	Linear(v, k) {
 
 		let m = v.length - 1;
 		let f = m * k;
@@ -19,7 +19,7 @@ const Interpolation = {
 
 	},
 
-	Bezier: (v, k) => {
+	Bezier(v, k) {
 
 		let b = 0;
 		let n = v.length - 1;
@@ -34,7 +34,7 @@ const Interpolation = {
 
 	},
 
-	CatmullRom: (v, k) => {
+	CatmullRom(v, k) {
 
 		let m = v.length - 1;
 		let f = m * k;
@@ -67,13 +67,13 @@ const Interpolation = {
 
 	Utils: {
 
-		Linear: (p0, p1, t) => {
+		Linear(p0, p1, t) {
 
 			return (p1 - p0) * t + p0;
 
 		},
 
-		Bernstein: (n, i) => {
+		Bernstein(n, i) {
 
 			let fc = Interpolation.Utils.Factorial;
 
@@ -81,7 +81,7 @@ const Interpolation = {
 
 		},
 
-		Factorial: (() => {
+		Factorial: (function() {
 
 			let a = [1];
 
@@ -104,7 +104,7 @@ const Interpolation = {
 
 		})(),
 
-		CatmullRom: (p0, p1, p2, p3, t) => {
+		CatmullRom(p0, p1, p2, p3, t) {
 
 			let v0 = (p2 - p0) * 0.5;
 			let v1 = (p3 - p1) * 0.5;
@@ -116,5 +116,7 @@ const Interpolation = {
 		}
 
 	}
+
+}
 
 export default Interpolation;
