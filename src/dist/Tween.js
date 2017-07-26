@@ -1,7 +1,8 @@
 import {
     add,
     remove,
-    now
+    now,
+	nextId
 }
 from './core';
 import Easing from './Easing';
@@ -36,6 +37,7 @@ class Tween {
 
         this._onStartCallbackFired = false;
         this._pausedTime = null;
+		this.id = nextId();
 
         if (instate && instate.to) {
 

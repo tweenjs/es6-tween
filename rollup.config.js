@@ -20,6 +20,6 @@ export default {
   entry: 'src/Tween.js',
   format: 'umd',
   dest: destFile, // equivalent to --output
-  moduleName: 'Tween',
+  moduleName: 'TWEEN',
   plugins: plugins
 }

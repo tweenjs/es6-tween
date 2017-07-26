@@ -1,11 +1,17 @@
 
 
-let _tweens = [];
+let _tweens = {};
 let isStarted = false;
 let _autoPlay = false;
 let _tick;
 let _events = {};
 let root = typeof (window) !== "undefined" ? window : typeof (global) !== "undefined" ? global : {};
+let _nextId = 0;
+
+const nextId = () => {
+	_nextId++;
+	return _nextId;
+}
 
 const getAll = () => {
 	return _tweens;
@@ -16,7 +22,7 @@ const autoPlay = (state) => {
 }
 
 const removeAll = () => {
-	_tweens = []
+	_tweens = {}
 }
 
 const emit = function(name, a, b, c, d, e) {
@@ -49,7 +55,8 @@ const off = (ev, fn) => {
 }
 
 const add = (tween) => {
-	_tweens.push(tween);
+	let { id } = tween;
+	_tweens[id] = tween;
 
 	if (_autoPlay && !isStarted) {
 		update();
@@ -78,16 +85,11 @@ const once = (ev, fn) => {
 }
 
 const remove = (tween) => {
-	_tweens.filter(tweens => tweens !== tween);
-	let i = 0
-		, tweenFind;
-	while (i < _tweens.length) {
-		tweenFind = _tweens[i];
-		if (tweenFind === tween) {
-			emit('remove', tween, _tweens);
-			_tweens.splice(i, 1);
+	for ( let searchTween in _tweens ) {
+		if (tween.id === searchTween.id) {
+			_tweens[searchTween] = null;
+			delete _tweens[searchTween];
 		}
-		i++
 	}
 }
 
@@ -135,13 +137,13 @@ const update = (time, preserve) => {
 
 	}
 
-	let i = 0;
-	while (i < _tweens.length) {
+	for ( let i in _tweens ) {
 
 		if (_tweens[i].update(time) || preserve) {
 			i++;
 		} else {
-			_tweens.splice(i, 1);
+			_tweens[i] = null;
+			delete _tweens[i];
 		}
 
 	}
@@ -149,7 +151,7 @@ const update = (time, preserve) => {
 	return true;
 }
 
-// Normalise time when visiblity is changed ...
+// Normalise time when visiblity is changed (if available) ...
 if (root.document) {
 	let doc = root.document, timeDiff = 0, timePause = 0;
 	doc.addEventListener('visibilitychange', (ev) => {
@@ -167,4 +169,4 @@ if (root.document) {
 	})
 }
 
-export { getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit };
+export { nextId, getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit };
