@@ -631,49 +631,6 @@
         test.done()
       },
 
-      'Test TWEEN.Tween.stopChainedTweens()': function (test) {
-        var t = new TWEEN.Tween({}),
-          tStarted = false,
-          tCompleted = false,
-          t2 = new TWEEN.Tween({}),
-          t2Started = false
-
-        TWEEN.removeAll()
-
-        t.to({}, 1000)
-        t2.delay(500).to({}, 1000)
-
-        t.chain(t2)
-        t2.chain(t)
-
-        t.on('start', function () {
-          tStarted = true
-        })
-
-        t.on('complete', function () {
-          tCompleted = true
-        })
-
-        t2.on('start', function () {
-          test.equal(tStarted, true)
-          test.equal(tCompleted, true)
-          test.equal(t2Started, false)
-          t2Started = true
-        })
-
-        test.equal(tStarted, false)
-        test.equal(t2Started, false)
-
-        t.start(0)
-        TWEEN.update(1001)
-        t.stop()
-
-        test.equal(tStarted, true)
-        test.equal(t2Started, false)
-        test.equal(TWEEN.getAll().length, 0)
-        test.done()
-      },
-
       'Test that TWEEN.Tween.end sets the final values.': function (test) {
         var object1 = {x: 0, y: -50, z: 1000}
         var target1 = {x: 50, y: 123, z: '+234'}
