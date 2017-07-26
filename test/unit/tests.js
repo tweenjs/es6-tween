@@ -1,1140 +1,1048 @@
-(function() {
-
-	function getTests(TWEEN) {
-
-		var tests = {
-			'hello': function(test) {
-				test.ok(TWEEN !== null);
-				test.done();
-			},
+(function () {
+  function getTests (TWEEN) {
+    var tests = {
+      'hello': function (test) {
+        test.ok(TWEEN !== null)
+        test.done()
+      },
 
 			// TWEEN tests
-			'TWEEN.getAll': function(test) {
-				test.ok(TWEEN.getAll() instanceof Array);
-				test.done();
-			},
+      'TWEEN.getAll': function (test) {
+        test.ok(TWEEN.getAll() instanceof Array)
+        test.done()
+      },
 
-			'TWEEN object stores tweens automatically on start': function(test) {
+      'TWEEN object stores tweens automatically on start': function (test) {
+        var numTweensBefore = TWEEN.getAll().length,
+          t = new TWEEN.Tween({})
 
-				var numTweensBefore = TWEEN.getAll().length,
-					t = new TWEEN.Tween({});
+        t.start()
 
-				t.start();
+        var numTweensAfter = TWEEN.getAll().length
 
-				var numTweensAfter = TWEEN.getAll().length;
+        test.equal(numTweensBefore + 1, numTweensAfter)
+        test.done()
+      },
 
-				test.equal( numTweensBefore + 1, numTweensAfter );
-				test.done();
+      'TWEEN.removeAll()': function (test) {
+        var all = TWEEN.getAll(),
+          t = new TWEEN.Tween({})
 
-			},
+        TWEEN.removeAll()
 
-			'TWEEN.removeAll()': function(test) {
+        test.equal(TWEEN.getAll().length, 0, 'No tweens left')
 
-				var all = TWEEN.getAll(),
-					t = new TWEEN.Tween({});
+        t.start()
 
-				TWEEN.removeAll();
+        test.equal(TWEEN.getAll().length, 1, 'A tween has been added')
 
-				test.equal( TWEEN.getAll().length, 0, "No tweens left" );
+        TWEEN.removeAll()
 
-				t.start();
+        test.equal(TWEEN.getAll().length, 0, 'No tweens left')
+        test.done()
+      },
 
-				test.equal( TWEEN.getAll().length, 1, "A tween has been added" );
+      'TWEEN.add()': function (test) {
+        var all = TWEEN.getAll(),
+          numTweens = all.length,
+          t = new TWEEN.Tween({})
 
-				TWEEN.removeAll();
+        TWEEN.add(t)
 
-				test.equal( TWEEN.getAll().length, 0, "No tweens left" );
-				test.done();
+        test.equal(numTweens + 1, TWEEN.getAll().length)
+        test.equal(all, TWEEN.getAll())
+        test.done()
+      },
 
-			},
+      'TWEEN.remove()': function (test) {
+        var all = TWEEN.getAll(),
+          numTweens = all.length,
+          t = new TWEEN.Tween({})
 
-			'TWEEN.add()': function(test) {
+        TWEEN.add(t)
 
-				var all = TWEEN.getAll(),
-					numTweens = all.length,
-					t = new TWEEN.Tween({});
+        test.ok(all.indexOf(t) != -1)
 
-				TWEEN.add( t );
+        TWEEN.remove(t)
 
-				test.equal( numTweens + 1, TWEEN.getAll().length );
-				test.equal( all, TWEEN.getAll() );
-				test.done();
+        test.equal(numTweens, TWEEN.getAll().length)
+        test.equal(all, TWEEN.getAll())
+        test.equal(all.indexOf(t), -1)
+        test.done()
+      },
 
-			},
+      'TWEEN.update() returns false when done (no tweens to animate)': function (test) {
+        TWEEN.removeAll()
 
-			'TWEEN.remove()': function(test) {
+        test.deepEqual(TWEEN.update(), false)
+        test.done()
+      },
 
-				var all = TWEEN.getAll(),
-					numTweens = all.length,
-					t = new TWEEN.Tween({});
+      'TWEEN.update() returns true when there are active tweens': function (test) {
+        TWEEN.removeAll()
 
-				TWEEN.add( t );
+        var t = new TWEEN.Tween({})
+        t.start()
 
-				test.ok( all.indexOf( t ) != -1 );
+        test.deepEqual(TWEEN.update(), true)
+        test.done()
+      },
 
-				TWEEN.remove( t );
+      'TWEEN.update() removes tweens when they are finished': function (test) {
+        TWEEN.removeAll()
 
-				test.equal( numTweens, TWEEN.getAll().length );
-				test.equal( all, TWEEN.getAll() );
-				test.equal( all.indexOf( t ), -1 );
-				test.done();
+        var t1 = new TWEEN.Tween({}).to({}, 1000),
+          t2 = new TWEEN.Tween({}).to({}, 2000)
 
-			},
+        test.equal(TWEEN.getAll().length, 0)
 
-			'TWEEN.update() returns false when done (no tweens to animate)': function(test) {
+        t1.start(0)
+        t2.start(0)
 
-				TWEEN.removeAll();
+        test.equal(TWEEN.getAll().length, 2)
 
-				test.deepEqual( TWEEN.update(), false );
-				test.done();
+        TWEEN.update(0)
+        test.equal(TWEEN.getAll().length, 2)
 
-			},
+        TWEEN.update(999)
+        test.equal(TWEEN.getAll().length, 2)
 
-			'TWEEN.update() returns true when there are active tweens': function(test) {
+        TWEEN.update(1000)
+        test.equal(TWEEN.getAll().length, 1)
+        test.equal(TWEEN.getAll().indexOf(t1), -1)
+        test.ok(TWEEN.getAll().indexOf(t2) != -1)
+        test.done()
+      },
+      'TWEEN.update() does not remove tweens when they are finished with preserve flag': function (test) {
+        TWEEN.removeAll()
 
-				TWEEN.removeAll();
+        var t1 = new TWEEN.Tween({}).to({}, 1000),
+          t2 = new TWEEN.Tween({}).to({}, 2000)
 
-				var t = new TWEEN.Tween( {} );
-				t.start();
+        test.equal(TWEEN.getAll().length, 0)
 
-				test.deepEqual( TWEEN.update(), true );
-				test.done();
+        t1.start(0)
+        t2.start(0)
 
-			},
+        test.equal(TWEEN.getAll().length, 2)
 
-			'TWEEN.update() removes tweens when they are finished': function(test) {
+        TWEEN.update(0, true)
+        test.equal(TWEEN.getAll().length, 2)
 
-				TWEEN.removeAll();
+        TWEEN.update(999, true)
+        test.equal(TWEEN.getAll().length, 2)
 
-				var t1 = new TWEEN.Tween( {} ).to( {}, 1000 ),
-					t2 = new TWEEN.Tween( {} ).to( {}, 2000 );
+        TWEEN.update(1000, true)
+        test.equal(TWEEN.getAll().length, 2)
 
-				test.equal( TWEEN.getAll().length, 0 );
+        TWEEN.update(1001, true)
+        test.equal(TWEEN.getAll().length, 2)
+        test.ok(TWEEN.getAll().indexOf(t1) != -1)
+        test.ok(TWEEN.getAll().indexOf(t2) != -1)
+        test.done()
+      },
 
-				t1.start( 0 );
-				t2.start( 0 );
+      'Unremoved tweens which have been updated past their finish time may be reused': function (test) {
+        TWEEN.removeAll()
 
-				test.equal( TWEEN.getAll().length, 2 );
+        var target1 = {a: 0}
+        var target2 = {b: 0}
 
-				TWEEN.update( 0 );
-				test.equal( TWEEN.getAll().length, 2 );
+        var t1 = new TWEEN.Tween(target1).to({a: 1}, 1000),
+          t2 = new TWEEN.Tween(target2).to({b: 1}, 2000)
 
-				TWEEN.update( 999 );
-				test.equal( TWEEN.getAll().length, 2 );
+        t1.start(0)
+        t2.start(0)
 
-				TWEEN.update( 1000 );
-				test.equal( TWEEN.getAll().length, 1 );
-				test.equal( TWEEN.getAll().indexOf( t1 ), -1 );
-				test.ok( TWEEN.getAll().indexOf( t2 ) != -1 );
-				test.done();
+        TWEEN.update(200, true)
+        TWEEN.update(2500, true)
+        TWEEN.update(500, true)
 
-			},
-			'TWEEN.update() does not remove tweens when they are finished with preserve flag': function(test) {
+        test.equal(TWEEN.getAll().length, 2)
+        test.equal(target1.a, 0.5)
+        test.equal(target2.b, 0.25)
 
-				TWEEN.removeAll();
-
-				var t1 = new TWEEN.Tween( {} ).to( {}, 1000 ),
-					t2 = new TWEEN.Tween( {} ).to( {}, 2000 );
-
-				test.equal( TWEEN.getAll().length, 0 );
-
-				t1.start( 0 );
-				t2.start( 0 );
-
-				test.equal( TWEEN.getAll().length, 2 );
-
-				TWEEN.update(0, true);
-				test.equal( TWEEN.getAll().length, 2 );
-
-				TWEEN.update(999, true);
-				test.equal( TWEEN.getAll().length, 2 );
-
-				TWEEN.update(1000, true);
-				test.equal( TWEEN.getAll().length, 2 );
-
-				TWEEN.update(1001, true);
-				test.equal( TWEEN.getAll().length, 2 );
-				test.ok( TWEEN.getAll().indexOf( t1 ) != -1 );
-				test.ok( TWEEN.getAll().indexOf( t2 ) != -1 );
-				test.done();
-			},
-
-
-			'Unremoved tweens which have been updated past their finish time may be reused': function(test) {
-
-				TWEEN.removeAll();
-
-				var target1 = {a:0};
-				var target2 = {b:0};
-
-				var t1 = new TWEEN.Tween( target1 ).to( {a:1}, 1000 ),
-					t2 = new TWEEN.Tween( target2 ).to( {b:1}, 2000 );
-
-				t1.start( 0 );
-				t2.start( 0 );
-
-				TWEEN.update(200, true);
-				TWEEN.update(2500, true);
-				TWEEN.update(500, true);
-
-				test.equal(TWEEN.getAll().length, 2);
-				test.equal(target1.a, 0.5);
-				test.equal(target2.b, 0.25);
-
-				test.done();
-			},
-
+        test.done()
+      },
 
 			// TWEEN.Tween tests
 
-			'constructor': function(test) {
+      'constructor': function (test) {
+        var t = new TWEEN.Tween({})
 
-				var t = new TWEEN.Tween( {} );
+        test.ok(t instanceof TWEEN.Tween, 'Pass')
+        test.done()
+      },
 
-				test.ok( t instanceof TWEEN.Tween, "Pass" );
-				test.done();
+      'Return the same tween instance for method chaining': function (test) {
+        var t = new TWEEN.Tween({})
 
-			},
+        test.ok(t.to({}, 0) instanceof TWEEN.Tween)
+        test.equal(t.to({}, 0), t)
 
-			'Return the same tween instance for method chaining': function(test) {
+        test.ok(t.start() instanceof TWEEN.Tween)
+        test.equal(t.start(), t)
 
-				var t = new TWEEN.Tween( {} );
+        test.ok(t.stop() instanceof TWEEN.Tween)
+        test.equal(t.stop(), t)
 
-				test.ok( t.to({}, 0) instanceof TWEEN.Tween );
-				test.equal( t.to({}, 0), t );
+        test.ok(t.delay() instanceof TWEEN.Tween)
+        test.equal(t.delay(), t)
 
-				test.ok( t.start() instanceof TWEEN.Tween );
-				test.equal( t.start(), t );
+        test.ok(t.easing() instanceof TWEEN.Tween)
+        test.equal(t.easing(), t)
 
-				test.ok( t.stop() instanceof TWEEN.Tween );
-				test.equal( t.stop(), t );
+        test.ok(t.interpolation() instanceof TWEEN.Tween)
+        test.equal(t.interpolation(), t)
 
-				test.ok( t.delay() instanceof TWEEN.Tween );
-				test.equal( t.delay(), t );
+        test.ok(t.chain() instanceof TWEEN.Tween)
+        test.equal(t.chain(), t)
 
-				test.ok( t.easing() instanceof TWEEN.Tween );
-				test.equal( t.easing(), t );
+        test.ok(t.on('start') instanceof TWEEN.Tween)
+        test.equal(t.on('start'), t)
 
-				test.ok( t.interpolation() instanceof TWEEN.Tween );
-				test.equal( t.interpolation(), t );
+        test.ok(t.on('stop') instanceof TWEEN.Tween)
+        test.equal(t.on('stop'), t)
 
-				test.ok( t.chain() instanceof TWEEN.Tween );
-				test.equal( t.chain(), t );
+        test.ok(t.on('update') instanceof TWEEN.Tween)
+        test.equal(t.on('update'), t)
 
-				test.ok( t.on('start') instanceof TWEEN.Tween );
-				test.equal( t.on('start'), t );
+        test.ok(t.on('complete') instanceof TWEEN.Tween)
+        test.equal(t.on('complete'), t)
 
-				test.ok( t.on('stop') instanceof TWEEN.Tween );
-				test.equal( t.on('stop'), t );
+        test.done()
+      },
 
-				test.ok( t.on('update') instanceof TWEEN.Tween );
-				test.equal( t.on('update'), t );
+      'Tween existing property': function (test) {
+        var obj = { x: 1 },
+          t = new TWEEN.Tween(obj)
 
-				test.ok( t.on('complete') instanceof TWEEN.Tween );
-				test.equal( t.on('complete'), t );
+        t.to({ x: 2 }, 1000)
+        t.start(0)
+        t.update(1000)
 
-				test.done();
+        test.deepEqual(obj.x, 2)
+        test.done()
+      },
 
-			},
+      'Tween non-existing property': function (test) {
+        var obj = { x: 1 },
+          t = new TWEEN.Tween(obj)
 
-			'Tween existing property': function(test) {
+        t.to({ y: 0 }, 1000)
+        t.start(0)
+        t.update(1000)
 
-				var obj = { x: 1 },
-					t = new TWEEN.Tween( obj );
+        test.deepEqual(obj.x, 1)
+        test.equal(obj.y, undefined)
+        test.done()
+      },
 
-				t.to( { x: 2 }, 1000 );
-				t.start( 0 );
-				t.update( 1000 );
+      'Tween non-null property': function (test) {
+        var obj = { x: 1 },
+          t = new TWEEN.Tween(obj)
 
-				test.deepEqual( obj.x, 2 );
-				test.done();
+        t.to({ x: 2 }, 1000)
+        t.start(0)
+        t.update(1000)
 
-			},
+        test.deepEqual(obj.x, 2)
+        test.ok(obj.x !== null)
+        test.done()
+      },
 
-			'Tween non-existing property': function(test) {
+      'Tween boolean property': function (test) {
+        var obj = { x: true },
+          t = new TWEEN.Tween(obj)
 
-				var obj = { x: 1 },
-					t = new TWEEN.Tween( obj );
+        t.to({ x: function () {} })
+        t.start(0)
+        t.update(1000)
 
-				t.to( { y: 0 }, 1000 );
-				t.start( 0 );
-				t.update( 1000 );
+        test.ok(typeof obj.x === 'boolean')
+        test.ok(obj.x)
+        test.done()
+      },
 
-				test.deepEqual( obj.x, 1 );
-				test.equal( obj.y, undefined );
-				test.done();
+      'Tween null property': function (test) {
+        var obj = { x: null },
+          t = new TWEEN.Tween(obj)
 
-			},
+        t.to({ x: 2 }, 1000)
+        t.start(0)
+        t.update(1000)
 
-			'Tween non-null property': function(test) {
+        test.deepEqual(obj.x, null)
+        test.done()
+      },
 
-				var obj = { x: 1 },
-					t = new TWEEN.Tween( obj );
+      'Tween undefined property': function (test) {
+        var obj = { },
+          t = new TWEEN.Tween(obj)
 
-				t.to( { x: 2 }, 1000 );
-				t.start( 0 );
-				t.update( 1000 );
+        t.to({ x: 2 }, 1000)
+        t.start(0)
+        t.update(1000)
 
-				test.deepEqual( obj.x, 2 );
-				test.ok( obj.x !== null );
-				test.done();
+        test.equal(obj.x, undefined)
+        test.done()
+      },
 
-			},
+      'Tween relative positive value, with sign': function (test) {
+        var obj = { x: 0 },
+          t = new TWEEN.Tween(obj)
 
-			'Tween boolean property': function(test) {
+        t.to({ x: '+100' }, 1000)
+        t.start(0)
+        t.update(1000)
 
-				var obj = { x: true },
-					t = new TWEEN.Tween( obj );
+        test.equal(obj.x, 100)
+        test.done()
+      },
 
-				t.to( { x: function() {} } );
-				t.start( 0 );
-				t.update( 1000 );
+      'Tween relative negative value': function (test) {
+        var obj = { x: 0 },
+          t = new TWEEN.Tween(obj)
 
-				test.ok( typeof obj.x === "boolean" );
-				test.ok( obj.x );
-				test.done();
+        t.to({ x: '-100' }, 1000)
+        t.start(0)
+        t.update(1000)
 
-			},
+        test.equal(obj.x, -100)
+        test.done()
+      },
 
-			'Tween null property': function(test) {
+      'String values without a + or - sign should not be interpreted as relative': function (test) {
+        var obj = { x: 100 },
+          t = new TWEEN.Tween(obj)
 
-				var obj = { x: null },
-					t = new TWEEN.Tween( obj );
+        t.to({ x: '100' }, 1000)
+        t.start(0)
+        t.update(1000)
 
-				t.to( { x: 2 }, 1000 );
-				t.start( 0 );
-				t.update( 1000 );
+        test.equal(obj.x, 100)
+        test.done()
+      },
 
-				test.deepEqual( obj.x, null );
-				test.done();
+      'Test TWEEN.Tween.start()': function (test) {
+        var obj = { },
+          t = new TWEEN.Tween(obj)
 
-			},
+        t.to({ }, 1000)
 
-			'Tween undefined property': function(test) {
+        TWEEN.removeAll()
+        test.equal(TWEEN.getAll().length, 0) // TODO move to TWEEN test
 
-				var obj = { },
-					t = new TWEEN.Tween( obj );
+        t.start(0)
 
-				t.to( { x: 2 }, 1000 );
-				t.start( 0 );
-				t.update( 1000 );
+        test.equal(TWEEN.getAll().length, 1) // TODO ditto
+        test.equal(TWEEN.getAll()[0], t)
+        test.done()
+      },
 
-				test.equal( obj.x, undefined );
-				test.done();
+      'Test TWEEN.Tween.stop()': function (test) {
+        var obj = { },
+          t = new TWEEN.Tween(obj)
 
-			},
+        t.to({ x: 2 }, 1000)
 
-			'Tween relative positive value, with sign': function(test) {
+        TWEEN.removeAll()
 
-				var obj = { x: 0 },
-					t = new TWEEN.Tween( obj );
+        t.start()
+        t.stop()
 
-				t.to( { x: "+100" }, 1000 );
-				t.start( 0 );
-				t.update( 1000 );
+        test.equal(TWEEN.getAll().length, 0)
+        test.done()
+      },
 
-				test.equal( obj.x, 100 );
-				test.done();
+      'Test TWEEN.Tween.delay()': function (test) {
+        var obj = { x: 1 },
+          t = new TWEEN.Tween(obj)
 
-			},
+        t.to({ x: 2 }, 1000)
+        t.delay(500)
+        t.start(0)
 
-			'Tween relative negative value': function(test) {
+        t.update(100)
 
-				var obj = { x: 0 },
-					t = new TWEEN.Tween( obj );
+        test.deepEqual(obj.x, 1, "Tween hasn't started yet")
 
-				t.to( { x: "-100" }, 1000 );
-				t.start( 0 );
-				t.update( 1000 );
+        t.update(1000)
 
-				test.equal( obj.x, -100 );
-				test.done();
+        test.ok((obj.x !== 1) && (obj.x !== 2), "Tween has started but hasn't finished yet")
 
-			},
+        t.update(1500)
 
-			'String values without a + or - sign should not be interpreted as relative': function(test) {
-
-				var obj = { x: 100 },
-					t = new TWEEN.Tween( obj );
-
-				t.to( { x: "100" }, 1000 );
-				t.start( 0 );
-				t.update( 1000 );
-
-				test.equal( obj.x, 100 );
-				test.done();
-
-			},
-
-			'Test TWEEN.Tween.start()': function(test) {
-
-				var obj = { },
-					t = new TWEEN.Tween( obj );
-
-				t.to( { }, 1000 );
-
-				TWEEN.removeAll();
-				test.equal( TWEEN.getAll().length, 0 ); // TODO move to TWEEN test
-
-				t.start( 0 );
-
-				test.equal( TWEEN.getAll().length, 1 ); // TODO ditto
-				test.equal( TWEEN.getAll()[0], t );
-				test.done();
-
-			},
-
-			'Test TWEEN.Tween.stop()': function(test) {
-
-				var obj = { },
-					t = new TWEEN.Tween( obj );
-
-				t.to( { x: 2 }, 1000 );
-
-				TWEEN.removeAll();
-
-				t.start();
-				t.stop();
-
-				test.equal( TWEEN.getAll().length, 0 );
-				test.done();
-
-			},
-
-			'Test TWEEN.Tween.delay()': function(test) {
-
-				var obj = { x: 1 },
-					t = new TWEEN.Tween( obj );
-
-				t.to( { x: 2 }, 1000 );
-				t.delay( 500 );
-				t.start( 0 );
-
-				t.update( 100 );
-
-				test.deepEqual( obj.x, 1, "Tween hasn't started yet" );
-
-				t.update( 1000 );
-
-				test.ok( (obj.x !== 1) && (obj.x !== 2), "Tween has started but hasn't finished yet" );
-
-				t.update( 1500 );
-
-				test.equal( obj.x, 2, "Tween finishes when expected" );
-				test.done();
-
-			},
+        test.equal(obj.x, 2, 'Tween finishes when expected')
+        test.done()
+      },
 
 			// TODO: not really sure how to test this. Advice appreciated!
-			'Test TWEEN.Tween.easing()': function(test) {
+      'Test TWEEN.Tween.easing()': function (test) {
+        var obj = { x: 0 },
+          t = new TWEEN.Tween(obj)
 
-				var obj = { x: 0 },
-					t = new TWEEN.Tween( obj );
+        t.to({ x: 1 }, 1000)
 
-				t.to( { x: 1 }, 1000 );
-
-				t.easing( TWEEN.Easing.Quadratic.In );
-				t.start( 0 );
-				t.update( 500 );
-				test.equal( obj.x, TWEEN.Easing.Quadratic.In( 0.5 ) );
-				test.done();
-
-			},
+        t.easing(TWEEN.Easing.Quadratic.In)
+        t.start(0)
+        t.update(500)
+        test.equal(obj.x, TWEEN.Easing.Quadratic.In(0.5))
+        test.done()
+      },
 
 			// TODO test interpolation()
 
-			'Test TWEEN.Tween.chain --with one tween': function(test) {
+      'Test TWEEN.Tween.chain --with one tween': function (test) {
+        var t = new TWEEN.Tween({}),
+          tStarted = false,
+          tCompleted = false,
+          t2 = new TWEEN.Tween({}),
+          t2Started = false
 
-				var t = new TWEEN.Tween( {} ),
-					tStarted = false,
-					tCompleted = false,
-					t2 = new TWEEN.Tween( {} ),
-					t2Started = false;
+        TWEEN.removeAll()
 
-				TWEEN.removeAll();
+        t.to({}, 1000)
+        t2.to({}, 1000)
 
-				t.to( {}, 1000 );
-				t2.to( {}, 1000 );
+        t.chain(t2)
 
-				t.chain( t2 );
+        t.on('start', function () {
+          tStarted = true
+        })
 
-				t.on('start', function() {
-					tStarted = true;
-				});
+        t.on('complete', function () {
+          tCompleted = true
+        })
 
-				t.on('complete', function() {
-					tCompleted = true;
-				});
+        t2.on('start', function () {
+          test.equal(tStarted, true)
+          test.equal(tCompleted, true)
+          test.equal(t2Started, false)
+          t2Started = true
+        })
 
-				t2.on('start', function() {
-					test.equal( tStarted, true );
-					test.equal( tCompleted, true );
-					test.equal( t2Started, false );
-					t2Started = true;
-				});
+        test.equal(tStarted, false)
+        test.equal(t2Started, false)
 
-				test.equal( tStarted, false );
-				test.equal( t2Started, false );
+        t.start(0)
+        TWEEN.update(0)
 
-				t.start( 0 );
-				TWEEN.update( 0 );
+        test.equal(tStarted, true)
+        test.equal(t2Started, false)
 
-				test.equal( tStarted, true );
-				test.equal( t2Started, false );
+        TWEEN.update(1000)
 
-				TWEEN.update( 1000 );
+        test.equal(tCompleted, true)
 
-				test.equal( tCompleted, true );
+        TWEEN.update(1001)
 
-				TWEEN.update( 1001 );
+        test.equal(t2Started, true, 't2 is automatically started by t')
+        test.done()
+      },
 
-				test.equal( t2Started, true, 't2 is automatically started by t' );
-				test.done();
+      'Test TWEEN.Tween.chain --with several tweens in an array': function (test) {
+        var t = new TWEEN.Tween({}),
+          chainedTweens = [],
+          numChained = 3,
+          numChainedStarted = 0
 
-			},
+        TWEEN.removeAll()
 
-			'Test TWEEN.Tween.chain --with several tweens in an array': function(test) {
+        t.to({}, 1000)
 
-				var t = new TWEEN.Tween( {} ),
-					chainedTweens = [],
-					numChained = 3,
-					numChainedStarted = 0;
+        function onChainedStart () {
+          numChainedStarted++
+        }
 
-				TWEEN.removeAll();
+        for (var i = 0; i < numChained; i++) {
+          var chained = new TWEEN.Tween({})
+          chained.to({}, 1000)
 
-				t.to( {}, 1000 );
+          chainedTweens.push(chained)
 
-				function onChainedStart() {
-					numChainedStarted++;
-				}
-
-				for(var i = 0; i < numChained; i++ ){
-					var chained = new TWEEN.Tween( {} );
-						chained.to( {}, 1000 );
-
-					chainedTweens.push( chained );
-
-					chained.on('start', onChainedStart);
-				}
+          chained.on('start', onChainedStart)
+        }
 
 				// NOTE: This is not the normal way to chain several tweens simultaneously
 				// The usual way would be to specify them explicitly:
 				// t.chain( tween1, tween2, ... tweenN)
 				// ... not to use apply to send an array of tweens
-				t.chain.apply( t, chainedTweens );
+        t.chain.apply(t, chainedTweens)
 
-				test.equal( numChainedStarted, 0 );
+        test.equal(numChainedStarted, 0)
 
-				t.start( 0 );
-				TWEEN.update( 0 );
-				TWEEN.update( 1000 );
-				TWEEN.update( 1001 );
+        t.start(0)
+        TWEEN.update(0)
+        TWEEN.update(1000)
+        TWEEN.update(1001)
 
-				test.equal( numChainedStarted, numChained, 'All chained tweens have been started' );
-				test.done();
+        test.equal(numChainedStarted, numChained, 'All chained tweens have been started')
+        test.done()
+      },
 
-			},
+      'Test TWEEN.Tween.chain allows endless loops': function (test) {
+        var obj = { x: 0 },
+          t1 = new TWEEN.Tween(obj).to({ x: 100 }, 1000),
+          t2 = new TWEEN.Tween(obj).to({ x: 0 }, 1000)
 
-			'Test TWEEN.Tween.chain allows endless loops': function(test) {
+        TWEEN.removeAll()
 
-				var obj = { x: 0 },
-					t1 = new TWEEN.Tween( obj ).to( { x: 100 }, 1000 ),
-					t2 = new TWEEN.Tween( obj ).to( { x: 0 }, 1000 );
+        t1.chain(t2)
+        t2.chain(t1)
 
-				TWEEN.removeAll();
-
-				t1.chain( t2 );
-				t2.chain( t1 );
-
-				test.equal( obj.x, 0 );
+        test.equal(obj.x, 0)
 
 				// x == 0
-				t1.start( 0 );
-				TWEEN.update( 0 );
+        t1.start(0)
+        TWEEN.update(0)
 
-				test.equal( obj.x, 0 );
+        test.equal(obj.x, 0)
 
-				TWEEN.update( 500 );
-				test.equal( obj.x, 50 );
+        TWEEN.update(500)
+        test.equal(obj.x, 50)
 
 				// there... (x == 100)
 
-				TWEEN.update( 1000 );
-				test.equal( obj.x, 100 );
+        TWEEN.update(1000)
+        test.equal(obj.x, 100)
 
-				TWEEN.update( 1500 );
-				test.equal( obj.x, 50 );
+        TWEEN.update(1500)
+        test.equal(obj.x, 50)
 
 				// ... and back again (x == 0)
 
-				TWEEN.update( 2000 );
-				test.equal( obj.x, 0);
+        TWEEN.update(2000)
+        test.equal(obj.x, 0)
 
-				TWEEN.update( 2500 );
-				test.equal( obj.x, 50 );
+        TWEEN.update(2500)
+        test.equal(obj.x, 50)
 
-				TWEEN.update( 3000 );
-				test.equal( obj.x, 100 ); // and x == 100 again
-				test.done();
+        TWEEN.update(3000)
+        test.equal(obj.x, 100) // and x == 100 again
+        test.done()
+      },
 
-			},
+      'Test TWEEN.Tween.onStart': function (test) {
+        var obj = { },
+          t = new TWEEN.Tween(obj),
+          counter = 0
 
-			'Test TWEEN.Tween.onStart': function(test) {
+        t.to({ x: 2 }, 1000)
+        t.on('start', function () {
+          test.ok(true, 'onStart callback is called')
+          counter++
+        })
 
-				var obj = { },
-					t = new TWEEN.Tween( obj ),
-					counter = 0;
+        test.deepEqual(counter, 0)
 
-				t.to( { x: 2 }, 1000 );
-				t.on( 'start', function() {
-					test.ok( true, "onStart callback is called" );
-					counter++;
-				});
+        t.start(0)
+        TWEEN.update(0)
 
-				test.deepEqual( counter, 0 );
+        test.deepEqual(counter, 1)
 
-				t.start( 0 );
-				TWEEN.update( 0 );
+        TWEEN.update(500)
 
-				test.deepEqual( counter, 1 );
+        test.deepEqual(counter, 1, 'onStart callback is not called again')
+        test.done()
+      },
 
-				TWEEN.update( 500 );
+      'Test TWEEN.Tween.onStop': function (test) {
+        var obj = { },
+          t = new TWEEN.Tween(obj),
+          counter = 0
 
-				test.deepEqual( counter, 1, "onStart callback is not called again" );
-				test.done();
+        t.to({ x: 2 }, 1000)
+        t.on('stop', function () {
+          test.ok(true, 'onStop callback is called')
+          counter++
+        })
 
-			},
+        test.deepEqual(counter, 0)
 
-			'Test TWEEN.Tween.onStop': function(test) {
+        t.stop()
+        TWEEN.update(0)
 
-				var obj = { },
-					t = new TWEEN.Tween( obj ),
-					counter = 0;
+        test.deepEqual(counter, 0, "onStop callback not called when the tween hasn't started yet")
 
-				t.to( { x: 2 }, 1000 );
-				t.on( 'stop', function() {
-					test.ok( true, "onStop callback is called" );
-					counter++;
-				});
+        t.start(0)
+        TWEEN.update(0)
+        t.stop()
 
-				test.deepEqual( counter, 0 );
+        test.deepEqual(counter, 1, 'onStop callback is called if the tween has been started already and stop is invoked')
 
-				t.stop();
-				TWEEN.update(0);
+        TWEEN.update(500)
+        t.stop()
 
-				test.deepEqual( counter, 0, "onStop callback not called when the tween hasn't started yet");
+        test.deepEqual(counter, 1, 'onStop callback is not called again once the tween is stopped')
+        test.done()
+      },
 
-				t.start( 0 );
-				TWEEN.update( 0 );
-				t.stop();
+      'Test TWEEN.Tween.onUpdate': function (test) {
+        var obj = { },
+          t = new TWEEN.Tween(obj),
+          counter = 0
 
-				test.deepEqual( counter, 1, "onStop callback is called if the tween has been started already and stop is invoked");
+        t.to({ x: 2 }, 1000)
+        t.on('update', function () {
+          counter++
+        })
 
-				TWEEN.update( 500 );
-				t.stop();
+        test.deepEqual(counter, 0)
 
-				test.deepEqual( counter, 1, "onStop callback is not called again once the tween is stopped" );
-				test.done();
+        t.start(0)
 
-			},
+        TWEEN.update(0)
+        test.deepEqual(counter, 1)
 
-			'Test TWEEN.Tween.onUpdate': function(test) {
+        TWEEN.update(500)
+        test.deepEqual(counter, 2)
 
-				var obj = { },
-					t = new TWEEN.Tween( obj ),
-					counter = 0;
+        TWEEN.update(600)
+        test.deepEqual(counter, 3)
 
-				t.to( { x: 2 }, 1000 );
-				t.on( 'update', function() {
-					counter++;
-				});
+        TWEEN.update(1000)
+        test.deepEqual(counter, 4)
 
-				test.deepEqual( counter, 0 );
+        TWEEN.update(1500)
+        test.deepEqual(counter, 4, 'onUpdate callback should not be called after the tween has finished')
 
-				t.start( 0 );
+        test.done()
+      },
 
-				TWEEN.update( 0 );
-				test.deepEqual( counter, 1 );
+      'Test TWEEN.Tween.onComplete': function (test) {
+        var obj = { },
+          t = new TWEEN.Tween(obj),
+          counter = 0
 
-				TWEEN.update( 500 );
-				test.deepEqual( counter, 2 );
+        t.to({ x: 2 }, 1000)
+        t.on('complete', function () {
+          counter++
+        })
 
-				TWEEN.update( 600 );
-				test.deepEqual( counter, 3 );
+        test.deepEqual(counter, 0)
 
-				TWEEN.update( 1000 );
-				test.deepEqual( counter, 4 );
+        t.start(0)
 
-				TWEEN.update( 1500 );
-				test.deepEqual( counter, 4, 'onUpdate callback should not be called after the tween has finished' );
+        TWEEN.update(0)
+        test.deepEqual(counter, 0)
 
-				test.done();
+        TWEEN.update(500)
+        test.deepEqual(counter, 0)
 
-			},
+        TWEEN.update(600)
+        test.deepEqual(counter, 0)
 
-			'Test TWEEN.Tween.onComplete': function(test) {
+        TWEEN.update(1000)
+        test.deepEqual(counter, 1)
 
-				var obj = { },
-					t = new TWEEN.Tween( obj ),
-					counter = 0;
+        TWEEN.update(1500)
+        test.deepEqual(counter, 1, 'onComplete callback must be called only once')
+        test.done()
+      },
 
-				t.to( { x: 2 }, 1000 );
-				t.on( 'complete', function() {
-					counter++;
-				});
+      'TWEEN.Tween does not repeat by default': function (test) {
+        TWEEN.removeAll()
 
-				test.deepEqual( counter, 0 );
+        var obj = { x: 0 },
+          t = new TWEEN.Tween(obj).to({ x: 100 }, 100)
 
-				t.start( 0 );
+        t.start(0)
 
-				TWEEN.update( 0 );
-				test.deepEqual( counter, 0 );
+        TWEEN.update(0)
+        test.equal(obj.x, 0)
 
-				TWEEN.update( 500 );
-				test.deepEqual( counter, 0 );
+        TWEEN.update(50)
+        test.equal(obj.x, 50)
 
-				TWEEN.update( 600 );
-				test.deepEqual( counter, 0 );
+        TWEEN.update(100)
+        test.equal(obj.x, 100)
 
-				TWEEN.update( 1000 );
-				test.deepEqual( counter, 1 );
+        TWEEN.update(150)
+        test.equal(obj.x, 100)
+        test.done()
+      },
 
-				TWEEN.update( 1500 );
-				test.deepEqual( counter, 1, 'onComplete callback must be called only once' );
-				test.done();
+      'Test single repeat happens only once': function (test) {
+        TWEEN.removeAll()
 
-			},
+        var obj = { x: 0 },
+          t = new TWEEN.Tween(obj).to({ x: 100 }, 100).repeat(1)
 
-			'TWEEN.Tween does not repeat by default': function(test) {
+        t.start(0)
 
-				TWEEN.removeAll();
+        TWEEN.update(0)
+        test.equal(obj.x, 0)
 
-				var obj = { x: 0 },
-					t = new TWEEN.Tween( obj ).to( { x: 100 }, 100 );
+        TWEEN.update(50)
+        test.equal(obj.x, 50)
 
-				t.start( 0 );
+        TWEEN.update(100)
+        test.equal(obj.x, 100)
 
-				TWEEN.update( 0 );
-				test.equal( obj.x, 0 );
+        TWEEN.update(150)
+        test.equal(obj.x, 50)
 
-				TWEEN.update( 50 );
-				test.equal( obj.x, 50 );
+        TWEEN.update(200)
+        test.equal(obj.x, 100)
+        test.done()
+      },
 
-				TWEEN.update( 100 );
-				test.equal( obj.x, 100 );
+      'Test Infinity repeat happens forever': function (test) {
+        TWEEN.removeAll()
 
-				TWEEN.update( 150 );
-				test.equal( obj.x, 100 );
-				test.done();
+        var obj = { x: 0 },
+          t = new TWEEN.Tween(obj).to({ x: 100 }, 100).repeat(Infinity)
 
-			},
+        t.start(0)
 
-			'Test single repeat happens only once': function(test) {
+        TWEEN.update(0)
+        test.equal(obj.x, 0)
 
-				TWEEN.removeAll();
+        TWEEN.update(50)
+        test.equal(obj.x, 50)
 
-				var obj = { x: 0 },
-					t = new TWEEN.Tween( obj ).to( { x: 100 }, 100 ).repeat( 1 );
+        TWEEN.update(100)
+        test.equal(obj.x, 100)
 
-				t.start( 0 );
+        TWEEN.update(150)
+        test.equal(obj.x, 50)
 
-				TWEEN.update( 0 );
-				test.equal( obj.x, 0 );
+        TWEEN.update(200)
+        test.equal(obj.x, 100)
 
-				TWEEN.update( 50 );
-				test.equal( obj.x, 50 );
+        TWEEN.update(250)
+        test.equal(obj.x, 50)
+        test.done()
+      },
 
-				TWEEN.update( 100 );
-				test.equal( obj.x, 100 );
+      'Test tweening relatively with repeat': function (test) {
+        TWEEN.removeAll()
 
-				TWEEN.update( 150 );
-				test.equal( obj.x, 50 );
+        var obj = { x: 0, y: 0 },
+          t = new TWEEN.Tween(obj).to({ x: '+100', y: '-100' }, 100).repeat(1)
 
-				TWEEN.update( 200 );
-				test.equal( obj.x, 100 );
-				test.done();
+        t.start(0)
 
-			},
+        TWEEN.update(0)
+        test.equal(obj.x, 0)
+        test.equal(obj.y, 0)
 
-			'Test Infinity repeat happens forever': function(test) {
+        TWEEN.update(50)
+        test.equal(obj.x, 50)
+        test.equal(obj.y, -50)
 
-				TWEEN.removeAll();
+        TWEEN.update(100)
+        test.equal(obj.x, 100)
+        test.equal(obj.y, -100)
 
-				var obj = { x: 0 },
-					t = new TWEEN.Tween( obj ).to( { x: 100 }, 100 ).repeat( Infinity );
+        TWEEN.update(150)
+        test.equal(obj.x, 150)
+        test.equal(obj.y, -150)
 
-				t.start( 0 );
+        TWEEN.update(200)
+        test.equal(obj.x, 200)
+        test.equal(obj.y, -200)
+        test.done()
+      },
 
-				TWEEN.update( 0 );
-				test.equal( obj.x, 0 );
+      'Test yoyo with repeat Infinity happens forever': function (test) {
+        TWEEN.removeAll()
 
-				TWEEN.update( 50 );
-				test.equal( obj.x, 50 );
+        var obj = { x: 0 },
+          t = new TWEEN.Tween(obj).to({ x: 100 }, 100).repeat(Infinity).yoyo(true)
 
-				TWEEN.update( 100 );
-				test.equal( obj.x, 100 );
+        t.start(0)
 
-				TWEEN.update( 150 );
-				test.equal( obj.x, 50 );
+        TWEEN.update(0)
+        test.equal(obj.x, 0)
 
-				TWEEN.update( 200 );
-				test.equal( obj.x, 100 );
+        TWEEN.update(25)
+        test.equal(obj.x, 25)
 
-				TWEEN.update( 250 );
-				test.equal( obj.x, 50 );
-				test.done();
+        TWEEN.update(100)
+        test.equal(obj.x, 100)
 
-			},
+        TWEEN.update(125)
+        test.equal(obj.x, 75)
 
-			'Test tweening relatively with repeat': function(test) {
+        TWEEN.update(200)
+        test.equal(obj.x, 0)
 
-				TWEEN.removeAll();
+        TWEEN.update(225)
+        test.equal(obj.x, 25)
+        test.done()
+      },
 
-				var obj = { x: 0, y: 0 },
-					t = new TWEEN.Tween( obj ).to( { x: "+100", y: "-100" }, 100 ).repeat( 1 );
+      'Test yoyo with repeat 1 happens once': function (test) {
+        TWEEN.removeAll()
 
-				t.start( 0 );
+        var obj = { x: 0 },
+          t = new TWEEN.Tween(obj).to({ x: 100 }, 100).repeat(1).yoyo(true)
 
-				TWEEN.update( 0 );
-				test.equal( obj.x, 0 );
-				test.equal( obj.y, 0 );
+        t.start(0)
 
-				TWEEN.update( 50 );
-				test.equal( obj.x, 50 );
-				test.equal( obj.y, -50 );
+        TWEEN.update(0)
+        test.equal(obj.x, 0)
 
-				TWEEN.update( 100 );
-				test.equal( obj.x, 100 );
-				test.equal( obj.y, -100 );
+        TWEEN.update(25)
+        test.equal(obj.x, 25)
 
-				TWEEN.update( 150 );
-				test.equal( obj.x, 150 );
-				test.equal( obj.y, -150 );
+        TWEEN.update(100)
+        test.equal(obj.x, 100)
 
-				TWEEN.update( 200 );
-				test.equal( obj.x, 200 );
-				test.equal( obj.y, -200 );
-				test.done();
+        TWEEN.update(125)
+        test.equal(obj.x, 75)
 
-			},
+        TWEEN.update(200)
+        test.equal(obj.x, 0)
 
-			'Test yoyo with repeat Infinity happens forever': function(test) {
+        TWEEN.update(225)
+        test.equal(obj.x, 0)
+        test.done()
+      },
 
-				TWEEN.removeAll();
+      'Test TWEEN.Tween.stopChainedTweens()': function (test) {
+        var t = new TWEEN.Tween({}),
+          tStarted = false,
+          tCompleted = false,
+          t2 = new TWEEN.Tween({}),
+          t2Started = false
 
-				var obj = { x: 0 },
-					t = new TWEEN.Tween( obj ).to( { x: 100 }, 100 ).repeat( Infinity ).yoyo(true);
+        TWEEN.removeAll()
 
-				t.start( 0 );
+        t.to({}, 1000)
+        t2.delay(500).to({}, 1000)
 
-				TWEEN.update( 0 );
-				test.equal( obj.x, 0 );
+        t.chain(t2)
+        t2.chain(t)
 
-				TWEEN.update( 25 );
-				test.equal( obj.x, 25 );
+        t.on('start', function () {
+          tStarted = true
+        })
 
-				TWEEN.update( 100 );
-				test.equal( obj.x, 100 );
+        t.on('complete', function () {
+          tCompleted = true
+        })
 
-				TWEEN.update( 125 );
-				test.equal( obj.x, 75 );
+        t2.on('start', function () {
+          test.equal(tStarted, true)
+          test.equal(tCompleted, true)
+          test.equal(t2Started, false)
+          t2Started = true
+        })
 
-				TWEEN.update( 200 );
-				test.equal( obj.x, 0 );
+        test.equal(tStarted, false)
+        test.equal(t2Started, false)
 
-				TWEEN.update( 225 );
-				test.equal( obj.x, 25 );
-				test.done();
+        t.start(0)
+        TWEEN.update(1001)
+        t.stop()
 
-			},
+        test.equal(tStarted, true)
+        test.equal(t2Started, false)
+        test.equal(TWEEN.getAll().length, 0)
+        test.done()
+      },
 
-			'Test yoyo with repeat 1 happens once': function(test) {
-
-				TWEEN.removeAll();
-
-				var obj = { x: 0 },
-					t = new TWEEN.Tween( obj ).to( { x: 100 }, 100 ).repeat( 1 ).yoyo(true);
-
-				t.start( 0 );
-
-				TWEEN.update( 0 );
-				test.equal( obj.x, 0 );
-
-				TWEEN.update( 25 );
-				test.equal( obj.x, 25 );
-
-				TWEEN.update( 100 );
-				test.equal( obj.x, 100 );
-
-				TWEEN.update( 125 );
-				test.equal( obj.x, 75 );
-
-				TWEEN.update( 200 );
-				test.equal( obj.x, 0 );
-
-				TWEEN.update( 225 );
-				test.equal( obj.x, 0 );
-				test.done();
-			},
-
-
-			'Test TWEEN.Tween.stopChainedTweens()': function(test) {
-				var t = new TWEEN.Tween( {} ),
-					tStarted = false,
-					tCompleted = false,
-					t2 = new TWEEN.Tween( {} ),
-					t2Started = false;
-
-				TWEEN.removeAll();
-
-				t.to( {}, 1000 );
-				t2.delay(500).to( {}, 1000 );
-
-				t.chain( t2 );
-				t2.chain( t );
-
-				t.on( 'start', function() {
-					tStarted = true;
-				});
-
-				t.on('complete', function() {
-					tCompleted = true;
-				});
-
-				t2.on( 'start', function() {
-					test.equal( tStarted, true );
-					test.equal( tCompleted, true );
-					test.equal( t2Started, false );
-					t2Started = true;
-				});
-
-				test.equal( tStarted, false );
-				test.equal( t2Started, false );
-
-				t.start( 0 );
-				TWEEN.update( 1001 );
-				t.stop();
-
-				test.equal( tStarted, true );
-				test.equal( t2Started, false );
-				test.equal( TWEEN.getAll().length, 0 );
-				test.done();
-
-			},
-
-			'Test TWEEN.Tween.chain progressess into chained tweens': function(test) {
-
-				var obj = { t: 1000 };
+      'Test TWEEN.Tween.chain progressess into chained tweens': function (test) {
+        var obj = { t: 1000 }
 
 				// 1000 of nothing
-				var blank = new TWEEN.Tween({}).to({}, 1000);
+        var blank = new TWEEN.Tween({}).to({}, 1000)
 
 				// tween obj.t from 1000 -> 2000 (in time with update time)
-				var next  = new TWEEN.Tween(obj).to({ t: 2000 }, 1000);
+        var next = new TWEEN.Tween(obj).to({ t: 2000 }, 1000)
 
-				blank.chain(next).start(0);
+        blank.chain(next).start(0)
 
-				TWEEN.update(1500);
-				test.equal(obj.t, 1500);
+        TWEEN.update(1500)
+        test.equal(obj.t, 1500)
 
-				TWEEN.update(2000);
-				test.equal(obj.t, 2000);
+        TWEEN.update(2000)
+        test.equal(obj.t, 2000)
 
-				test.done();
+        test.done()
+      },
 
-			},
+      'Test that TWEEN.Tween.end sets the final values.': function (test) {
+        var object1 = {x: 0, y: -50, z: 1000}
+        var target1 = {x: 50, y: 123, z: '+234'}
 
-			'Test that TWEEN.Tween.end sets the final values.': function(test) {
+        var tween1 = new TWEEN.Tween(object1).to(target1, 1000)
 
-				var object1 = {x: 0, y: -50, z: 1000};
-				var target1 = {x: 50, y: 123, z: '+234'};
+        tween1.start()
+        tween1.end()
 
-				var tween1 = new TWEEN.Tween(object1).to(target1, 1000);
+        test.equal(object1.x, 50)
+        test.equal(object1.y, 123)
+        test.equal(object1.z, 1234)
 
-				tween1.start();
-				tween1.end();
+        var object2 = {x: 0, y: -50, z: 1000}
+        var target2 = {x: 50, y: 123, z: '+234'}
 
-				test.equal(object1.x, 50);
-				test.equal(object1.y, 123);
-				test.equal(object1.z, 1234);
+        var tween2 = new TWEEN.Tween(object2).to(target2, 1000)
 
-				var object2 = {x: 0, y: -50, z: 1000};
-				var target2 = {x: 50, y: 123, z: '+234'};
+        tween2.start(300)
+        tween2.update(500)
+        tween2.end()
 
-				var tween2 = new TWEEN.Tween(object2).to(target2, 1000);
+        test.equal(object2.x, 50)
+        test.equal(object2.y, 123)
+        test.equal(object2.z, 1234)
 
-				tween2.start(300);
-				tween2.update(500);
-				tween2.end();
+        test.done()
+      },
 
-				test.equal(object2.x, 50);
-				test.equal(object2.y, 123);
-				test.equal(object2.z, 1234);
+      'Test that TWEEN.Tween.end calls the onComplete callback of the tween.': function (test) {
+        test.expect(1)
 
-				test.done();
-			},
+        var tween1 = new TWEEN.Tween({}).to({}, 1000).on('complete', function () {
+          test.ok(true)
+        })
 
-			'Test that TWEEN.Tween.end calls the onComplete callback of the tween.': function(test) {
+        tween1.start()
+        tween1.end()
 
-				test.expect(1);
+        test.done()
+      },
 
-				var tween1 = new TWEEN.Tween({}).to({}, 1000).on('complete', function () {
-					test.ok(true);
-				});
-
-				tween1.start();
-				tween1.end();
-
-				test.done();
-
-			},
-
-			'Test delay not adds delay before each repeat': function(test) {
-
+      'Test delay not adds delay before each repeat': function (test) {
 				// If repeatDelay isn't specified then delay is used since
 				// that's the way it worked before repeatDelay was added.
 
-				TWEEN.removeAll();
+        TWEEN.removeAll()
 
-				var obj = { x: 0 },
-					t = new TWEEN.Tween( obj ).to( { x: 100 }, 100 ).repeat( 1 ).delay(100);
+        var obj = { x: 0 },
+          t = new TWEEN.Tween(obj).to({ x: 100 }, 100).repeat(1).delay(100)
 
-				t.start( 0 );
+        t.start(0)
 
-				TWEEN.update( 100 );
-				test.equal( obj.x, 0 );
+        TWEEN.update(100)
+        test.equal(obj.x, 0)
 
-				TWEEN.update( 150 );
-				test.equal( obj.x, 50 );
+        TWEEN.update(150)
+        test.equal(obj.x, 50)
 
-				TWEEN.update( 200 );
-				test.equal( obj.x, 100 );
+        TWEEN.update(200)
+        test.equal(obj.x, 100)
 
-				TWEEN.update( 250 );
-				test.equal( obj.x, 50 );
+        TWEEN.update(250)
+        test.equal(obj.x, 50)
 
-				TWEEN.update( 300 );
-				test.equal( obj.x, 100 );
+        TWEEN.update(300)
+        test.equal(obj.x, 100)
 
-				TWEEN.update( 350 );
-				test.equal( obj.x, 100 );
+        TWEEN.update(350)
+        test.equal(obj.x, 100)
 
-				test.done();
+        test.done()
+      },
 
-			},
+      'Test repeatDelay adds delay before each repeat': function (test) {
+        TWEEN.removeAll()
 
-			'Test repeatDelay adds delay before each repeat': function(test) {
+        var obj = { x: 0 },
+          t = new TWEEN.Tween(obj).to({ x: 100 }, 100).repeat(1).repeatDelay(200)
 
-				TWEEN.removeAll();
+        t.start(0)
 
-				var obj = { x: 0 },
-					t = new TWEEN.Tween( obj ).to( { x: 100 }, 100 ).repeat( 1 ).repeatDelay(200);
+        t.update(0)
+        test.equal(obj.x, 0)
 
-				t.start( 0 );
+        t.update(50)
+        test.equal(obj.x, 50)
 
-				t.update( 0 );
-				test.equal( obj.x, 0 );
+        t.update(100)
+        test.equal(obj.x, 100)
 
-				t.update( 50 );
-				test.equal( obj.x, 50 );
+        t.update(200)
+        test.equal(obj.x, 100)
 
-				t.update( 100 );
-				test.equal( obj.x, 100 );
+        t.update(300)
+        test.equal(obj.x, 0)
 
-				t.update( 200 );
-				test.equal( obj.x, 100 );
+        t.update(350)
+        test.equal(obj.x, 50)
 
-				t.update( 300 );
-				test.equal( obj.x, 0 );
+        t.update(400)
+        test.equal(obj.x, 100)
 
-				t.update( 350 );
-				test.equal( obj.x, 50 );
+        test.done()
+      },
 
-				t.update( 400 );
-				test.equal( obj.x, 100 );
+      'Test repeatDelay and delay can be used together': function (test) {
+        TWEEN.removeAll()
 
-				test.done();
+        var obj = { x: 0 },
+          t = new TWEEN.Tween(obj).to({ x: 100 }, 100).delay(100).repeat(1).repeatDelay(200)
 
-			},
+        t.start(0)
 
-			'Test repeatDelay and delay can be used together': function(test) {
+        TWEEN.update(100)
+        test.equal(obj.x, 0)
 
-				TWEEN.removeAll();
+        TWEEN.update(150)
+        test.equal(obj.x, 50)
 
-				var obj = { x: 0 },
-					t = new TWEEN.Tween( obj ).to( { x: 100 }, 100 ).delay(100).repeat( 1 ).repeatDelay(200);
+        TWEEN.update(200)
+        test.equal(obj.x, 100)
 
-				t.start( 0 );
+        TWEEN.update(300)
+        test.equal(obj.x, 100)
 
-				TWEEN.update( 100 );
-				test.equal( obj.x, 0 );
+        TWEEN.update(400)
+        test.equal(obj.x, 0)
 
-				TWEEN.update( 150 );
-				test.equal( obj.x, 50 );
+        TWEEN.update(450)
+        test.equal(obj.x, 50)
 
-				TWEEN.update( 200 );
-				test.equal( obj.x, 100 );
+        TWEEN.update(500)
+        test.equal(obj.x, 100)
 
-				TWEEN.update( 300 );
-				test.equal( obj.x, 100 );
+        test.done()
+      },
 
-				TWEEN.update( 400 );
-				test.equal( obj.x, 0 );
+      'Tween.js compatible with Object.defineProperty getter / setters': function (test) {
+        var obj = { _x: 0 }
 
-				TWEEN.update( 450 );
-				test.equal( obj.x, 50 );
+        Object.defineProperty(obj, 'x', {
+          get: function () {
+            return this._x
+          },
+          set: function (x) {
+            this._x = x
+          }
+        })
 
-				TWEEN.update( 500 );
-				test.equal( obj.x, 100 );
+        test.equal(obj.x, 0)
 
-				test.done();
+        var t = new TWEEN.Tween(obj).to({ x: 100 }, 100)
 
-			},
+        t.start(0)
 
-			'Tween.js compatible with Object.defineProperty getter / setters': function(test) {
+        test.equal(obj.x, 0)
 
-				var obj = { _x: 0 };
+        TWEEN.update(37)
+        test.equal(obj.x, 37)
 
-				Object.defineProperty( obj, 'x', {
-					get: function() {
-						return this._x;
-					},
-					set: function( x ) {
-						this._x = x;
-					}
-				});
+        TWEEN.update(100)
+        test.equal(obj.x, 100)
 
-                test.equal( obj.x, 0 );
+        TWEEN.update(115)
+        test.equal(obj.x, 100)
 
-				var t = new TWEEN.Tween( obj ).to( { x: 100 }, 100 );
+        test.done()
+      }
 
-				t.start( 0 );
+    }
 
-                test.equal( obj.x, 0 );
+    return tests
+  }
 
-                TWEEN.update( 37 );
-                test.equal( obj.x, 37 );
-
-				TWEEN.update( 100 );
-				test.equal( obj.x, 100 );
-
-                TWEEN.update( 115 );
-                test.equal( obj.x, 100 );
-
-				test.done();
-
-			}
-
-		};
-
-		return tests;
-
-	}
-
-	if(typeof module !== 'undefined' && module.exports) {
-		module.exports = getTests;
-	} else {
-		this.getTests = getTests;
-	}
-
-}).call(this);
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = getTests
+  } else {
+    this.getTests = getTests
+  }
+}).call(this)

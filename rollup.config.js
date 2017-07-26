@@ -1,20 +1,20 @@
-import buble from 'rollup-plugin-buble';
-import uglify from 'rollup-plugin-uglify';
-import { minify } from 'uglify-js-harmony';
+import buble from 'rollup-plugin-buble'
+import uglify from 'rollup-plugin-uglify'
+import { minify } from 'uglify-js-harmony'
 
-const { BUILD } = process.env;
+const { BUILD } = process.env
 
-const plugins = [ buble() ];
+const plugins = [ buble() ]
 
-let moduleName = 'Tween';
-let destFile = 'dist/' + moduleName;
+let moduleName = 'Tween'
+let destFile = 'dist/' + moduleName
 
-if ( BUILD === 'prod' ) {
-	plugins.push(uglify({}, minify));
-	destFile = 'dist/' + moduleName + '.min';
+if (BUILD === 'prod') {
+  plugins.push(uglify({}, minify))
+  destFile = 'dist/' + moduleName + '.min'
 }
 
-destFile = destFile + '.js';
+destFile = destFile + '.js'
 
 export default {
   entry: 'src/Tween.js',

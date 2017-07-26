@@ -4,3 +4,7 @@ docs/
 examples/
 CONTRIBUTING.md
 test/
+.gitignore
+ISSUE_TEMPLATE.md
+LICENSE.md
+compatibility/

@@ -16,11 +16,11 @@
 * `npm`
 * `yarn`
 
-# Builders
-* `Webpack`
+# Bundler
+* `Rollup`
 
 # Transpiler
-* `Babel`
+* `Buble`
 
 # XBox/PlayStation
 * not tested yet

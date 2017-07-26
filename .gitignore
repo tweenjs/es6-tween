@@ -2,3 +2,8 @@
 build/npm*
 node_modules
 npm-debug.log
+dist/
+.npmignore
+yarn.lock
+package-lock.json
+.travis
