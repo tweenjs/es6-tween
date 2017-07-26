@@ -201,7 +201,7 @@ if (root.document) {
 
 			for ( let tween in _tweens ) {
 
-			tween._startTime += timeDiff
+			_tweens[tween]._startTime += timeDiff
 
 			}
 

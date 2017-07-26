@@ -1,5 +1,3 @@
-import cloneTween from './clone';
-
 import Plugins from './Plugins';
 
 export default class Composite {
@@ -60,9 +58,6 @@ export default class Composite {
 	}
 	set object(obj) {
 		return this.render(obj);
-	}
-	cloneLayer() {
-		return cloneTween(this, {}, Composite)
 	}
 	appendTo(node) {
 		node.appendChild(this.domNode);

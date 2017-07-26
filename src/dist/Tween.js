@@ -7,9 +7,9 @@ import {
 from './core';
 import Easing from './Easing';
 import Interpolation from './Interpolation';
-import cloneTween from './clone';
 import joinToString from './joinToString';
 import toNumber from './toNumber';
+import SubTween from './SubTween';
 
 // Credits:
 // @jkroso for string parse library
@@ -19,6 +19,8 @@ const Number_Match_RegEx = /\s+|([A-Za-z?().,{}:""\[\]#]+)|([-+\/*%]+=)?([-+*\/%
 class Tween {
     constructor(object = {}, instate) {
 
+		this.isJoinToString = typeof object === "string" && Number_Match_RegEx.test(object);
+		object = this.isJoinToString ? object.match(Number_Match_RegEx).map(toNumber) : object;
         this.object = object;
         this._valuesStart = Tween.createEmptyConst(object);
         this._valuesEnd = Tween.createEmptyConst(object);
@@ -200,7 +202,7 @@ class Tween {
                 };
                 this._valuesEnd = _vE;
             } else {
-                this._valuesEnd = properties;
+                this._valuesEnd = this.isJoinToString ? SubTween(this.object, properties.match(Number_Match_RegEx).map(toNumber)) : properties;
             }
 
             if (typeof duration === "number") {
@@ -233,61 +235,22 @@ class Tween {
 
             for (let property in _valuesEnd) {
 
+				property = object[+property] !== undefined ? +property : property;
+
                 if (typeof _valuesEnd[property] === "object") {
-                    if (Array.isArray(_valuesEnd[property])) {
-                        if (typeof object[property] === "number") {
-                            this._valuesEnd[property] = [object[property]].concat(_valuesEnd[property]);
-                        } else {
-                            let clonedTween = cloneTween(this, {
-                                    object: object[property],
-                                    _valuesEnd: _valuesEnd[property],
-                                    _events: undefined
-                                })
-                                .start()
-                                .stop();
 
-                            this._valuesEnd[property] = clonedTween;
-                        }
-                    } else {
-                        let clonedTween = cloneTween(this, {
-                                object: object[property],
-                                _valuesEnd: _valuesEnd[property],
-                                _events: undefined
-                            })
-                            .start()
-                            .stop();
+                    this._valuesEnd[property] = SubTween(object[property], _valuesEnd[property]);
 
-                        this._valuesStart[property] = 1;
-                        this._valuesEnd[property] = clonedTween;
-                    }
                 } else if (typeof _valuesEnd[property] === "string" && typeof object[property] === "string" && Number_Match_RegEx.test(object[property]) && Number_Match_RegEx.test(_valuesEnd[property])) {
 
                     let __get__Start = object[property].match(Number_Match_RegEx);
                     __get__Start = __get__Start.map(toNumber);
                     let __get__End = _valuesEnd[property].match(Number_Match_RegEx);
                     __get__End = __get__End.map(toNumber);
-                    let clonedTween = cloneTween(this, {
-                            object: __get__Start,
-                            _valuesEnd: __get__End,
-                            _events: {}
-                        })
-                        .start()
-                        .stop();
 
-                    clonedTween.join = true; // For string tweening
-                    this._valuesStart[property] = 1;
-                    this._valuesEnd[property] = clonedTween;
+					this._valuesEnd[property] = SubTween(__get__Start, __get__End);
+					this._valuesEnd[property].join = true;
 
-                }
-
-                // If value presented as function,
-                // we should convert to value again by passing function
-                if (typeof object[property] === "function") {
-                    object[property] = this.object[property] = object[property](this);
-                }
-
-                if (typeof _valuesEnd[property] === "function") {
-                    this._valuesEnd[property] = _valuesEnd[property](this);
                 }
 
                 // If `to()` specifies a property that doesn't exist in the source object,
@@ -410,7 +373,8 @@ class Tween {
                 _duration,
                 _valuesStart,
                 _valuesEnd,
-                object
+                object,
+				isJoinToString
             } = this;
 
             let property;
@@ -436,6 +400,20 @@ class Tween {
 
             value = _easingFunction(elapsed);
 
+			if (typeof _valuesEnd === "function") {
+
+				let get = _valuesEnd(value);
+
+				if (isJoinToString) {
+
+					get = joinToString(get);
+
+				}
+
+				object = get;
+
+			} else {
+
             for (property in _valuesEnd) {
 
                 // Don't update properties that do not exist in the source object
@@ -446,19 +424,17 @@ class Tween {
                 let start = _valuesStart[property];
                 let end = _valuesEnd[property];
 
-                if (end instanceof Tween) {
+                if (typeof end === "function") {
 
-                    let getValue = end.get(time);
+					let get = end(value);
 
-                    if (end.join) {
+					if (end.join) {
 
-                        object[property] = joinToString(getValue);
+						get = joinToString(get);
 
-                    } else {
+					}
 
-                        object[property] = getValue;
-
-                    }
+                    object[property] = get;
 
                 } else if (Array.isArray(end)) {
 
@@ -481,6 +457,8 @@ class Tween {
                 }
 
             }
+
+			}
 
             this.emit('update', object, value, elapsed);
 

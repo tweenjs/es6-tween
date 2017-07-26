@@ -122,8 +122,8 @@ git reset --hard
 
 ## Features
 
-* Does one thing and one thing only: tween properties
-* Takes care of CSS units (e.g. appending `px`)
+* Tweens everything you give them, string (numbers only), number, number of arrays, number of object, etc...
+* Can use CSS units (e.g. appending `px`)
 * Can interpolate colours (partially)
 * Easing functions are reusable outside of Tween
 * Can also use custom easing functions
