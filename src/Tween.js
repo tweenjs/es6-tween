@@ -6,7 +6,7 @@ import './shim/raf'
 
 import './shim/isArray'
 
-import { has, get, getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit } from './dist/core'
+import { nextId, has, get, getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit } from './dist/core'
 
 import Easing from './dist/Easing'
 
@@ -22,4 +22,4 @@ import Plugins from './dist/Plugins'
 
 import { TweenInit } from './dist/Decorators'
 
-export { TweenInit, has, get, getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit, Tween, Easing, Interpolation, Composite, Timeline, Plugins }
+export { TweenInit, nextId, has, get, getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit, Tween, Easing, Interpolation, Composite, Timeline, Plugins }

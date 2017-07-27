@@ -1,9 +1,6 @@
 .DS_Store
 build/npm*
 node_modules
+dist
 npm-debug.log
-dist/
 .npmignore
-yarn.lock
-package-lock.json
-.travis
