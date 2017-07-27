@@ -24,7 +24,7 @@ class Tween {
     this.isJoinToString = typeof object === "string" && Number_Match_RegEx.test(object);
     object = this.isJoinToString ? object.match(Number_Match_RegEx)
       .map(toNumber) : object;
-    this.object = Store.add(object);
+    this.object = object;
     this._valuesStart = Tween.createEmptyConst(object);
     this._valuesEnd = Tween.createEmptyConst(object);
 
@@ -79,6 +79,10 @@ class Tween {
   }
   reversed() {
     return this._reversed;
+  }
+  useActiveMode () {
+	this.object = Store.add(this.object);
+	return this;
   }
   off(name, fn) {
     if (!(this._events && this._events[name] !== undefined)) {
@@ -274,14 +278,16 @@ class Tween {
 
     }
 
-	this._startTime += now();
-
 	return this;
 
   }
   start(time) {
 
     this._startTime = time !== undefined ? time : now();
+	this._startTime += this._delayTime;
+
+	this.render();
+	this._rendered = true;
 
     add(this);
 
@@ -404,7 +410,12 @@ class Tween {
 
     if (!_onStartCallbackFired) {
 
+	if (!this._rendered) {
+
 	  this.render();
+
+	}
+
       this.emit('start', object);
 
       this._onStartCallbackFired = true;
