@@ -18,8 +18,8 @@ import Composite from './dist/Composite'
 
 import Timeline from './dist/Timeline'
 
-import Plugins from './dist/Plugins'
+import Plugins, { PropertyTypes } from './dist/Plugins'
 
 import { TweenInit } from './dist/Decorators'
 
-export { TweenInit, nextId, has, get, getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit, Tween, Easing, Interpolation, Composite, Timeline, Plugins }
+export { TweenInit, nextId, has, get, getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit, Tween, Easing, Interpolation, Composite, Timeline, Plugins, PropertyTypes }

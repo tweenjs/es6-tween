@@ -213,8 +213,7 @@ class Tween {
       };
       this._valuesEnd = _vE;
     } else if (typeof properties === "string" && this.isJoinToString) {
-      this._valuesEnd = SubTween(this.object, properties.match(Number_Match_RegEx)
-        .map(toNumber));
+      this._valuesEnd = SubTween(this.object, properties.match(Number_Match_RegEx).map(toNumber));
     } else {
 	  this._valuesEnd = properties;
 	}

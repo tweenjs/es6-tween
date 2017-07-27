@@ -29,8 +29,18 @@ const cache = {
 		x: 1,
 		y: 1,
 		z: 1
+	},
+	color: {
+		fill: 1,
+		stroke: 1,
+		color: 1,
+		backgroundColor: 1,
+		borderColor : 1,
+		outlineColor: 1
 	}
 };
+
+export { cache as PropertyTypes };
 
 export default class Plugins {
 	static Attr(Composite) {
@@ -40,6 +50,18 @@ export default class Plugins {
 				for (let p in RenderObject) {
 					if (cache.transform[p] || cache.filter[p]) continue;
 					layer.setAttribute(p, RenderObject[p]);
+				}
+			}
+		}
+	}
+	static Color(Composite) {
+		let layer = this.domNode
+		let decimalRegExp = /\.([0-9]+)/g;
+		return {
+			update(Tween, RenderObject) {
+				for (let p in RenderObject) {
+					if (!cache.color[p]) continue;
+					layer.style[p] = RenderObject[p].replace(decimalRegExp, '');
 				}
 			}
 		}

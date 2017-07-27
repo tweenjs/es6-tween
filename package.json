@@ -15,9 +15,9 @@
 		"example": "examples"
 	},
 	"scripts": {
-		"build": "rollup -c --environment BUILD:prod",
+		"minify": "rollup -c --environment BUILD:prod",
 		"source": "rollup -c --sourcemap",
-		"bundle": "npm run source && npm run build",
+		"build": "npm run source && npm run minify",
 		"dev": "rollup -c -w --sourcemap",
 		"test-unit": "nodeunit test/unit/nodeunitheadless.js",
 		"test": "npm run test-unit && npm run fix && npm run lint",
