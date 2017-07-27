@@ -212,9 +212,9 @@ class Tween {
         Number: properties
       };
       this._valuesEnd = _vE;
-    } else if (typeof properties === "string") {
-      this._valuesEnd = this.isJoinToString ? SubTween(this.object, properties.match(Number_Match_RegEx)
-        .map(toNumber)) : properties;
+    } else if (typeof properties === "string" && this.isJoinToString) {
+      this._valuesEnd = SubTween(this.object, properties.match(Number_Match_RegEx)
+        .map(toNumber));
     } else {
 	  this._valuesEnd = properties;
 	}
@@ -432,9 +432,11 @@ class Tween {
     elapsed = elapsed > 1 ? 1 : elapsed;
     elapsed = _reversed ? 1 - elapsed : elapsed;
 
+	value = typeof _easingFunction === "function" ? _easingFunction(elapsed) : defaultEasing(elapsed);
+
     if (typeof _valuesEnd === "function") {
 
-      let get = _valuesEnd(value);
+      let get = _valuesEnd(elapsed);
 
       if (isJoinToString) {
 
@@ -442,7 +444,7 @@ class Tween {
 
       }
 
-      object = get;
+	this.emit('update', get, value, elapsed);
 
     } else {
 
@@ -455,7 +457,7 @@ class Tween {
 
         let start = _valuesStart[property];
         let end = _valuesEnd[property];
-			value = _easingFunction[property] ? _easingFunction[property](elapsed) : typeof _easingFunction === "function" ? _easingFunction(elapsed) : defaultEasing(elapsed);
+			value = _easingFunction[property] ? _easingFunction[property](elapsed) : value;
 
         if (typeof end === "function") {
 
@@ -491,9 +493,9 @@ class Tween {
 
       }
 
-    }
+	this.emit('update', object, value, elapsed);
 
-    this.emit('update', object, value, elapsed);
+    }
 
     if (elapsed === 1 || (_reversed && elapsed === 0)) {
 
