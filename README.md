@@ -2,9 +2,7 @@
 
 ES6 implementation of <a href="https://github.com/tweenjs/tween.js">tween.js</a>
 
-<img src="http://img.badgesize.io/https://unpkg.com/es6-tween"/>
-<img src="http://img.badgesize.io/https://unpkg.com/es6-tween?compression=gzip"/>
-[![NPM Version][npm-image]][npm-url]
+<img src="http://img.badgesize.io/https://unpkg.com/es6-tween"/>  <img src="http://img.badgesize.io/https://unpkg.com/es6-tween?compression=gzip"/>  [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Travis tests][travis-image]][travis-url]
 [![Flattr this][flattr-image]][flattr-url]
