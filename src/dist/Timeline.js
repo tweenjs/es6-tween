@@ -85,6 +85,13 @@ class Timeline extends Tween {
     this._tweens[tween.id] = tween;
     return this;
   }
+  restart () {
+	this._startTime += now();
+
+	add(this);
+
+	return this.emit('restart');
+  }
   easing(easing) {
     return this.map(tween => tween.easing(easing));
   }
@@ -114,17 +121,15 @@ class Timeline extends Tween {
     this._elapsed = elapsed;
 
     let timing = time - _startTime;
-    timing = _reversed ? _totalDuration - timing : timing;
+    let _timing = _reversed ? _totalDuration - timing : timing;
 
     for (let tween in _tweens) {
-      if (_tweens[tween].update(timing)) {
+      if (_tweens[tween].update(_timing)) {
         continue;
-      } else {
-        delete this._tweens[tween];
       }
     }
 
-    this.emit('update', elapsed);
+    this.emit('update', elapsed, timing);
 
     if (elapsed === 1 || (_reversed && elapsed === 0)) {
 
