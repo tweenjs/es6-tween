@@ -7,57 +7,49 @@ export default class Composite {
 
 		this.domNode = domNode;
 		this.plugins = {};
-		let pluginList = this.plugins;
 
-		this.render = function (object) {
+		this.map = this.map.bind(this);
+		this.render = this.render.bind(this);
+		this.init = this.init.bind(this);
+		this.fetch = this.fetch.bind(this);
 
-			for (let p in pluginList) {
+		return this;
+	}
+	map (type, object) {
+		
+		let { plugins } = this;
 
-				pluginList[p] && pluginList[p].update && pluginList[p].update(this, object);
+		for (let p in plugins) {
 
-			}
+			let plugin = plugins[p];
 
-			return this;
-		};
+			plugin && plugin[type] && plugin[type](this, object);
 
-		this.fetch = function () {
-
-			if (Object.keys(this.object).length) {
-
-				return this;
-
-			}
-
-			for (let p in pluginList) {
-
-				pluginList[p] && pluginList[p].fetch && pluginList[p].fetch(this);
-
-			}
-
-			return this;
-		};
-
-		this.init = function (object) {
-
-			for (let p in pluginList) {
-
-				pluginList[p] && pluginList[p].init && pluginList[p].init(this, object);
-
-			}
-
-			return this;
 		}
 
 		return this;
 	}
-	applyPlugin(name) {
+	render (object) {
+
+		return this.map('update', object);
+
+	}
+	init (object) {
+
+		return this.map('init', object);
+
+	}
+	fetch (object) {
+
+		return this.map('fetch', fetch);
+
+	}
+	applyPlugin(name, ...args) {
 		if (Plugins[name] !== undefined) {
-			this.plugins[name] = Plugins[name](this);
+			this.plugins[name] = Plugins[name].apply(this, args);
+			return this.plugins[name];
 		}
 		return this;
-	}
-	set object(obj) {
-		return this.render(obj);
 	}
 	appendTo(node) {
 		node.appendChild(this.domNode);

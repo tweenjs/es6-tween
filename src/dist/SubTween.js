@@ -1,4 +1,4 @@
-const SubTween = (start, end, roundv = 100000) => {
+const SubTween = (start, end, roundv = 10000) => {
 	if (Array.isArray(start)) {
 		end = end.map((v, i) => v === start[i] ? null : typeof v === "number" ? v - start[i] : typeof v === "string" ? v : SubTween(start[i], v));
 		let map = [...start];

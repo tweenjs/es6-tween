@@ -17,6 +17,9 @@ import Store from './Store';
 // Optimized, Extended by @dalisoft
 const Number_Match_RegEx =
   /\s+|([A-Za-z?().,{}:""\[\]#]+)|([-+\/*%]+=)?([-+*\/%]+)?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/gi;
+  
+const maxDecNum = 10000;
+const defaultEasing = Easing.Linear.None
 
 class Tween {
   constructor(object = {}, instate) {
@@ -29,7 +32,7 @@ class Tween {
     this._valuesEnd = Tween.createEmptyConst(object);
 
     this._duration = 1000;
-    this._easingFunction = Easing.Linear.None;
+    this._easingFunction = defaultEasing;
     this._interpolationFunction = Interpolation.None;
 
     this._startTime = 0;
@@ -246,6 +249,7 @@ class Tween {
         if (typeof _valuesEnd[property] === "object" && _valuesEnd[property]) {
 
           this._valuesEnd[property] = SubTween(object[property], _valuesEnd[property]);
+		  this.object[property] = this._valuesEnd[property](0)
 
         } else if (typeof _valuesEnd[property] === "string" && typeof object[property] === "string" &&
           Number_Match_RegEx.test(object[property]) && Number_Match_RegEx.test(_valuesEnd[property])) {
@@ -257,6 +261,7 @@ class Tween {
 
           this._valuesEnd[property] = SubTween(__get__Start, __get__End);
           this._valuesEnd[property].join = true;
+		  this.object[property] = joinToString(this._valuesEnd[property](0))
 
         }
 
@@ -278,8 +283,6 @@ class Tween {
 
     }
 
-	return this;
-
   }
   start(time) {
 
@@ -290,6 +293,8 @@ class Tween {
 	this._rendered = true;
 
     add(this);
+
+    this.emit('start', this.object);
 
     this._isPlaying = true;
 
@@ -414,9 +419,11 @@ class Tween {
 
 	  this.render();
 
-	}
-
       this.emit('start', object);
+
+	  this._rendered = true;
+
+	}
 
       this._onStartCallbackFired = true;
     }
@@ -424,8 +431,6 @@ class Tween {
     elapsed = (time - _startTime) / _duration;
     elapsed = elapsed > 1 ? 1 : elapsed;
     elapsed = _reversed ? 1 - elapsed : elapsed;
-
-    value = _easingFunction(elapsed);
 
     if (typeof _valuesEnd === "function") {
 
@@ -450,6 +455,7 @@ class Tween {
 
         let start = _valuesStart[property];
         let end = _valuesEnd[property];
+			value = _easingFunction[property] ? _easingFunction[property](elapsed) : typeof _easingFunction === "function" ? _easingFunction(elapsed) : defaultEasing(elapsed);
 
         if (typeof end === "function") {
 
@@ -477,10 +483,10 @@ class Tween {
 
           // Protect against non numeric properties.
           if (typeof(end) === 'number') {
-            object[property] = start + (end - start) * value;
+            object[property] = (((start + (end - start) * value) * maxDecNum) | 0) / maxDecNum;
           }
         } else if (typeof(start) === 'number') {
-          object[property] = start + (end - start) * value;
+          object[property] = (((start + (end - start) * value) * maxDecNum) | 0) / maxDecNum;
         }
 
       }

@@ -79,10 +79,9 @@ class Timeline extends Tween {
       }
     }
 
-	tween.useActiveMode();
     tween._startTime = this.parsePosition(0, position, _totalDuration);
 	tween._startTime += now();
-    this._totalDuration = Math.max(_totalDuration, tween._duration + tween._delayTime);
+    this._totalDuration = Math.max(_totalDuration, tween._duration + tween._startTime);
     this._tweens[tween.id] = tween;
     return this;
   }
