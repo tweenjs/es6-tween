@@ -124,9 +124,12 @@ class Timeline extends Tween {
     let _timing = _reversed ? _totalDuration - timing : timing;
 
     for (let tween in _tweens) {
-      if (_tweens[tween].update(_timing)) {
+	  let _tween = _tweens[tween];
+      if (_tween.skip || _tween.update(_timing)) {
         continue;
-      }
+      } else {
+		_tween.skip = true;
+	  }
     }
 
     this.emit('update', elapsed, timing);
@@ -153,6 +156,13 @@ class Timeline extends Tween {
         } else {
           this._startTime += _totalDuration;
         }
+		
+		for (let tween in _tweens) {
+			let _tween = _tweens[tween];
+			if (_tween.skip) {
+				_tween.skip = false;
+			}
+		}
 
         return true;
 

@@ -36,7 +36,13 @@ const cache = {
 		color: 1,
 		backgroundColor: 1,
 		borderColor : 1,
-		outlineColor: 1
+		outlineColor: 1,
+		boxShadowColor: 1,
+		textShadowColor: 1
+	},
+	scroll: {
+		scrollTop: 1,
+		scrollLeft: 1
 	}
 };
 
@@ -46,22 +52,23 @@ export default class Plugins {
 	static Attr(Composite) {
 		let layer = this.domNode
 		return {
-			update(Tween, RenderObject) {
+			update(RenderObject, value) {
 				for (let p in RenderObject) {
-					if (cache.transform[p] || cache.filter[p]) continue;
+					if (cache.transform[p] || cache.filter[p] || cache.color[p] || cache.scroll[p]) continue;
 					layer.setAttribute(p, RenderObject[p]);
 				}
 			}
 		}
 	}
 	static Color(Composite) {
-		let layer = this.domNode
-		let decimalRegExp = /\.([0-9]+)/g;
+		let layer = this.domNode;
+		let style = layer.style;
+		let decimalRegExp = /\.([0-9]+)/g, replaceTo = '';
 		return {
-			update(Tween, RenderObject) {
+			update(RenderObject) {
 				for (let p in RenderObject) {
 					if (!cache.color[p]) continue;
-					layer.style[p] = RenderObject[p].replace(decimalRegExp, '');
+					style[p] = RenderObject[p].replace(decimalRegExp, replaceTo);
 				}
 			}
 		}
@@ -70,9 +77,9 @@ export default class Plugins {
 		let layer = this.domNode,
 		style = layer.style;
 		return {
-			update(Tween, RenderObject) {
+			update(RenderObject) {
 				for (let p in RenderObject) {
-					if (cache.transform[p] || cache.filter[p]) continue;
+					if (cache.transform[p] || cache.filter[p] || cache.color[p]) continue;
 					style[p] = RenderObject[p];
 				}
 			}
@@ -82,10 +89,10 @@ export default class Plugins {
 		let layer = this.domNode,
 		style = layer.style;
 		return {
-			update(Tween, RenderObject) {
+			update(RenderObject) {
 				let transform = '';
 				for (let p in RenderObject) {
-				if (cache.filter[p]) continue;
+				if (!cache.transform[p]) continue;
 					if (p === 'x' || p === 'y' || p === 'z') {
 						transform += ' translate3d( ' + (RenderObject.x || '0px') + ', ' + (RenderObject.y || '0px') + ', ' + (RenderObject.z || '0px') + ')';
 					} else if (cache.transform[p]) {
@@ -100,32 +107,33 @@ export default class Plugins {
 	}
 	static SVGTransform(xPos, yPos) {
 		let layer = this.domNode,
-		bbox = {};
-		return {
-			update(Tween, RenderObject) {
+		bbox = {}, self;
+		let attrName = 'transform', rotate = 'rotate', x = 'x', y = 'y';
+		return self = {
+			update(RenderObject) {
 				let transform = '';
 				for (let p in RenderObject) {
-				if (!cache.transform[p]) continue;
+				if (!cache[attrName][p]) continue;
 				if (bbox.x === undefined || bbox.y === undefined) {
-					this.setOrigin(xPos, yPos);
+					self.setOrigin(xPos, yPos);
 					continue;
 				}
-					if (p === 'rotate') {
+					if (p === rotate) {
 						transform += ` rotate(${RenderObject[p]} ${bbox.x} ${bbox.y})`;
-					} else if (p === 'x' || p === 'y') {
+					} else if (p === x || p === y) {
 						transform += ` translate(${RenderObject.x || 0}, ${RenderObject.y || 0})`;
 					} else {
 						transform += ` ${p}(${RenderObject[p]})`;
 					}
 				}
 				if (transform) {
-					layer.setAttribute('transform', transform)
+					layer.setAttribute(attrName, transform)
 				}
-				return this;
+				return self;
 			},
 			init(Tween, RenderObject) {
 
-				return this.setOrigin(xPos, yPos);
+				return self.setOrigin(xPos, yPos);
 
 			},
 			setOrigin(x, y) {
@@ -145,7 +153,7 @@ export default class Plugins {
 				bbox.x = x;
 				bbox.y = y;
 
-				return this;
+				return self;
 			}
 		}
 	}
@@ -153,10 +161,10 @@ export default class Plugins {
 		let layer = this.domNode,
 		style = layer.style;
 		return {
-			update(Tween, RenderObject) {
+			update(RenderObject) {
 				let filter = '';
 				for (let p in RenderObject) {
-				if (cache.transform[p]) continue;
+				if (!cache.filter[p]) continue;
 					if (cache.filter[p]) {
 						filter += ` ${ p }( ${ RenderObject[p] })`;
 					}
@@ -170,8 +178,9 @@ export default class Plugins {
 	static Scroll() {
 		let layer = this.domNode;
 		return {
-			update: (Tween, RenderObject) => {
+			update: (RenderObject) => {
 				for (let p in RenderObject) {
+					if (!cache.scroll[p]) continue;
 					layer[p] = RenderObject[p];
 				}
 			}

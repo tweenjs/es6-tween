@@ -15,7 +15,7 @@ export default class Composite {
 
 		return this;
 	}
-	map (type, object) {
+	map (type, ...args) {
 		
 		let { plugins } = this;
 
@@ -23,15 +23,15 @@ export default class Composite {
 
 			let plugin = plugins[p];
 
-			plugin && plugin[type] && plugin[type](this, object);
+			plugin && plugin[type] && plugin[type].apply(this, args);
 
 		}
 
 		return this;
 	}
-	render (object) {
+	render (object, value, elapsed) {
 
-		return this.map('update', object);
+		return this.map('update', object, value, elapsed);
 
 	}
 	init (object) {
