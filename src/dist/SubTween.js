@@ -29,7 +29,7 @@ const SubTween = (start, end, roundv = 10000) => {
 	if (Array.isArray(start)) {
 		let isColorPropsExist = null;
 		let startIndex = null
-		end = end.map((v, i) => colorMatch.test(v) ? (isColorPropsExist = v, startIndex = i, null) : v === start[i] ? null : typeof v === "number" ? v - start[i] : typeof v === "string" ? v : SubTween(start[i], v));
+		end = end.map((v, i) => colorMatch.test(v) ? (isColorPropsExist = v, startIndex = i, null) : v === start[i] ? null : typeof v === "number" ? v - start[i] : SubTween(start[i], v));
 		let endIndex = startIndex !== null ? startIndex + 6 : null;
 		if (isColorPropsExist && isIncrementReqForColor.test(isColorPropsExist)) {
 			startIndex++;
@@ -56,10 +56,10 @@ const SubTween = (start, end, roundv = 10000) => {
 		for ( let property in end ) {
 			if (end[property] === start[property]) {
 				end[property] = null;
-			} else if ( typeof end[property] === "object" ) {
-				end[property] = SubTween(start[property], end[property]);
 			} else if (typeof start[property] === "number") {
 				end[property] -= start[property];
+			} else if ( typeof end[property] === "object" || typeof[end] === "string" ) {
+				end[property] = SubTween(start[property], end[property]);
 			}
 		}
 		let map = {...start};
@@ -94,6 +94,8 @@ const SubTween = (start, end, roundv = 10000) => {
 			}
 			return s
 		}
+	} else if (typeof end === "function") {
+		return end;
 	} else {
 		let isSame = start === end;
 		return (t) => isSame ? start : t >= 0.5 ? end : start;
