@@ -7,16 +7,9 @@ import {
 from './core';
 import Easing from './Easing';
 import Interpolation from './Interpolation';
-import joinToString from './joinToString';
 import toNumber from './toNumber';
 import SubTween from './SubTween';
 import Store from './Store';
-
-// Credits:
-// @jkroso for string parse library
-// Optimized, Extended by @dalisoft
-const Number_Match_RegEx =
-  /\s+|([A-Za-z?().,{}:""\[\]#]+)|([-+\/*%]+=)?([-+*\/%]+)?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/gi;
   
 const maxDecNum = 10000;
 const defaultEasing = Easing.Linear.None
@@ -24,9 +17,7 @@ const defaultEasing = Easing.Linear.None
 class Tween {
   constructor(object = {}, instate) {
 
-    this.isJoinToString = typeof object === "string" && Number_Match_RegEx.test(object);
-    object = this.isJoinToString ? object.match(Number_Match_RegEx)
-      .map(toNumber) : object;
+    this.isJoinToString = typeof object === "string";
     this.object = object;
     this._valuesStart = Tween.createEmptyConst(object);
     this._valuesEnd = Tween.createEmptyConst(object);
@@ -213,7 +204,7 @@ class Tween {
       };
       this._valuesEnd = _vE;
     } else if (typeof properties === "string" && this.isJoinToString) {
-      this._valuesEnd = SubTween(this.object, properties.match(Number_Match_RegEx).map(toNumber));
+      this._valuesEnd = SubTween(this.object, properties);
     } else {
 	  this._valuesEnd = properties;
 	}
@@ -250,17 +241,10 @@ class Tween {
           this._valuesEnd[property] = SubTween(object[property], _valuesEnd[property]);
 		  this.object[property] = this._valuesEnd[property](0)
 
-        } else if (typeof _valuesEnd[property] === "string" && typeof object[property] === "string" &&
-          Number_Match_RegEx.test(object[property]) && Number_Match_RegEx.test(_valuesEnd[property])) {
+        } else if (typeof _valuesEnd[property] === "string" && typeof object[property] === "string") {
 
-          let __get__Start = object[property].match(Number_Match_RegEx);
-          __get__Start = __get__Start.map(toNumber);
-          let __get__End = _valuesEnd[property].match(Number_Match_RegEx);
-          __get__End = __get__End.map(toNumber);
-
-          this._valuesEnd[property] = SubTween(__get__Start, __get__End);
-          this._valuesEnd[property].join = true;
-		  this.object[property] = joinToString(this._valuesEnd[property](0))
+          this._valuesEnd[property] = SubTween(object[property], _valuesEnd[property]);
+		  this.object[property] = this._valuesEnd[property](0);
 
         }
 
@@ -435,15 +419,7 @@ class Tween {
 
     if (typeof _valuesEnd === "function") {
 
-      let get = _valuesEnd(elapsed);
-
-      if (isJoinToString) {
-
-        get = joinToString(get);
-
-      }
-
-	this.emit('update', get, value, elapsed);
+	this.emit('update', _valuesEnd(elapsed), value, elapsed);
 
     } else {
 
@@ -460,15 +436,7 @@ class Tween {
 
         if (typeof end === "function") {
 
-          let get = end(value);
-
-          if (end.join) {
-
-            get = joinToString(get);
-
-          }
-
-          object[property] = get;
+          object[property] = end(value);
 
         } else if (Array.isArray(end)) {
 

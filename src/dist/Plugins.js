@@ -30,16 +30,6 @@ const cache = {
 		y: 1,
 		z: 1
 	},
-	color: {
-		fill: 1,
-		stroke: 1,
-		color: 1,
-		backgroundColor: 1,
-		borderColor : 1,
-		outlineColor: 1,
-		boxShadowColor: 1,
-		textShadowColor: 1
-	},
 	scroll: {
 		scrollTop: 1,
 		scrollLeft: 1
@@ -54,21 +44,8 @@ export default class Plugins {
 		return {
 			update(RenderObject, value) {
 				for (let p in RenderObject) {
-					if (cache.transform[p] || cache.filter[p] || cache.color[p] || cache.scroll[p]) continue;
+					if (cache.transform[p] || cache.filter[p] || cache.scroll[p]) continue;
 					layer.setAttribute(p, RenderObject[p]);
-				}
-			}
-		}
-	}
-	static Color(Composite) {
-		let layer = this.domNode;
-		let style = layer.style;
-		let decimalRegExp = /\.([0-9]+)/g, replaceTo = '';
-		return {
-			update(RenderObject) {
-				for (let p in RenderObject) {
-					if (!cache.color[p]) continue;
-					style[p] = RenderObject[p].replace(decimalRegExp, replaceTo);
 				}
 			}
 		}
@@ -79,7 +56,7 @@ export default class Plugins {
 		return {
 			update(RenderObject) {
 				for (let p in RenderObject) {
-					if (cache.transform[p] || cache.filter[p] || cache.color[p]) continue;
+					if (cache.transform[p] || cache.filter[p]) continue;
 					style[p] = RenderObject[p];
 				}
 			}
