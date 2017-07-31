@@ -183,5 +183,8 @@ class Timeline extends Tween {
   elapsed(value) {
     return value !== undefined ? this.update(value * this._totalDuration) : this._elapsed;
   }
+  seek (value) {
+	return this.update(value < 1.1 ? value * this._totalDuration : value);
+  }
 }
 export default Timeline;

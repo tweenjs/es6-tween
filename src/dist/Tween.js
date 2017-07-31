@@ -10,9 +10,21 @@ import Interpolation from './Interpolation';
 import toNumber from './toNumber';
 import SubTween from './SubTween';
 import Store from './Store';
-  
-const maxDecNum = 10000;
+
+const maxDecNum = 10000
 const defaultEasing = Easing.Linear.None
+
+// Events list
+const EVENT_UPDATE = 'update'
+const EVENT_COMPLETE = 'complete'
+const EVENT_START = 'start'
+const EVENT_REPEAT = 'repeat'
+const EVENT_REVERSE = 'reverse'
+const EVENT_PAUSE = 'pause'
+const EVENT_PLAY = 'play'
+const EVENT_RS = 'restart'
+const EVENT_STOP = 'stop'
+const EVENT_SEEK = 'seek'
 
 class Tween {
   constructor(object = {}, instate) {
@@ -114,29 +126,24 @@ class Tween {
       this._events[name] = [];
     }
     return this.on(name, (...args) => {
-      fn.call(this, ...args);
+      fn.apply(this, args);
       this.off(name);
     });
   }
-  emit(name, a, b, c, d, e) {
+  emit(name, a, b, c) {
 
     let {
       _events
     } = this;
 
-    if (!_events) {
+    if (!_events || !_events[name]) {
       return this;
     }
 
     let eventFn = _events[name];
 
-    if (!eventFn) {
-      return this;
-    }
-
-    let i = eventFn.length;
-    while (i--) {
-      eventFn[i].call(this, a, b, c, d, e);
+    for ( let i = 0, length = eventFn.length; i < length; i++ ) {
+      eventFn[i](a, b, c);
     }
     return this;
 
@@ -152,7 +159,7 @@ class Tween {
     remove(this);
     this._pausedTime = now();
 
-    return this.emit('pause', this.object);
+    return this.emit(EVENT_PAUSE, this.object);
   }
   play() {
 
@@ -166,7 +173,7 @@ class Tween {
     add(this);
     this._pausedTime = now();
 
-    return this.emit('play', this.object);
+    return this.emit(EVENT_PLAY, this.object);
   }
   restart(noDelay) {
 
@@ -177,7 +184,7 @@ class Tween {
       add(this);
     }
 
-    return this.emit('restart', this._object);
+    return this.emit(EVENT_RS, this._object);
 
   }
   seek(time, keepPlaying) {
@@ -185,7 +192,7 @@ class Tween {
     this._startTime = now() + Math.max(0, Math.min(
       time, this._duration));
 
-    this.emit('seek', time, this._object);
+    this.emit(EVENT_SEEK, time, this._object);
 
     return keepPlaying ? this : this.pause();
 
@@ -224,6 +231,10 @@ class Tween {
   }
   render() {
 
+	if (this._rendered) {
+		return this;
+	}
+
     let {
       _startTime,
       _delayTime,
@@ -260,11 +271,21 @@ class Tween {
           continue;
         }
 
+		if (typeof object[property] === "number") {
+
+			object[property] *= maxDecNum;
+			this._valuesEnd[property] *= maxDecNum;
+
+			this._valuesEnd[property] -= object[property];
+		}
+
         this._valuesStart[property] = object[property];
 
       }
 
     }
+
+	return this;
 
   }
   start(time) {
@@ -277,7 +298,7 @@ class Tween {
 
     add(this);
 
-    this.emit('start', this.object);
+    this.emit(EVENT_START, this.object);
 
     this._isPlaying = true;
 
@@ -298,7 +319,7 @@ class Tween {
     remove(this);
     this._isPlaying = false;
 
-    return this.emit('stop', object);
+    return this.emit(EVENT_STOP, object);
 
   }
   end() {
@@ -402,7 +423,7 @@ class Tween {
 
 	  this.render();
 
-      this.emit('start', object);
+      this.emit(EVENT_START, object);
 
 	  this._rendered = true;
 
@@ -419,7 +440,7 @@ class Tween {
 
     if (typeof _valuesEnd === "function") {
 
-	this.emit('update', _valuesEnd(elapsed), value, elapsed);
+	this.emit(EVENT_UPDATE, _valuesEnd(elapsed), value, elapsed);
 
     } else {
 
@@ -452,15 +473,17 @@ class Tween {
 
           // Protect against non numeric properties.
           if (typeof(end) === 'number') {
-            object[property] = (((start + (end - start) * value) * maxDecNum) | 0) / maxDecNum;
+            object[property] = (start + end * value | 0) / maxDecNum;
           }
         } else if (typeof(start) === 'number') {
-          object[property] = (((start + (end - start) * value) * maxDecNum) | 0) / maxDecNum;
+          object[property] = (start + end * value | 0) / maxDecNum;
         }
 
       }
 
-	this.emit('update', object, value, elapsed);
+	this.emit(EVENT_UPDATE, object, value, elapsed);
+
+	this.object = object;
 
     }
 
@@ -481,7 +504,7 @@ class Tween {
         }
 
         // Reassign starting values, restart by making startTime = now
-        this.emit(_reversed ? 'reverse' : 'repeat', object);
+        this.emit(_reversed ? EVENT_REVERSE : EVENT_REPEAT, object);
 
         if (_yoyo) {
           this._reversed = !_reversed;
@@ -499,7 +522,7 @@ class Tween {
 
       } else {
 
-        this.emit('complete', object);
+        this.emit(EVENT_COMPLETE, object);
 		this._repeat = this._r;
 
         return false;
