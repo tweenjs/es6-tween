@@ -36,7 +36,7 @@ class Tween extends EventClass {
 
     this._duration = 1000
     this._easingFunction = defaultEasing
-    this._interpolationFunction = Interpolation.None
+    this._interpolationFunction = Interpolation.Linear
 
     this._startTime = 0
     this._delayTime = 0
@@ -178,10 +178,14 @@ class Tween extends EventClass {
     for (let property in _valuesEnd) {
       if (typeof _valuesEnd[property] === 'object' && _valuesEnd[property]) {
         this._valuesEnd[property] = SubTween(object[property], _valuesEnd[property])
-        this.object[property] = this._valuesEnd[property](0)
+        if (typeof this._valuesEnd[property] === 'function') {
+          this.object[property] = this._valuesEnd[property](0)
+        }
       } else if (typeof _valuesEnd[property] === 'string' && typeof object[property] === 'string') {
         this._valuesEnd[property] = SubTween(object[property], _valuesEnd[property])
-        this.object[property] = this._valuesEnd[property](0)
+        if (typeof this._valuesEnd[property] === 'function') {
+          this.object[property] = this._valuesEnd[property](0)
+        }
       }
 
       // If `to()` specifies a property that doesn't exist in the source object,

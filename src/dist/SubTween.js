@@ -24,7 +24,7 @@ let hexReplace = (all, hex) => {
     b = parseInt(hex.substr(4, 6), 16)
   }
 
-  return `rgb(${r},${g},${b}`
+  return `rgb(${r},${g},${b})`
 }
 let trim = str => typeof str === 'string' ? str.replace(trimRegExp, '') : str
 
@@ -86,7 +86,7 @@ const SubTween = (start, end, roundv = 10000) => {
     return (t) => {
       return isSame ? end : (((start + end * t) * roundv) | 0) / roundv
     }
-  } else if (typeof start === 'string' && numRegExp.test(start) && numRegExp.test(end)) {
+  } else if ((typeof start === 'string' && typeof end === 'string' && numRegExp.test(start) && numRegExp.test(end)) || (typeof end === 'string' && (hexColor.test(start) || hexColor.test(end)))) {
     let _startMap = trim(start).replace(hexColor, hexReplace).match(numRegExp).map(toNumber)
     let _endMap = trim(end).replace(hexColor, hexReplace).match(numRegExp).map(toNumber)
     let _tween = SubTween(_startMap, _endMap)
@@ -103,6 +103,10 @@ const SubTween = (start, end, roundv = 10000) => {
     }
   } else if (typeof end === 'function') {
     return end
+  } else if (!Array.isArray(start) && Array.isArray(end)) {
+    end.unshift(start)
+    end.push(end[end.length - 1])
+    return end.map((v, i) => SubTween(i === 0 ? start : end[i - 1], v))
   } else {
     let isSame = start === end
     return (t) => isSame ? start : t >= 0.5 ? end : start
