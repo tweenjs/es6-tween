@@ -9,6 +9,7 @@ let isIncrementReqForColor = /ahsv|ahsl|argb/g
 const numRegExp =
   /\s+|([A-Za-z?().,{}:""[\]#]+)|([-+/*%]+=)?([-+*/%]+)?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/g
 let hexColor = /^#([0-9a-f]{6}|[0-9a-f]{3})$/i
+let trimRegExp = /\n|\r|\t/g
 let hexReplace = (all, hex) => {
   let r
   let g
@@ -25,12 +26,13 @@ let hexReplace = (all, hex) => {
 
   return `rgb(${r},${g},${b}`
 }
+let trim = str => typeof str === 'string' ? str.replace(trimRegExp, '') : str
 
 const SubTween = (start, end, roundv = 10000) => {
   if (Array.isArray(start)) {
     let isColorPropsExist = null
     let startIndex = null
-    end = end.map((v, i) => colorMatch.test(v) ? ((isColorPropsExist = v), (startIndex = i), null) : v === start[i] ? null : typeof v === 'number' ? (v - start[i]) : SubTween(start[i], v))
+    end = end.map((v, i) => colorMatch.test(v) ? ((isColorPropsExist = v), (startIndex = i), null) : v === start[i] ? null : typeof v === 'number' ? (v - start[i]) : numRegExp.test(v) ? SubTween(trim(start[i]), trim(v)) : v)
     let endIndex = startIndex !== null ? startIndex + 6 : null
     if (isColorPropsExist && isIncrementReqForColor.test(isColorPropsExist)) {
       startIndex++
@@ -60,7 +62,7 @@ const SubTween = (start, end, roundv = 10000) => {
         end[property] = null
       } else if (typeof start[property] === 'number') {
         end[property] -= start[property]
-      } else if (typeof end[property] === 'object' || typeof [end] === 'string') {
+      } else if (typeof end[property] === 'object' || (typeof end[property] === 'string' && numRegExp.test(end[property]))) {
         end[property] = SubTween(start[property], end[property])
       }
     }
@@ -84,9 +86,9 @@ const SubTween = (start, end, roundv = 10000) => {
     return (t) => {
       return isSame ? end : (((start + end * t) * roundv) | 0) / roundv
     }
-  } else if (typeof start === 'string') {
-    let _startMap = start.replace(hexColor, hexReplace).match(numRegExp).map(toNumber)
-    let _endMap = end.replace(hexColor, hexReplace).match(numRegExp).map(toNumber)
+  } else if (typeof start === 'string' && numRegExp.test(start) && numRegExp.test(end)) {
+    let _startMap = trim(start).replace(hexColor, hexReplace).match(numRegExp).map(toNumber)
+    let _endMap = trim(end).replace(hexColor, hexReplace).match(numRegExp).map(toNumber)
     let _tween = SubTween(_startMap, _endMap)
     return (t) => {
       let _t = _tween(t)
