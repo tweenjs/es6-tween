@@ -3,7 +3,7 @@
 ES6 implementation of <a href="https://github.com/tweenjs/tween.js">tween.js</a>
 
 [![size](http://img.badgesize.io/https://unpkg.com/es6-tween)](https://unpkg.com/es6-tween)
-[![gzipsize](http://img.badgesize.io/https://unpkg.com/es6-tween?compression=gzip)](https://unpkg.com/es6-tween)
+[![gzipsize](http://img.badgesize.io/https://unpkg.com/es6-tween?compression=gzip&cache=false)](https://unpkg.com/es6-tween)
 [![CDNJS](https://img.shields.io/cdnjs/v/es6-tween.svg)](https://cdnjs.com/libraries/es6-tween)
 [![jsdelivr](https://img.shields.io/badge/cdn-jsdelivr-brightgreen.svg)](https://cdn.jsdelivr.net/npm/es6-tween)  [![unpkg](https://img.shields.io/badge/cdn-unpkg-brightgreen.svg)](https://unpkg.com/es6-tween)  [![npmcdn](https://img.shields.io/badge/cdn-npmcdn-brightgreen.svg)](https://npmcdn.com/es6-tween)
 [![NPM Version][npm-image]][npm-url]

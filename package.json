@@ -1,10 +1,4 @@
 {
-	"standard": {
-		"ignore": [
-			"dist/",
-			"test/"
-		]
-	},
 	"name": "es6-tween",
 	"version": "0.0.0-semantically-released",
 	"description": "ES6 implementation of amazing tween.js",
@@ -15,14 +9,14 @@
 		"example": "examples"
 	},
 	"scripts": {
-		"minify": "rollup -c --environment BUILD:prod",
-		"source": "rollup -c --sourcemap",
+		"source": "rollup -c --environment min:false",
+		"minify": "rollup -c --environment min:true",
 		"build": "npm run source && npm run minify",
-		"dev": "rollup -c -w --sourcemap",
+		"dev": "rollup -c -w",
+		"lint": "eslint src",
+		"fix": "eslint --fix src",
 		"test-unit": "nodeunit test/unit/nodeunitheadless.js",
-		"test": "npm run test-unit && npm run fix && npm run lint",
-		"fix": "standard --fix",
-		"lint": "standard --verbose | snazzy",
+		"test": "npm run lint && npm run test-unit",
 		"semantic-release": "semantic-release pre && npm publish && semantic-release post --owner=sole --user=dalisoft"
 	},
 	"repository": {
@@ -48,15 +42,15 @@
 	},
 	"homepage": "https://github.com/tweenjs/es6-tween#readme",
 	"devDependencies": {
+		"eslint": "^4.3.0",
+		"eslint-plugin-import": "^2.7.0",
 		"nodeunit": "^0.9.1",
 		"rollup": "^0.41.6",
 		"rollup-plugin-buble": "^0.15.0",
-		"rollup-plugin-uglify": "^1.0.2",
-		"rollup-watch": "^3.2.2",
+		"rollup-plugin-uglify": "^2.0.1",
+		"rollup-watch": "^4.3.1",
 		"semantic-release": "latest",
-		"snazzy": "^7.0.0",
-		"standard": "^10.0.2",
-		"uglify-js-harmony": "^2.7.7"
+		"uglify-es": "^3.0.27"
 	},
 	"dependencies": {}
 }

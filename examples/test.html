@@ -42,34 +42,6 @@
 			hwiw = (wIw / 5) * ratio,
 			frag = document.createDocumentFragment();
 
-		const update = (object) => {
-			object.dom.style.transform = object.transform;
-		}
-
-		const Style = TWEEN.Plugins.DOM;
-
-		const { Plugins } = TWEEN;
-
-		class Morph extends Plugins {
-			static Morph(Composite) {
-				let layer = Composite.domNode,
-				style = layer.style;
-				return {
-					update(Tween, RenderObject) {
-						let filter = '';
-						for (let p in RenderObject) {
-							if (p.indexOf('blur') !== -1 || p.indexOf('rotate') !== -1 || p.indexOf('shadow') !== -1 || p.indexOf('brightness') !== -1) {
-								filter += ` ${ p }( ${ RenderObject[p] })`;
-							}
-						}
-						if (filter) {
-							style.filter = filter;
-						}
-					}
-				}
-			}
-		}
-
 		function createTest(count) {
 			var i;
 			for (i = 0; i < count; i++) {
@@ -81,24 +53,18 @@
 					tl = Math.floor(random(-200, 200));
 				div.setAttribute("class", "line");
 				div.style.top = [(Math.random() * wIh), "px"].join("");
-				div.style.transform = "translate3d(" + -hwiw + "px, 0px, 0px)";
+				div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
 				//div.style.left = l + "px";
 				div.style.backgroundColor = bgC;
-				var layer = new TWEEN.Composite(div).applyPlugin('Transform');
-				var a = new TWEEN.Tween({ x: -hwiw + 'px' }).to({
-					x: hwiw + 'px'
-				}, 1000).easing(TWEEN.Easing.Circular.InOut).on('update', layer.render).delay(15).repeat(Infinity).yoyo(true);
-				nodes.push({ layer: layer, node: div, tween: a });
+				var a = new TWEEN.Tween({ x: l, el: div }).to({
+					x: tl
+				}, 1000).easing(TWEEN.Easing.Circular.InOut).on('update', ({el, x}) => {
+					el.style.transform = `translate3d(${x}px, 0px, 0px)`
+				}).repeat(Infinity).yoyo(true).start();
+
+				frag.appendChild(div);
 
 			}
-			nodes.sort((a, b) => {
-				return parseFloat(a.node.style.top) - parseFloat(b.node.style.top);
-			}).map((node, i) => {
-				frag.appendChild(node.node);
-				node.tween.delay(delay => {
-					return (i * (i % 2 ? delay : -delay));
-				}).start();
-			})
 			c.appendChild(frag);
 		}
 		createTest(200);

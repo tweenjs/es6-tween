@@ -1,27 +1,41 @@
 import buble from 'rollup-plugin-buble'
 import uglify from 'rollup-plugin-uglify'
-import { minify } from 'uglify-js-harmony'
+import { minify } from 'uglify-es'
 
-const { BUILD } = process.env
+const { min } = process.env
+const isMinify = min === 'true'
+const minSuffix = isMinify ? '.min' : ''
 
-const plugins = [ buble({
-  objectAssign: 'Object.assign'
-}) ]
+const plugins = [
+	// ES6->ES5 syntax/code transpiler
+	buble({
+		// Spread to Object merge/assign
+		objectAssign: `Object.assign`,
+		// Features
+		transforms: {
+			// For of feature
+			dangerousForOf: true
+		}
+	})
+]
 
-let moduleName = 'Tween'
-let destFile = 'dist/' + moduleName
-
-if (BUILD === 'prod') {
-  plugins.push(uglify({}, minify))
-  destFile = 'dist/' + moduleName + '.min'
+if ( isMinify ) {
+	plugins.push(
+	// Minify
+	uglify({
+		sourceMap: {
+			filename: `src/Tween.js`,
+			url: `dist/Tween${minSuffix}.js.map`
+		}
+	}, minify)
+	);
 }
-
-destFile = destFile + '.js'
 
 export default {
   entry: 'src/Tween.js',
   format: 'umd',
-  dest: destFile, // equivalent to --output
+  sourceMap: true,
+  dest: `dist/Tween${minSuffix}.js`,
   moduleName: 'TWEEN',
   plugins: plugins
 }
