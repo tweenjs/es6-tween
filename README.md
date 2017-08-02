@@ -30,7 +30,8 @@ TWEEN.autoPlay(true); // simplify the your code
 
 ## Demos
 
-* Play at [Codepen](https://codepen.io/dalisoft/pen/mMJmxX)
+* Demo #1 [Morphing SVG Shape + Cross-browser SVG Transform](https://codepen.io/dalisoft/pen/mMJmxX)
+* Demo #2 [Morphing SVG Shape](https://codepen.io/dalisoft/pen/BdLydv)
 
 ## Installation
 
