@@ -1,11 +1,9 @@
 /* global global, window, Object, document, process, requestAnimationFrame, cancelAnimationFrame, setTimeout, clearTimeout */
-import EventClass from './Event'
 
 let _tweens = {}
 let isStarted = false
 let _autoPlay = false
 let _tick
-let {emit, on, once, off} = new EventClass()
 let root = typeof (window) !== 'undefined' ? window : typeof (global) !== 'undefined' ? global : {}
 let _nextId = 0
 
@@ -23,10 +21,7 @@ const add = tween => {
   if (_autoPlay && !isStarted) {
     update()
     isStarted = true
-    emit('start')
   }
-
-  emit('add', tween, _tweens)
 }
 
 const nextId = () => {
@@ -104,12 +99,9 @@ const update = (time, preserve) => {
     _tick = _ticker(update)
   }
 
-  emit('update', time, _tweens)
-
   if (_tweens.length === 0) {
     isStarted = false
     _stopTicker(_tick)
-    emit('stop', time)
     return false
   }
 
@@ -124,6 +116,8 @@ const update = (time, preserve) => {
 
   return true
 }
+
+const Plugins = {}
 
 // Normalise time when visiblity is changed (if available) ...
 if (root.document) {
@@ -149,4 +143,4 @@ if (root.document) {
   })
 }
 
-export { get, has, nextId, getAll, removeAll, remove, add, now, update, autoPlay, on, once, off, emit }
+export { Plugins, get, has, nextId, getAll, removeAll, remove, add, now, update, autoPlay }

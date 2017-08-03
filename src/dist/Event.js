@@ -1,17 +1,6 @@
-const bind = (fn, ctx) => {
-  return function () {
-    return fn.apply(ctx, arguments)
-  }
-}
-
 export default class EventClass {
   constructor () {
     this._events = {}
-    this._bind = this
-    this.on = bind(this.on, this)
-    this.once = bind(this.once, this)
-    this.off = bind(this.off, this)
-    this.emit = bind(this.emit, this)
   }
 
   bind (scope) {

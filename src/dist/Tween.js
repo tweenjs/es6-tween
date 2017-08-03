@@ -2,7 +2,8 @@ import {
   add,
   remove,
   now,
-  nextId
+  nextId,
+  Plugins
 }
   from './core'
 import Easing from './Easing'
@@ -29,7 +30,10 @@ class Tween extends EventClass {
   constructor (object = {}, instate) {
     super()
 
-    this.isJoinToString = typeof object === 'string'
+    if (object.node) {
+      this.node = object.node
+      delete object.node
+    }
     this.object = object
     this._valuesStart = Tween.createEmptyConst(object)
     this._valuesEnd = Tween.createEmptyConst(object)
@@ -49,6 +53,7 @@ class Tween extends EventClass {
     this._onStartCallbackFired = false
     this._pausedTime = null
     this.id = nextId()
+    this._plugins = {}
 
     if (instate && instate.to) {
       return new Tween(object)
@@ -176,6 +181,11 @@ class Tween extends EventClass {
     } = this
 
     for (let property in _valuesEnd) {
+      let isPluginProp = Plugins[property]
+      if (isPluginProp) {
+        isPluginProp = this._plugins[property] = new Plugins[property](this, object[property], _valuesEnd[property])
+        isPluginProp.preprocess && isPluginProp.preprocess(object[property], _valuesEnd[property])
+      }
       if (typeof _valuesEnd[property] === 'object' && _valuesEnd[property]) {
         this._valuesEnd[property] = SubTween(object[property], _valuesEnd[property])
         if (typeof this._valuesEnd[property] === 'function') {
@@ -201,6 +211,10 @@ class Tween extends EventClass {
       }
 
       this._valuesStart[property] = object[property]
+
+      if (isPluginProp) {
+        isPluginProp.postprocess && isPluginProp.postprocess(this.object[property], this._valuesEnd[property])
+      }
     }
 
     return this
@@ -310,6 +324,7 @@ class Tween extends EventClass {
       _duration,
       _valuesStart,
       _valuesEnd,
+      _plugins,
       object
     } = this
 
@@ -349,9 +364,12 @@ class Tween extends EventClass {
 
       let start = _valuesStart[property]
       let end = _valuesEnd[property]
+      let plugin = _plugins[property]
       value = _easingFunction[property] ? _easingFunction[property](elapsed) : value
 
-      if (typeof end === 'function') {
+      if (plugin) {
+        plugin.update(value, elapsed, _reversed)
+      } else if (typeof end === 'function') {
         object[property] = end(value)
       } else if (Array.isArray(end)) {
         object[property] = _interpolationFunction(end, value)

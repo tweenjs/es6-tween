@@ -121,16 +121,6 @@ Then reference the library source:
 <script src="dist/Tween.min.js"></script>
 ```
 
-## Bugs/Fixes
-
-#### Helping to avoid false log of `jscs`
-```bash
-git config core.eol lf
-git config core.autocrlf input
-git rm --cached -r .
-git reset --hard
-```
-
 ## Features
 
 * Tweens everything you give them, string (numbers only), number, number of arrays, number of object, etc...
@@ -147,6 +137,18 @@ git reset --hard
 * [Wiki page](https://github.com/tweenjs/es6-tween/wiki)
 * [Compatiblity](./compatibility/comp_support.md)
 * [Tutorial](http://learningthreejs.com/blog/2011/08/17/tweenjs-for-smooth-animation/)  using tween.js with three.js
+
+## Caveats
+##### We removed the shim from core functions for reduce size and improve execution speed, so you need some polyfills to work better
+
+* `Array.isArray`*
+* `Object.assign`
+* `requestAnimationFrame`*
+* `performance.now()`*
+* `cancelAnimationFrame`*
+* `Array.from`*
+
+`* - optional for best performance, fallback supported in core`
 
 ## Examples
 

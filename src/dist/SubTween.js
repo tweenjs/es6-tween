@@ -29,10 +29,14 @@ let hexReplace = (all, hex) => {
 let trim = str => typeof str === 'string' ? str.replace(trimRegExp, '') : str
 
 const SubTween = (start, end, roundv = 10000) => {
-  if (Array.isArray(start)) {
+  if (typeof end === 'function' || (end && end.nodeType)) {
+    return end
+  } else if (start && start.nodeType) {
+    return start
+  } else if (Array.isArray(start)) {
     let isColorPropsExist = null
     let startIndex = null
-    end = end.map((v, i) => colorMatch.test(v) ? ((isColorPropsExist = v), (startIndex = i), null) : v === start[i] ? null : typeof v === 'number' ? (v - start[i]) : numRegExp.test(v) ? SubTween(trim(start[i]), trim(v)) : v)
+    end = end.map((v, i) => typeof v === 'string' && colorMatch.test(v) ? ((isColorPropsExist = v), (startIndex = i), null) : v === start[i] ? null : typeof v === 'number' ? (v - start[i]) : typeof v === 'string' && numRegExp.test(v) ? SubTween(trim(start[i]), trim(v)) : SubTween(start[i], v))
     let endIndex = startIndex !== null ? startIndex + 6 : null
     if (isColorPropsExist && isIncrementReqForColor.test(isColorPropsExist)) {
       startIndex++
@@ -86,7 +90,7 @@ const SubTween = (start, end, roundv = 10000) => {
     return (t) => {
       return isSame ? end : (((start + end * t) * roundv) | 0) / roundv
     }
-  } else if ((typeof start === 'string' && typeof end === 'string' && numRegExp.test(start) && numRegExp.test(end)) || (typeof end === 'string' && (hexColor.test(start) || hexColor.test(end)))) {
+  } else if ((typeof start === 'string' && typeof end === 'string' && numRegExp.test(start) && numRegExp.test(end)) || (typeof end === 'string' && start && (hexColor.test(start) || hexColor.test(end)))) {
     let _startMap = trim(start).replace(hexColor, hexReplace).match(numRegExp).map(toNumber)
     let _endMap = trim(end).replace(hexColor, hexReplace).match(numRegExp).map(toNumber)
     let _tween = SubTween(_startMap, _endMap)
@@ -101,15 +105,12 @@ const SubTween = (start, end, roundv = 10000) => {
 
       return s
     }
-  } else if (typeof end === 'function') {
-    return end
   } else if (!Array.isArray(start) && Array.isArray(end)) {
     end.unshift(start)
     end.push(end[end.length - 1])
     return end.map((v, i) => SubTween(i === 0 ? start : end[i - 1], v))
   } else {
-    let isSame = start === end
-    return (t) => isSame ? start : t >= 0.5 ? end : start
+    return end
   }
 }
 
