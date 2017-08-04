@@ -1,6 +1,6 @@
 {
 	"name": "es6-tween",
-	"version": "0.0.0-semantically-released",
+	"version": "3.0.1",
 	"description": "ES6 implementation of amazing tween.js",
 	"browser": "dist/Tween.min.js",
 	"cdn": "dist/Tween.min.js",
@@ -15,9 +15,8 @@
 		"dev": "rollup -c -w",
 		"lint": "eslint src",
 		"fix": "eslint --fix src",
-		"test-unit": "nodeunit test/unit/nodeunitheadless.js",
-		"test": "npm run lint && npm run test-unit",
-		"semantic-release": "semantic-release pre && npm publish && semantic-release post --owner=sole --user=dalisoft"
+		"test": "nodeunit test/unit/nodeunitheadless.js",
+		"check": "npm run lint && npm test"
 	},
 	"repository": {
 		"type": "git",
@@ -36,9 +35,6 @@
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/tweenjs/es6-tween/issues"
-	},
-	"release": {
-		"branch": "master"
 	},
 	"homepage": "https://github.com/tweenjs/es6-tween#readme",
 	"devDependencies": {
