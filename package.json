@@ -1,6 +1,6 @@
 {
 	"name": "es6-tween",
-	"version": "3.0.1",
+	"version": "3.0.2",
 	"description": "ES6 implementation of amazing tween.js",
 	"browser": "dist/Tween.min.js",
 	"cdn": "dist/Tween.min.js",
@@ -16,7 +16,7 @@
 		"lint": "eslint src",
 		"fix": "eslint --fix src",
 		"test": "nodeunit test/unit/nodeunitheadless.js",
-		"check": "npm run lint && npm test"
+		"prepublishOnly": "npm run lint && npm test && npm run build"
 	},
 	"repository": {
 		"type": "git",
