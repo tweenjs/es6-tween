@@ -27,6 +27,10 @@ TWEEN.autoPlay(true); // simplify the your code
 }
 ```
 
+## Plugins
+
+Starting at `v3`, we provide excluded plugins from core, so our core has lighter and faster. [Here our plugins list](https://www.npmjs.com/browse/keyword/es6-tween)
+
 
 ## Demos
 
