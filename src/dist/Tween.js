@@ -27,6 +27,9 @@ const EVENT_STOP = 'stop'
 const EVENT_SEEK = 'seek'
 
 class Tween extends EventClass {
+  static fromTo (from, instance) {
+    return new Tween(from, instance)
+  }
   constructor (object = {}, instate) {
     super()
 
