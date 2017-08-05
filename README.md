@@ -178,19 +178,15 @@ every time you want to run the tests.
 
 If you want to add any feature or change existing features, you *must* run the tests to make sure you didn't break anything else. If you send a PR to add something new and it doesn't have tests, or the tests don't pass, the PR won't be accepted. See [contributing](CONTRIBUTING.md) for more information.
 
-Every PR, Commits and Update now automacilly updates the version based on commit message with `semantic-release` with `Travis CI`
-
 ## People
 
-[All contributors](http://github.com/tweenjs/tween.js/contributors).
+[All contributors](http://github.com/tweenjs/es6-tween/contributors).
 
 ## Thanks to: 
-* @sole (author of this library)
 * [tween.js contributors](https://github.com/tweenjs/tween.js/graphs/contributors)
-* @michaelvillar for physics easing
-* Rollup, Buble, Travis CI, semantic-release and others (make issue, if i'm missed you) with their teams, devs and supporters
+* Rollup, Buble, Travis CI, and others (make issue, if i'm missed you) with their teams, devs and supporters
 
-## Projects using tween.js
+## Projects using es6-tween
 
 If you using our app and happy with this and share your app? Please make PR and we append to there your project
 
