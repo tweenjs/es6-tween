@@ -9,7 +9,7 @@ import {
 import Easing from './Easing'
 import Interpolation from './Interpolation'
 import SubTween from './SubTween'
-import Store from './Store'
+import NodeCache from './NodeCache'
 import EventClass from './Event'
 
 const defaultEasing = Easing.Linear.None
@@ -37,7 +37,7 @@ class Tween extends EventClass {
       this.node = object.node
       delete object.node
     }
-    this.object = object
+    this.object = NodeCache(this.node, object)
     this._valuesStart = Tween.createEmptyConst(object)
     this._valuesEnd = Tween.createEmptyConst(object)
 
@@ -95,11 +95,6 @@ class Tween extends EventClass {
 
   reversed () {
     return this._reversed
-  }
-
-  useActiveMode () {
-    this.object = Store.add(this.object)
-    return this
   }
 
   pause () {
@@ -204,12 +199,6 @@ class Tween extends EventClass {
       // If `to()` specifies a property that doesn't exist in the source object,
       // we should not set that property in the object
       if (Tween.checkValidness(object[property]) === false) {
-        continue
-      }
-
-      // If duplicate or non-tweening numerics matched,
-      // we should skip from adding to _valuesStart
-      if (object[property] === _valuesEnd[property]) {
         continue
       }
 
@@ -360,22 +349,21 @@ class Tween extends EventClass {
     value = typeof _easingFunction === 'function' ? _easingFunction(elapsed) : defaultEasing(elapsed)
 
     for (property in _valuesEnd) {
-      // Don't update properties that do not exist in the source object
-      if (_valuesStart[property] === undefined) {
-        continue
-      }
-
       let start = _valuesStart[property]
       let end = _valuesEnd[property]
       let plugin = _plugins[property]
       value = _easingFunction[property] ? _easingFunction[property](elapsed) : value
 
-      if (plugin) {
+      if (plugin && plugin.update) {
         plugin.update(value, elapsed, _reversed)
+      } else if (start === null || start === undefined) {
+        continue
       } else if (typeof end === 'function') {
         object[property] = end(value)
       } else if (Array.isArray(end)) {
         object[property] = _interpolationFunction(end, value)
+      } else if (typeof (end) === 'number') {
+        object[property] = start + (end - start) * value
       } else if (typeof (end) === 'string') {
         if (end.charAt(0) === '+' || end.charAt(0) === '-') {
           end = start + parseFloat(end)
@@ -387,8 +375,6 @@ class Tween extends EventClass {
         if (typeof (end) === 'number') {
           object[property] = start + (end - start) * value
         }
-      } else if (typeof (start) === 'number') {
-        object[property] = start + (end - start) * value
       }
     }
 

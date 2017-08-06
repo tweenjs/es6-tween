@@ -7,6 +7,7 @@ class Timeline extends Tween {
     this._totalDuration = 0
     this._startTime = now()
     this._tweens = {}
+    this._timing = []
     this._elapsed = 0
     this._id = nextId()
     this._labels = {}
@@ -42,19 +43,25 @@ class Timeline extends Tween {
       position += input
     }
 
-    return position
+    return Math.max(0, position)
   }
 
   map (fn) {
     for (let tween in this._tweens) {
-      fn(this._tweens[tween])
+      let _tween = this._tweens[tween]
+      fn(_tween, +tween)
+      this._totalDuration = Math.max(this._totalDuration, _tween._duration + _tween._startTime)
     }
-
     return this
   }
 
   add (tween, position) {
-    if (typeof tween === 'object' && !(tween instanceof Tween)) {
+    if (Array.isArray(tween)) {
+      tween.map(_tween => {
+        this.add(_tween, position)
+      })
+      return this
+    } else if (typeof tween === 'object' && !(tween instanceof Tween)) {
       tween = new Tween(tween.from, tween)
     }
 
@@ -69,9 +76,9 @@ class Timeline extends Tween {
       }
     }
 
-    tween._startTime = this.parsePosition(0, position, _totalDuration)
-    tween._startTime += now()
-    this._totalDuration = Math.max(_totalDuration, tween._duration + tween._startTime)
+    tween._startTime = this.parsePosition(now() + tween._delayTime, position, _totalDuration)
+    this._timing[tween.id] = tween._startTime
+    this._totalDuration = Math.max(_totalDuration, tween._duration + tween._startTime + tween._delayTime)
     this._tweens[tween.id] = tween
     return this
   }
@@ -90,6 +97,15 @@ class Timeline extends Tween {
 
   interpolation (interpolation) {
     return this.map(tween => tween.interpolation(interpolation))
+  }
+
+  reverse () {
+    this._reversed = !this._reversed
+    this._timing = this._timing.reverse()
+    for (let tween in this._tweens) {
+      this._tweens[tween]._startTime = this._timing[+tween]
+    }
+    return this
   }
 
   update (time) {
@@ -117,7 +133,9 @@ class Timeline extends Tween {
 
     for (let tween in _tweens) {
       let _tween = _tweens[tween]
-      if (_tween.skip || _tween.update(_timing)) {
+      if (_tween.skip) {
+        _tween.skip = false
+      } else if (_tween.update(_timing)) {
         continue
       } else {
         _tween.skip = true
@@ -132,11 +150,10 @@ class Timeline extends Tween {
           this._repeat--
         }
 
-        // Reassign starting values, restart by making startTime = now
         this.emit(_reversed ? 'reverse' : 'repeat')
 
         if (_yoyo) {
-          this._reversed = !_reversed
+          this.reverse()
         }
 
         if (!_reversed && _repeatDelayTime) {
@@ -158,6 +175,13 @@ class Timeline extends Tween {
       } else {
         this.emit('complete')
         this._repeat = this._r
+
+        for (let tween in _tweens) {
+          let _tween = _tweens[tween]
+          if (_tween.skip) {
+            _tween.skip = false
+          }
+        }
 
         return false
       }
