@@ -96,7 +96,7 @@ let now = (function () {
   }
 }())
 
-const update = (time) => {
+const update = (time, preserve) => {
   time = time !== undefined ? time : now()
 
   _tick = _ticker(update)
@@ -110,7 +110,7 @@ const update = (time) => {
   }
 
   for (i in _tweens) {
-    _tweens[i].update(time)
+    _tweens[i].update(time, preserve)
   }
 
   return true

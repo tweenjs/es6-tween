@@ -326,7 +326,7 @@ class Tween extends EventClass {
     return this.object
   }
 
-  update (time) {
+  update (time, preserve) {
     let {
       _onStartCallbackFired,
       _easingFunction,
@@ -389,6 +389,17 @@ class Tween extends EventClass {
         object[property] = _interpolationFunction(end, value)
       } else if (typeof (end) === 'number') {
         object[property] = start + (end - start) * value
+      } else if (typeof (end) === 'string') {
+        if (end.charAt(0) === '+' || end.charAt(0) === '-') {
+          end = start + parseFloat(end)
+        } else {
+          end = parseFloat(end)
+        }
+
+        // Protect against non numeric properties.
+        if (typeof (end) === 'number') {
+          object[property] = start + (end - start) * value
+        }
       }
     }
 
@@ -398,6 +409,12 @@ class Tween extends EventClass {
       if (_repeat) {
         if (_isFinite) {
           this._repeat--
+        }
+
+        for (property in _valuesEnd) {
+          if (typeof (_valuesEnd[property]) === 'string' && typeof (_valuesStart[property]) === 'number') {
+            _valuesStart[property] = _valuesStart[property] + parseFloat(_valuesEnd[property])
+          }
         }
 
         // Reassign starting values, restart by making startTime = now
@@ -415,11 +432,11 @@ class Tween extends EventClass {
           this._startTime += _duration
         }
 
-        this.reassignValues()
-
         return true
       } else {
-        remove(this)
+        if (!preserve) {
+          remove(this)
+        }
         this.emit(EVENT_COMPLETE, object)
         this._repeat = this._r
 
