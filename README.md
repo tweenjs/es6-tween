@@ -36,6 +36,7 @@ Starting at `v3`, we provide excluded plugins from core, so our core has lighter
 
 * Demo #1 [Morphing SVG Shape + Cross-browser SVG Transform](https://codepen.io/dalisoft/pen/mMJmxX)
 * Demo #2 [Morphing SVG Shape](https://codepen.io/dalisoft/pen/BdLydv)
+* Demo #3 [Timeline](https://codepen.io/dalisoft/pen/mMRWdr)
 
 ## Installation
 

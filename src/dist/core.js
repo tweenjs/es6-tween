@@ -19,7 +19,7 @@ const add = tween => {
   _tweens.length++
 
   if (_autoPlay && !isStarted) {
-    update()
+    _tick = _ticker(update)
     isStarted = true
   }
 }
@@ -40,16 +40,17 @@ const autoPlay = (state) => {
 
 const removeAll = () => {
   for (let id in _tweens) {
-    _tweens[+id] = null
-    delete _tweens[+id]
+    _tweens[id] = null
+    delete _tweens[id]
   }
   _tweens.length = 0
+  _stopTicker(_tick)
 }
 
 const get = tween => {
   for (let searchTween in _tweens) {
     if (tween.id === +searchTween) {
-      return _tweens[+searchTween]
+      return _tweens[searchTween]
     }
   }
 
@@ -63,9 +64,12 @@ const has = tween => {
 const remove = tween => {
   for (let searchTween in _tweens) {
     if (tween.id === +searchTween) {
-      delete _tweens[+searchTween]
+      delete _tweens[searchTween]
       _tweens.length--
     }
+  }
+  if (_tweens.length === 0) {
+    _stopTicker(_tick)
   }
 }
 
@@ -92,30 +96,27 @@ let now = (function () {
   }
 }())
 
-const update = (time, preserve) => {
+const update = (time) => {
   time = time !== undefined ? time : now()
 
-  if (_autoPlay) {
-    _tick = _ticker(update)
-  }
+  _tick = _ticker(update)
 
-  if (_tweens.length === 0) {
+  let i
+  let length = _tweens.length
+  if (!length) {
     isStarted = false
     _stopTicker(_tick)
     return false
   }
 
-  for (let i in _tweens) {
-    if (_tweens[i].update(time) || preserve) {
-      i++
-    } else {
-      delete _tweens[+i]
-      _tweens.length--
-    }
+  for (i in _tweens) {
+    _tweens[i].update(time)
   }
 
   return true
 }
+
+const isRunning = () => isStarted
 
 const Plugins = {}
 
@@ -125,22 +126,22 @@ if (root.document) {
   let timeDiff = 0
   let timePause = 0
   doc.addEventListener('visibilitychange', () => {
-    if (_tweens.length === 0) {
-      return false
-    }
-
     if (document.hidden) {
       timePause = now()
+      _stopTicker(_tick)
+      isStarted = false
     } else {
       timeDiff = now() - timePause
 
       for (let tween in _tweens) {
         _tweens[tween]._startTime += timeDiff
       }
+      _tick = _ticker(update)
+      isStarted = true
     }
 
     return true
   })
 }
 
-export { Plugins, get, has, nextId, getAll, removeAll, remove, add, now, update, autoPlay }
+export { Plugins, get, has, nextId, getAll, removeAll, remove, add, now, update, autoPlay, isRunning }

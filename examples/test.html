@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0">
-	<title>TWEEN.js</title>
+	<title>es6-tween</title>
 	<style>
 		#container {
 			width: 200px;
@@ -33,10 +33,14 @@
 			return Math.random() * (max - min) + min;
 		}
 
+		function update (v, t) {
+			v.el.style.left = (v.x | 0) + 'px';
+		}
+
 		var nodes = [],
 			c = document.getElementById("container"),
 			easing = "quadraticInOut",
-			ratio = 0.9,
+			ratio = 0.8,
 			wIh = (window.innerHeight || screen.height - 40) * ratio,
 			wIw = window.innerWidth,
 			hwiw = (wIw / 5) * ratio,
@@ -53,14 +57,12 @@
 					tl = Math.floor(random(-200, 200));
 				div.setAttribute("class", "line");
 				div.style.top = [(Math.random() * wIh), "px"].join("");
-				div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
-				//div.style.left = l + "px";
+				//div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
+				div.style.left = l + "px";
 				div.style.backgroundColor = bgC;
 				var a = new TWEEN.Tween({ x: l, el: div }).to({
 					x: tl
-				}, 1000).easing(TWEEN.Easing.Circular.InOut).on('update', ({el, x}) => {
-					el.style.transform = `translate3d(${x}px, 0px, 0px)`
-				}).repeat(Infinity).yoyo(true).start();
+				}, 1000).on('update', update).easing(TWEEN.Easing.Quadratic.InOut).repeat(Infinity).yoyo(true).start();
 
 				frag.appendChild(div);
 

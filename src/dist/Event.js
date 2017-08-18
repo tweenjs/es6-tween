@@ -3,11 +3,6 @@ export default class EventClass {
     this._events = {}
   }
 
-  bind (scope) {
-    this._bind = scope
-    return this
-  }
-
   on (event, callback) {
     if (!this._events[event]) {
       this._events[event] = []
@@ -22,10 +17,10 @@ export default class EventClass {
       this._events[event] = []
     }
 
-    let {_events, _bind} = this
+    let {_events} = this
     let spliceIndex = _events[event].length
     this._events[event].push((...args) => {
-      callback.apply(_bind, args)
+      callback.apply(this, args)
       _events[event].splice(spliceIndex, 1)
     })
     return this
@@ -48,7 +43,7 @@ export default class EventClass {
   }
 
   emit (event, arg1, arg2, arg3, arg4) {
-    let {_events, _bind} = this
+    let {_events} = this
 
     if (event === undefined || !_events[event]) {
       return this
@@ -57,7 +52,7 @@ export default class EventClass {
     let _event = _events[event]
 
     for (let i = 0, length = _event.length; i < length; i++) {
-      _event[i].call(_bind, arg1, arg2, arg3, arg4)
+      _event[i](arg1, arg2, arg3, arg4)
     }
   }
 }

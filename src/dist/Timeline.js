@@ -1,49 +1,27 @@
-import Tween from './Tween'
-import { add, now, nextId } from './core'
+import Tween, { EVENT_UPDATE, EVENT_RS, EVENT_REPEAT, EVENT_REVERSE, EVENT_COMPLETE } from './Tween'
+import { add, now } from './core'
+import PlaybackPosition from './PlaybackPosition'
 
+let _id = 0
 class Timeline extends Tween {
   constructor (params) {
     super()
     this._totalDuration = 0
     this._startTime = now()
     this._tweens = {}
-    this._timing = []
     this._elapsed = 0
-    this._id = nextId()
-    this._labels = {}
+    this._id = _id++
     this._defaultParams = params
+    this.position = new PlaybackPosition()
+    this.position.addLabel('afterLast', this._totalDuration)
+    this.position.addLabel('afterInit', this._startTime)
 
     return this
   }
 
-  setLabel (name, value) {
-    this._labels[name] = this.parsePosition(0, value, 0)
+  addLabel (name, offset) {
+    this.position.addLabel(name, offset)
     return this
-  }
-
-  parsePosition (startTime, input, total) {
-    let position = startTime + total
-
-    if (typeof input === 'string') {
-      for (let label in this._labels) {
-        if (input.indexOf(label) === 0) {
-          let inp = input.split(label)[1]
-
-          if (inp.length === 0 || (inp[0] === '+' || inp[0] === '-')) {
-            position = this._labels[label] + startTime
-            input = input.replace(label, '')
-          }
-        }
-      }
-
-      if (input.indexOf('+') === 0 || input.indexOf('-') === 0) {
-        position += parseFloat(input)
-      }
-    } else if (typeof input === 'number') {
-      position += input
-    }
-
-    return Math.max(0, position)
   }
 
   map (fn) {
@@ -62,7 +40,7 @@ class Timeline extends Tween {
       })
       return this
     } else if (typeof tween === 'object' && !(tween instanceof Tween)) {
-      tween = new Tween(tween.from, tween)
+      tween = new Tween(tween.from).to(tween.to, tween)
     }
 
     let {
@@ -76,10 +54,12 @@ class Timeline extends Tween {
       }
     }
 
-    tween._startTime = this.parsePosition(now() + tween._delayTime, position, _totalDuration)
-    this._timing[tween.id] = tween._startTime
-    this._totalDuration = Math.max(_totalDuration, tween._duration + tween._startTime + tween._delayTime)
+    const offset = typeof position === 'number' ? position : this.position.parseLabel(typeof position !== 'undefined' ? position : 'afterLast', null)
+    tween._startTime = this._startTime
+    tween._startTime += offset
+    this._totalDuration = Math.max(_totalDuration, tween._startTime + tween._delayTime + tween._duration)
     this._tweens[tween.id] = tween
+    this.position.setLabel('afterLast', this._totalDuration)
     return this
   }
 
@@ -88,7 +68,7 @@ class Timeline extends Tween {
 
     add(this)
 
-    return this.emit('restart')
+    return this.emit(EVENT_RS)
   }
 
   easing (easing) {
@@ -101,11 +81,7 @@ class Timeline extends Tween {
 
   reverse () {
     this._reversed = !this._reversed
-    this._timing = this._timing.reverse()
-    for (let tween in this._tweens) {
-      this._tweens[tween]._startTime = this._timing[+tween]
-    }
-    return this
+    return this.emit(EVENT_REVERSE)
   }
 
   update (time) {
@@ -117,7 +93,8 @@ class Timeline extends Tween {
       _startTime,
       _reversed,
       _yoyo,
-      _repeat
+      _repeat,
+      _isFinite
     } = this
 
     if (time < _startTime) {
@@ -142,15 +119,15 @@ class Timeline extends Tween {
       }
     }
 
-    this.emit('update', elapsed, timing)
+    this.emit(EVENT_UPDATE, elapsed, timing)
 
     if (elapsed === 1 || (_reversed && elapsed === 0)) {
       if (_repeat) {
-        if (isFinite(_repeat)) {
+        if (_isFinite) {
           this._repeat--
         }
 
-        this.emit(_reversed ? 'reverse' : 'repeat')
+        this.emit(_reversed ? EVENT_REVERSE : EVENT_REPEAT)
 
         if (_yoyo) {
           this.reverse()
@@ -169,11 +146,12 @@ class Timeline extends Tween {
           if (_tween.skip) {
             _tween.skip = false
           }
+          _tween.reassignValues()
         }
 
         return true
       } else {
-        this.emit('complete')
+        this.emit(EVENT_COMPLETE)
         this._repeat = this._r
 
         for (let tween in _tweens) {

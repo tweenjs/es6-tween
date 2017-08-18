@@ -106,8 +106,6 @@ const SubTween = (start, end, roundv = 10000) => {
       return s
     }
   } else if (!Array.isArray(start) && Array.isArray(end)) {
-    end.unshift(start)
-    end.push(end[end.length - 1])
     return end.map((v, i) => SubTween(i === 0 ? start : end[i - 1], v))
   } else {
     return end

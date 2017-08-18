@@ -15,29 +15,36 @@ import EventClass from './Event'
 const defaultEasing = Easing.Linear.None
 
 // Events list
-const EVENT_UPDATE = 'update'
-const EVENT_COMPLETE = 'complete'
-const EVENT_START = 'start'
-const EVENT_REPEAT = 'repeat'
-const EVENT_REVERSE = 'reverse'
-const EVENT_PAUSE = 'pause'
-const EVENT_PLAY = 'play'
-const EVENT_RS = 'restart'
-const EVENT_STOP = 'stop'
-const EVENT_SEEK = 'seek'
+export const EVENT_UPDATE = 'update'
+export const EVENT_COMPLETE = 'complete'
+export const EVENT_START = 'start'
+export const EVENT_REPEAT = 'repeat'
+export const EVENT_REVERSE = 'reverse'
+export const EVENT_PAUSE = 'pause'
+export const EVENT_PLAY = 'play'
+export const EVENT_RS = 'restart'
+export const EVENT_STOP = 'stop'
+export const EVENT_SEEK = 'seek'
 
 class Tween extends EventClass {
-  static fromTo (from, instance) {
-    return new Tween(from, instance)
+  timeout (fn, delay) {
+    return new Tween({x: 0}).to({x: 1}, delay).on('complete', fn)
   }
-  constructor (object = {}, instate) {
+  interval (fn, delay) {
+    return new Tween({x: 0}).to({x: 1}, delay).repeat(Infinity).on('repeat', fn)
+  }
+  constructor (node, object) {
     super()
 
-    if (object.node) {
-      this.node = object.node
-      delete object.node
+    this.id = nextId()
+    if (typeof node === 'object' && !object && !node.nodeType) {
+      object = this.object = node
+      node = null
+    } else if (typeof node !== 'undefined') {
+      this.node = node
+      object = this.object = NodeCache(node, object)
+      this.object.node = node
     }
-    this.object = NodeCache(this.node, object)
     this._valuesStart = Tween.createEmptyConst(object)
     this._valuesEnd = Tween.createEmptyConst(object)
 
@@ -55,13 +62,8 @@ class Tween extends EventClass {
 
     this._onStartCallbackFired = false
     this._pausedTime = null
-    this.id = nextId()
     this._plugins = {}
-
-    if (instate && instate.to) {
-      return new Tween(object)
-        .to(instate.to, instate)
-    }
+    this._isFinite = true
 
     return this
   }
@@ -174,25 +176,27 @@ class Tween extends EventClass {
     }
 
     let {
+      _valuesStart,
       _valuesEnd,
-      object
+      object,
+      _plugins
     } = this
 
     for (let property in _valuesEnd) {
       let isPluginProp = Plugins[property]
       if (isPluginProp) {
-        isPluginProp = this._plugins[property] = new Plugins[property](this, object[property], _valuesEnd[property])
+        isPluginProp = _plugins[property] = new Plugins[property](this, object[property], _valuesEnd[property])
         isPluginProp.preprocess && isPluginProp.preprocess(object[property], _valuesEnd[property])
       }
-      if (typeof _valuesEnd[property] === 'object' && _valuesEnd[property]) {
-        this._valuesEnd[property] = SubTween(object[property], _valuesEnd[property])
-        if (typeof this._valuesEnd[property] === 'function') {
-          this.object[property] = this._valuesEnd[property](0)
+      if (typeof _valuesEnd[property] === 'object' && _valuesEnd[property] && typeof object[property] === 'object') {
+        _valuesEnd[property] = SubTween(object[property], _valuesEnd[property])
+        if (typeof _valuesEnd[property] === 'function') {
+          object[property] = _valuesEnd[property](0)
         }
       } else if (typeof _valuesEnd[property] === 'string' && typeof object[property] === 'string') {
-        this._valuesEnd[property] = SubTween(object[property], _valuesEnd[property])
-        if (typeof this._valuesEnd[property] === 'function') {
-          this.object[property] = this._valuesEnd[property](0)
+        _valuesEnd[property] = SubTween(object[property], _valuesEnd[property])
+        if (typeof _valuesEnd[property] === 'function') {
+          object[property] = _valuesEnd[property](0)
         }
       }
 
@@ -202,10 +206,10 @@ class Tween extends EventClass {
         continue
       }
 
-      this._valuesStart[property] = object[property]
+      _valuesStart[property] = object[property]
 
       if (isPluginProp) {
-        isPluginProp.postprocess && isPluginProp.postprocess(this.object[property], this._valuesEnd[property])
+        isPluginProp.postprocess && isPluginProp.postprocess(object[property], _valuesEnd[property])
       }
     }
 
@@ -263,6 +267,7 @@ class Tween extends EventClass {
   repeat (amount) {
     this._repeat = typeof (amount) === 'function' ? amount(this._repeat) : amount
     this._r = this._repeat
+    this._isFinite = isFinite(amount)
 
     return this
   }
@@ -297,6 +302,25 @@ class Tween extends EventClass {
     return this
   }
 
+  reassignValues () {
+    const {
+      _valuesStart,
+      _valuesEnd,
+      object
+    } = this
+
+    for (let property in _valuesEnd) {
+      let end = _valuesEnd[property]
+      let start = _valuesStart[property]
+
+      if (typeof end === 'number' || typeof end === 'string') {
+        object[property] = start
+      }
+    }
+
+    return this
+  }
+
   get (time) {
     this.update(time)
     return this.object
@@ -317,7 +341,8 @@ class Tween extends EventClass {
       _valuesStart,
       _valuesEnd,
       _plugins,
-      object
+      object,
+      _isFinite
     } = this
 
     let property
@@ -364,41 +389,22 @@ class Tween extends EventClass {
         object[property] = _interpolationFunction(end, value)
       } else if (typeof (end) === 'number') {
         object[property] = start + (end - start) * value
-      } else if (typeof (end) === 'string') {
-        if (end.charAt(0) === '+' || end.charAt(0) === '-') {
-          end = start + parseFloat(end)
-        } else {
-          end = parseFloat(end)
-        }
-
-        // Protect against non numeric properties.
-        if (typeof (end) === 'number') {
-          object[property] = start + (end - start) * value
-        }
       }
     }
 
     this.emit(EVENT_UPDATE, object, value, elapsed)
 
-    this.object = object
-
     if (elapsed === 1 || (_reversed && elapsed === 0)) {
       if (_repeat) {
-        if (isFinite(_repeat)) {
+        if (_isFinite) {
           this._repeat--
-        }
-
-        for (property in _valuesEnd) {
-          if (typeof (_valuesEnd[property]) === 'string' && typeof (_valuesStart[property]) === 'number') {
-            this._valuesStart[property] = _valuesStart[property] + parseFloat(_valuesEnd[property])
-          }
         }
 
         // Reassign starting values, restart by making startTime = now
         this.emit(_reversed ? EVENT_REVERSE : EVENT_REPEAT, object)
 
         if (_yoyo) {
-          this._reversed = !_reversed
+          this.reverse()
         }
 
         if (!_reversed && _repeatDelayTime) {
@@ -409,8 +415,11 @@ class Tween extends EventClass {
           this._startTime += _duration
         }
 
+        this.reassignValues()
+
         return true
       } else {
+        remove(this)
         this.emit(EVENT_COMPLETE, object)
         this._repeat = this._r
 

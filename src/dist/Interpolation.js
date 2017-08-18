@@ -58,7 +58,7 @@ const Interpolation = {
   Utils: {
 
     Linear (p0, p1, t) {
-      return typeof p1 === 'function' ? p1(t) : (p1 - p0) * t + p0
+      return typeof p0 === 'function' ? p0(t) : (p1 - p0) * t + p0
     },
 
     Bernstein (n, i) {
