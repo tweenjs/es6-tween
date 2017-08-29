@@ -45,13 +45,15 @@ export default class EventClass {
   emit (event, arg1, arg2, arg3, arg4) {
     let {_events} = this
 
-    if (event === undefined || !_events[event]) {
+    let _event = _events[event]
+
+    if (!_event || !_event.length) {
       return this
     }
 
-    let _event = _events[event]
-
-    for (let i = 0, length = _event.length; i < length; i++) {
+    let i = 0
+    const len = _event.length
+    for (; i < len; i++) {
       _event[i](arg1, arg2, arg3, arg4)
     }
   }

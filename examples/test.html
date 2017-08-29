@@ -26,6 +26,7 @@
 	<div id="container"></div>
 
 	<script src="../dist/Tween.js"></script>
+	<script src="../../es6-tween-plugins/renderer/index.js"></script>
 	<script>
 		TWEEN.autoPlay(true);
 
@@ -33,14 +34,16 @@
 			return Math.random() * (max - min) + min;
 		}
 
-		function update (v, t) {
-			v.el.style.left = (v.x | 0) + 'px';
+		function _self (self) {
+		return function update (v, t) {
+			self.node.style.transform = 'translate3d(' + (((v * 10) | 0) / 10) + 'px, 0px, 0px)';
+		}
 		}
 
 		var nodes = [],
 			c = document.getElementById("container"),
 			easing = "quadraticInOut",
-			ratio = 0.8,
+			ratio = 0.9,
 			wIh = (window.innerHeight || screen.height - 40) * ratio,
 			wIw = window.innerWidth,
 			hwiw = (wIw / 5) * ratio,
@@ -51,18 +54,20 @@
 			for (i = 0; i < count; i++) {
 				var div = document.createElement("div"),
 					bg = (Math.random() * 0xffffff) >> 0,
-					bgC = "#" + bg.toString(16),
+					r = bg >> 16 & 255,
+					g = bg >> 8 & 255,
+					b = bg & 255,
+					bgC = 'rgb(' + r + ',' + g + ', ' + b + ')',
 					l = Math.floor(random(-200, 200)),
 					dl = Math.floor(Math.random() * 1000),
 					tl = Math.floor(random(-200, 200));
 				div.setAttribute("class", "line");
 				div.style.top = [(Math.random() * wIh), "px"].join("");
-				//div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
-				div.style.left = l + "px";
+				//div.style.left = l + 'px';
+				div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
 				div.style.backgroundColor = bgC;
-				var a = new TWEEN.Tween({ x: l, el: div }).to({
-					x: tl
-				}, 1000).on('update', update).easing(TWEEN.Easing.Quadratic.InOut).repeat(Infinity).yoyo(true).start();
+				var a = new TWEEN.Tween(div, l).to(tl, 1000).easing(TWEEN.Easing.Quadratic.InOut);
+				a.on('update', _self(a)).repeat(Infinity).yoyo(true).start();
 
 				frag.appendChild(div);
 

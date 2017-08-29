@@ -2,13 +2,11 @@ import {
   add,
   remove,
   now,
-  nextId,
   Plugins
 }
   from './core'
 import Easing from './Easing'
-import Interpolation from './Interpolation'
-import SubTween from './SubTween'
+import InterTween from 'intertween'
 import NodeCache from './NodeCache'
 import EventClass from './Event'
 
@@ -26,31 +24,29 @@ export const EVENT_RS = 'restart'
 export const EVENT_STOP = 'stop'
 export const EVENT_SEEK = 'seek'
 
+let _id = 0 // Unique ID
+
 class Tween extends EventClass {
-  timeout (fn, delay) {
-    return new Tween({x: 0}).to({x: 1}, delay).on('complete', fn)
-  }
-  interval (fn, delay) {
-    return new Tween({x: 0}).to({x: 1}, delay).repeat(Infinity).on('repeat', fn)
-  }
   constructor (node, object) {
     super()
 
-    this.id = nextId()
-    if (typeof node === 'object' && !object && !node.nodeType) {
+    this.id = _id++
+    if (typeof node !== 'undefined' && !object && !node.nodeType) {
       object = this.object = node
       node = null
     } else if (typeof node !== 'undefined') {
       this.node = node
-      object = this.object = NodeCache(node, object)
-      this.object.node = node
+      if (typeof object === 'object') {
+        object = this.object = NodeCache(node, object)
+        this.object.node = node
+      } else {
+        this.object = object
+      }
     }
-    this._valuesStart = Tween.createEmptyConst(object)
-    this._valuesEnd = Tween.createEmptyConst(object)
+    this._valuesEnd = null
 
     this._duration = 1000
     this._easingFunction = defaultEasing
-    this._interpolationFunction = Interpolation.Linear
 
     this._startTime = 0
     this._delayTime = 0
@@ -62,19 +58,9 @@ class Tween extends EventClass {
 
     this._onStartCallbackFired = false
     this._pausedTime = null
-    this._plugins = {}
     this._isFinite = true
 
     return this
-  }
-
-  static createEmptyConst (oldObject) {
-    return typeof (oldObject) === 'number' ? 0 : Array.isArray(oldObject) ? [] : typeof (oldObject) === 'object' ? {}
-      : ''
-  }
-
-  static checkValidness (valid) {
-    return valid !== undefined && valid !== null && valid !== '' && ((typeof valid === 'number' && !isNaN(valid)) || typeof valid !== 'number') && valid !== Infinity
   }
 
   isPlaying () {
@@ -152,12 +138,10 @@ class Tween extends EventClass {
     return this
   }
 
-  to (properties = {}, duration = 1000) {
-    if (typeof properties === 'object') {
-      this._valuesEnd = properties
-    }
+  to (properties, duration = 1000) {
+    this._valuesEnd = properties
 
-    if (typeof duration === 'number') {
+    if (typeof duration === 'number' || typeof (duration) === 'function') {
       this._duration = typeof (duration) === 'function' ? duration(this._duration) : duration
     } else if (typeof duration === 'object') {
       for (let prop in duration) {
@@ -176,41 +160,23 @@ class Tween extends EventClass {
     }
 
     let {
-      _valuesStart,
       _valuesEnd,
       object,
-      _plugins
+      Renderer
     } = this
 
-    for (let property in _valuesEnd) {
-      let isPluginProp = Plugins[property]
-      if (isPluginProp) {
-        isPluginProp = _plugins[property] = new Plugins[property](this, object[property], _valuesEnd[property])
-        isPluginProp.preprocess && isPluginProp.preprocess(object[property], _valuesEnd[property])
-      }
-      if (typeof _valuesEnd[property] === 'object' && _valuesEnd[property] && typeof object[property] === 'object') {
-        _valuesEnd[property] = SubTween(object[property], _valuesEnd[property])
-        if (typeof _valuesEnd[property] === 'function') {
-          object[property] = _valuesEnd[property](0)
-        }
-      } else if (typeof _valuesEnd[property] === 'string' && typeof object[property] === 'string') {
-        _valuesEnd[property] = SubTween(object[property], _valuesEnd[property])
-        if (typeof _valuesEnd[property] === 'function') {
-          object[property] = _valuesEnd[property](0)
+    if (typeof _valuesEnd === 'object') {
+      for (let property in _valuesEnd) {
+        if (Plugins[property]) {
+          _valuesEnd[property] = new Plugins[property](this, object[property], _valuesEnd[property])
         }
       }
+    }
 
-      // If `to()` specifies a property that doesn't exist in the source object,
-      // we should not set that property in the object
-      if (Tween.checkValidness(object[property]) === false) {
-        continue
-      }
+    this._valuesEnd = _valuesEnd = InterTween(object, _valuesEnd)
 
-      _valuesStart[property] = object[property]
-
-      if (isPluginProp) {
-        isPluginProp.postprocess && isPluginProp.postprocess(object[property], _valuesEnd[property])
-      }
+    if (Renderer && this.node) {
+      this.__render = new Renderer(this, _valuesEnd)
     }
 
     return this
@@ -296,25 +262,17 @@ class Tween extends EventClass {
     return this
   }
 
-  interpolation (fn) {
-    this._interpolationFunction = fn
-
-    return this
-  }
-
   reassignValues () {
     const {
-      _valuesStart,
       _valuesEnd,
       object
     } = this
 
     for (let property in _valuesEnd) {
       let end = _valuesEnd[property]
-      let start = _valuesStart[property]
 
       if (typeof end === 'number' || typeof end === 'string') {
-        object[property] = start
+        object[property] = end(0)
       }
     }
 
@@ -330,7 +288,6 @@ class Tween extends EventClass {
     let {
       _onStartCallbackFired,
       _easingFunction,
-      _interpolationFunction,
       _repeat,
       _repeatDelayTime,
       _reverseDelayTime,
@@ -338,14 +295,12 @@ class Tween extends EventClass {
       _reversed,
       _startTime,
       _duration,
-      _valuesStart,
       _valuesEnd,
-      _plugins,
       object,
-      _isFinite
+      _isFinite,
+      __render
     } = this
 
-    let property
     let elapsed
     let value
 
@@ -371,36 +326,12 @@ class Tween extends EventClass {
     elapsed = elapsed > 1 ? 1 : elapsed
     elapsed = _reversed ? 1 - elapsed : elapsed
 
-    value = typeof _easingFunction === 'function' ? _easingFunction(elapsed) : defaultEasing(elapsed)
+    value = _easingFunction(elapsed)
 
-    for (property in _valuesEnd) {
-      let start = _valuesStart[property]
-      let end = _valuesEnd[property]
-      let plugin = _plugins[property]
-      value = _easingFunction[property] ? _easingFunction[property](elapsed) : value
+    object = _valuesEnd(value)
 
-      if (plugin && plugin.update) {
-        plugin.update(value, elapsed, _reversed)
-      } else if (start === null || start === undefined) {
-        continue
-      } else if (typeof end === 'function') {
-        object[property] = end(value)
-      } else if (Array.isArray(end)) {
-        object[property] = _interpolationFunction(end, value)
-      } else if (typeof (end) === 'number') {
-        object[property] = start + (end - start) * value
-      } else if (typeof (end) === 'string') {
-        if (end.charAt(0) === '+' || end.charAt(0) === '-') {
-          end = start + parseFloat(end)
-        } else {
-          end = parseFloat(end)
-        }
-
-        // Protect against non numeric properties.
-        if (typeof (end) === 'number') {
-          object[property] = start + (end - start) * value
-        }
-      }
+    if (__render) {
+      __render.update(object, elapsed)
     }
 
     this.emit(EVENT_UPDATE, object, value, elapsed)
@@ -411,25 +342,16 @@ class Tween extends EventClass {
           this._repeat--
         }
 
-        for (property in _valuesEnd) {
-          if (typeof (_valuesEnd[property]) === 'string' && typeof (_valuesStart[property]) === 'number') {
-            _valuesStart[property] = _valuesStart[property] + parseFloat(_valuesEnd[property])
-          }
-        }
-
-        // Reassign starting values, restart by making startTime = now
-        this.emit(_reversed ? EVENT_REVERSE : EVENT_REPEAT, object)
-
         if (_yoyo) {
-          this.reverse()
+          this._reversed = !_reversed
         }
 
         if (!_reversed && _repeatDelayTime) {
-          this._startTime += _duration + _repeatDelayTime
+          this._startTime = time + _repeatDelayTime
         } else if (_reversed && _reverseDelayTime) {
-          this._startTime += _duration + _reverseDelayTime
+          this._startTime = time + _reverseDelayTime
         } else {
-          this._startTime += _duration
+          this._startTime = time
         }
 
         return true

@@ -1,22 +1,15 @@
-/* global global, window, Object, document, process, requestAnimationFrame, cancelAnimationFrame, setTimeout, clearTimeout */
+/* global process */
+import { root } from '../shim'
 
-let _tweens = {}
+let _tweens = []
 let isStarted = false
 let _autoPlay = false
 let _tick
-let root = typeof (window) !== 'undefined' ? window : typeof (global) !== 'undefined' ? global : {}
-let _nextId = 0
-
-let _ticker = fn => typeof (requestAnimationFrame) !== 'undefined' ? requestAnimationFrame(fn) : setTimeout(fn, 16.6)
-let _stopTicker = fn => typeof (cancelAnimationFrame) !== 'undefined' ? cancelAnimationFrame(fn) : clearTimeout(fn)
-
-let setProp = (o, p, param) => Object.defineProperty(o, p, param)
-setProp(_tweens, 'length', {enumerable: false, writable: true, value: 0})
+const _ticker = root.requestAnimationFrame
+const _stopTicker = root.cancelAnimationFrame
 
 const add = tween => {
-  let {id} = tween
-  _tweens[id] = tween
-  _tweens.length++
+  _tweens.push(tween)
 
   if (_autoPlay && !isStarted) {
     _tick = _ticker(update)
@@ -24,33 +17,21 @@ const add = tween => {
   }
 }
 
-const nextId = () => {
-  let id = _nextId
-  _nextId++
-  return id
-}
-
-const getAll = () => {
-  return _tweens
-}
+const getAll = () => _tweens
 
 const autoPlay = (state) => {
   _autoPlay = state
 }
 
 const removeAll = () => {
-  for (let id in _tweens) {
-    _tweens[id] = null
-    delete _tweens[id]
-  }
   _tweens.length = 0
   _stopTicker(_tick)
 }
 
 const get = tween => {
-  for (let searchTween in _tweens) {
-    if (tween.id === +searchTween) {
-      return _tweens[searchTween]
+  for (let i = 0; i < _tweens.length; i++) {
+    if (tween === _tweens[i]) {
+      return _tweens[i]
     }
   }
 
@@ -62,13 +43,11 @@ const has = tween => {
 }
 
 const remove = tween => {
-  for (let searchTween in _tweens) {
-    if (tween.id === +searchTween) {
-      delete _tweens[searchTween]
-      _tweens.length--
-    }
+  let i = _tweens.indexOf(tween)
+  if (i !== -1) {
+    _tweens.splice(i, 1)
   }
-  if (_tweens.length === 0) {
+  if (!_tweens.length) {
     _stopTicker(_tick)
   }
 }
@@ -101,15 +80,15 @@ const update = (time, preserve) => {
 
   _tick = _ticker(update)
 
-  let i
-  let length = _tweens.length
-  if (!length) {
+  const len = _tweens.length
+  if (!len) {
     isStarted = false
     _stopTicker(_tick)
     return false
   }
 
-  for (i in _tweens) {
+  let i = 0
+  for (; i < len; i++) {
     _tweens[i].update(time, preserve)
   }
 
@@ -121,7 +100,7 @@ const isRunning = () => isStarted
 const Plugins = {}
 
 // Normalise time when visiblity is changed (if available) ...
-if (root.document) {
+if (root.document && root.document.addEventListener) {
   let doc = root.document
   let timeDiff = 0
   let timePause = 0
@@ -133,8 +112,8 @@ if (root.document) {
     } else {
       timeDiff = now() - timePause
 
-      for (let tween in _tweens) {
-        _tweens[tween]._startTime += timeDiff
+      for (let i = 0, length = _tweens.length; i < length; i++) {
+        _tweens[i]._startTime += timeDiff
       }
       _tick = _ticker(update)
       isStarted = true
@@ -144,4 +123,4 @@ if (root.document) {
   })
 }
 
-export { Plugins, get, has, nextId, getAll, removeAll, remove, add, now, update, autoPlay, isRunning }
+export { Plugins, get, has, getAll, removeAll, remove, add, now, update, autoPlay, isRunning }
