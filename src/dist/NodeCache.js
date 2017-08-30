@@ -1,13 +1,17 @@
 let Store = {}
 export default function (node, tween) {
-  if (!node) return tween
-  if (Store[node]) {
+  if (!node || !node.nodeType) return tween
+  var ID = node.queueID || 'queue_' + Math.round(Math.random() * 1000 + Date.now())
+  if (!node.queueID) {
+    node.queueID = ID
+  }
+  if (Store[ID]) {
     if (tween) {
-      return Object.assign(Store[node], tween)
+      Store[ID] = Object.assign(Store[ID], tween)
     }
-    return Store[node]
+    return Store[ID]
   }
 
-  Store[node] = tween
-  return Store[node]
+  Store[ID] = tween
+  return Store[ID]
 };

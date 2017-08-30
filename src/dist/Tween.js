@@ -40,6 +40,8 @@ class Tween extends EventClass {
         this.object = object
       }
     }
+    let isArr = this.isArr = Array.isArray(object)
+    this._valuesStart = isArr ? [] : {}
     this._valuesEnd = null
 
     this._duration = 1000
@@ -158,15 +160,29 @@ class Tween extends EventClass {
 
     let {
       _valuesEnd,
+      _valuesStart,
       object,
       Renderer
     } = this
 
-    if (typeof _valuesEnd === 'object') {
-      for (let property in _valuesEnd) {
-        if (Plugins[property]) {
-          _valuesEnd[property] = new Plugins[property](this, object[property], _valuesEnd[property])
-        }
+    for (let property in _valuesEnd) {
+      let start = object[property]
+      let end = _valuesEnd[property]
+
+      if (Plugins[property]) {
+        _valuesEnd[property] = new Plugins[property](this, start, end)
+        continue
+      }
+
+      if (object[property] === undefined) {
+        continue
+      }
+
+      if (typeof start === 'number' && typeof end === 'number') {
+        _valuesStart[property] = start
+        _valuesEnd[property] = end
+      } else {
+        _valuesEnd[property] = InterTween(start, end)
       }
     }
 
@@ -254,18 +270,21 @@ class Tween extends EventClass {
 
   reassignValues () {
     const {
+      _valuesStart,
       _valuesEnd,
-      object
+      object,
+      isArr
     } = this
 
-    let v0 = _valuesEnd(0)
-
-    if (typeof v0 === 'object') {
-      let isArr = Array.isArray(v0)
-      for (let property in v0) {
-        if (isArr) property *= 1
-        object[property] = v0[property]
+    for (let property in _valuesEnd) {
+      if (isArr) {
+        property *= 1
       }
+
+      let start = _valuesStart[property]
+      let end = _valuesEnd[property]
+
+      object[property] = typeof end === 'function' ? end(0) : start
     }
 
     return this
@@ -287,6 +306,7 @@ class Tween extends EventClass {
       _reversed,
       _startTime,
       _duration,
+      _valuesStart,
       _valuesEnd,
       object,
       _isFinite,
@@ -295,6 +315,7 @@ class Tween extends EventClass {
 
     let elapsed
     let value
+    let property
 
     time = time !== undefined ? time : now()
 
@@ -306,9 +327,6 @@ class Tween extends EventClass {
       if (!this._rendered) {
         this.render()
         this._rendered = true
-        if (typeof _valuesEnd !== 'function') {
-          this._valuesEnd = _valuesEnd = InterTween(object, _valuesEnd)
-        }
       }
 
       this.emit(EVENT_START, object)
@@ -320,15 +338,24 @@ class Tween extends EventClass {
     elapsed = elapsed > 1 ? 1 : elapsed
     elapsed = _reversed ? 1 - elapsed : elapsed
 
-    value = _easingFunction(elapsed)
+    for (property in _valuesEnd) {
+      value = _easingFunction[property] ? _easingFunction[property](elapsed) : _easingFunction(elapsed)
 
-    object = _valuesEnd(value)
+      let start = _valuesStart[property]
+      let end = _valuesEnd[property]
+
+      if (typeof end === 'number') {
+        object[property] = start + (end - start) * value
+      } else if (typeof end === 'function') {
+        object[property] = end(value)
+      }
+    }
 
     if (__render) {
       __render.update(object, elapsed)
     }
 
-    this.emit(EVENT_UPDATE, object, value, elapsed)
+    this.emit(EVENT_UPDATE, object, elapsed)
 
     if (elapsed === 1 || (_reversed && elapsed === 0)) {
       if (_repeat) {

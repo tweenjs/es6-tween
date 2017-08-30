@@ -25,7 +25,6 @@ const autoPlay = (state) => {
 
 const removeAll = () => {
   _tweens.length = 0
-  _stopTicker(_tick)
 }
 
 const get = tween => {
@@ -46,9 +45,6 @@ const remove = tween => {
   let i = _tweens.indexOf(tween)
   if (i !== -1) {
     _tweens.splice(i, 1)
-  }
-  if (!_tweens.length) {
-    _stopTicker(_tick)
   }
 }
 
@@ -80,16 +76,16 @@ const update = (time, preserve) => {
 
   _tick = _ticker(update)
 
-  const len = _tweens.length
-  if (!len) {
-    isStarted = false
+  if (_tweens.length === 0) {
     _stopTicker(_tick)
+    isStarted = false
     return false
   }
 
   let i = 0
-  for (; i < len; i++) {
+  while (i < _tweens.length) {
     _tweens[i].update(time, preserve)
+    i++
   }
 
   return true
