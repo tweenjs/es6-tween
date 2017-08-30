@@ -344,7 +344,9 @@ class Tween extends EventClass {
       let start = _valuesStart[property]
       let end = _valuesEnd[property]
 
-      if (typeof end === 'number') {
+      if (end.update) {
+        end.update(value, elapsed)
+      } else if (typeof end === 'number') {
         object[property] = start + (end - start) * value
       } else if (typeof end === 'function') {
         object[property] = end(value)

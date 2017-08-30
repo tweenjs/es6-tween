@@ -15,7 +15,7 @@
 		
 		.line {
 			width: 200px;
-			height: 2px;
+			height: 1px;
 			position: absolute;
 		}
 	</style>
@@ -26,6 +26,7 @@
 	<div id="container"></div>
 
 	<script src="../dist/Tween.js"></script>
+	<script src="../../es6-tween-plugins/renderer/index.js"></script>
 	<script>
 		TWEEN.autoPlay(true);
 
@@ -63,14 +64,14 @@
 				//div.style.left = l + 'px';
 				div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
 				div.style.backgroundColor = bgC;
-				var a = new TWEEN.Tween({ x : l, el: div }).to({ x: tl }, 1000).on('update', update).easing(TWEEN.Easing.Quadratic.InOut).repeat(Infinity).yoyo(true).start();
+				var a = new TWEEN.Tween(div, { x : l }).to({ x: tl }, 1000).easing(TWEEN.Easing.Quadratic.InOut).repeat(Infinity).yoyo(true).start();
 
 				frag.appendChild(div);
 
 			}
 			c.appendChild(frag);
 		}
-		createTest(200);
+		createTest(500);
 	</script>
 
 </body>
