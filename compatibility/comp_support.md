@@ -7,9 +7,9 @@
 * IE9+
 
 # Devices
-* Android 4+
+* Android 5+
 * iOS7+
-* WP7.5+
+* WP8+
 
 # Package managers
 * `bower`
@@ -21,6 +21,3 @@
 
 # Transpiler
 * `Buble`
-
-# XBox/PlayStation
-* not tested yet

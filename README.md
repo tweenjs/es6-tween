@@ -143,18 +143,6 @@ Then reference the library source:
 * [Compatiblity](./compatibility/comp_support.md)
 * [Tutorial](http://learningthreejs.com/blog/2011/08/17/tweenjs-for-smooth-animation/)  using tween.js with three.js
 
-## Caveats
-##### We removed the shim from core functions for reduce size and improve execution speed, so you need some polyfills to work better
-
-* `Array.isArray`*
-* `Object.assign`
-* `requestAnimationFrame`*
-* `performance.now()`*
-* `cancelAnimationFrame`*
-* `Array.from`*
-
-`* - optional for best performance, fallback supported in core`
-
 ## Examples
 
 Demos with this version are not yet implemented, sorry.
