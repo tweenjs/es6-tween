@@ -23,6 +23,7 @@ export const EVENT_STOP = 'stop'
 export const EVENT_SEEK = 'seek'
 
 let _id = 0 // Unique ID
+const defaultEasing = Easing.Linear.None
 
 class Tween extends EventClass {
   constructor (node, object) {
@@ -45,7 +46,7 @@ class Tween extends EventClass {
     this._valuesEnd = null
 
     this._duration = 1000
-    this._easingFunction = Easing.Linear.None
+    this._easingFunction = defaultEasing
 
     this._startTime = 0
     this._delayTime = 0
@@ -339,7 +340,7 @@ class Tween extends EventClass {
     elapsed = _reversed ? 1 - elapsed : elapsed
 
     for (property in _valuesEnd) {
-      value = _easingFunction[property] ? _easingFunction[property](elapsed) : _easingFunction(elapsed)
+      value = _easingFunction[property] ? _easingFunction[property](elapsed) : typeof _easingFunction === 'function' ? _easingFunction(elapsed) : defaultEasing(elapsed)
 
       let start = _valuesStart[property]
       let end = _valuesEnd[property]
