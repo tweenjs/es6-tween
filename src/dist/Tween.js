@@ -367,6 +367,8 @@ class Tween extends EventClass {
           this._reversed = !_reversed
         }
 
+        this.emit(_yoyo && !_reversed ? EVENT_REVERSE : EVENT_REPEAT, object)
+
         if (!_reversed && _repeatDelayTime) {
           this._startTime = time + _repeatDelayTime
         } else if (_reversed && _reverseDelayTime) {

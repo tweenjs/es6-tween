@@ -1,6 +1,6 @@
 {
 	"name": "es6-tween",
-	"version": "3.5.2",
+	"version": "3.5.3",
 	"description": "ES6 implementation of amazing tween.js",
 	"browser": "dist/Tween.min.js",
 	"cdn": "dist/Tween.min.js",
@@ -8,6 +8,7 @@
 	"directories": {
 		"example": "examples"
 	},
+	"types": "Tween.d.ts",
 	"scripts": {
 		"source": "rollup -c --environment min:false",
 		"minify": "rollup -c --environment min:true",
@@ -16,7 +17,7 @@
 		"lint": "eslint src",
 		"fix": "eslint --fix src",
 		"test-unit": "nodeunit test/unit/nodeunitheadless.js",
-		"test": "npm run lint",
+		"test": "npm run lint && ava --verbose",
 		"prepublishOnly": "npm run lint && npm test && npm run build"
 	},
 	"repository": {
@@ -39,6 +40,7 @@
 	},
 	"homepage": "https://github.com/tweenjs/es6-tween#readme",
 	"devDependencies": {
+		"ava": "^0.22.0",
 		"eslint": "latest",
 		"eslint-plugin-import": "latest",
 		"rollup": "latest",
