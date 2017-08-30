@@ -10,8 +10,6 @@ import InterTween from 'intertween'
 import NodeCache from './NodeCache'
 import EventClass from './Event'
 
-const defaultEasing = Easing.Linear.None
-
 // Events list
 export const EVENT_UPDATE = 'update'
 export const EVENT_COMPLETE = 'complete'
@@ -38,7 +36,6 @@ class Tween extends EventClass {
       this.node = node
       if (typeof object === 'object') {
         object = this.object = NodeCache(node, object)
-        this.object.node = node
       } else {
         this.object = object
       }
@@ -46,7 +43,7 @@ class Tween extends EventClass {
     this._valuesEnd = null
 
     this._duration = 1000
-    this._easingFunction = defaultEasing
+    this._easingFunction = Easing.Linear.None
 
     this._startTime = 0
     this._delayTime = 0
@@ -173,10 +170,8 @@ class Tween extends EventClass {
       }
     }
 
-    this._valuesEnd = _valuesEnd = InterTween(object, _valuesEnd)
-
     if (Renderer && this.node) {
-      this.__render = new Renderer(this, _valuesEnd)
+      this.__render = new Renderer(this, object, _valuesEnd)
     }
 
     return this
@@ -186,12 +181,7 @@ class Tween extends EventClass {
     this._startTime = time !== undefined ? time : now()
     this._startTime += this._delayTime
 
-    this.render()
-    this._rendered = true
-
     add(this)
-
-    this.emit(EVENT_START, this.object)
 
     this._isPlaying = true
 
@@ -268,11 +258,13 @@ class Tween extends EventClass {
       object
     } = this
 
-    for (let property in _valuesEnd) {
-      let end = _valuesEnd[property]
+    let v0 = _valuesEnd(0)
 
-      if (typeof end === 'number' || typeof end === 'string') {
-        object[property] = end(0)
+    if (typeof v0 === 'object') {
+      let isArr = Array.isArray(v0)
+      for (let property in v0) {
+        if (isArr) property *= 1
+        object[property] = v0[property]
       }
     }
 
@@ -313,11 +305,13 @@ class Tween extends EventClass {
     if (!_onStartCallbackFired) {
       if (!this._rendered) {
         this.render()
-
-        this.emit(EVENT_START, object)
-
         this._rendered = true
+        if (typeof _valuesEnd !== 'function') {
+          this._valuesEnd = _valuesEnd = InterTween(object, _valuesEnd)
+        }
       }
+
+      this.emit(EVENT_START, object)
 
       this._onStartCallbackFired = true
     }

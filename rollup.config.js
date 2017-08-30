@@ -20,10 +20,11 @@ const plugins = [
 		}
 	}),
 	nodeResolve({
-      main: true
+      main: true,
+	  jsnext: true
     }),
     commonjs({
-      include: ['./node_modules/intertween/index.js']
+      include: ['node_modules/intertween/index.js']
     })
 ]
 
