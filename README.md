@@ -15,6 +15,8 @@ ES6 implementation of <a href="https://github.com/tweenjs/tween.js">tween.js</a>
 [![NPM](https://nodei.co/npm/es6-tween.png?downloads=true&stars=true)](https://nodei.co/npm/es6-tween/)
 
 ```javascript
+TWEEN.autoPlay(true); // simplify the your code
+
 let coords = { x: 0, y: 0 };
 let tween = new TWEEN.Tween(coords)
 	.to({ x: 100, y: 100 }, 1000)
@@ -22,8 +24,6 @@ let tween = new TWEEN.Tween(coords)
 		console.log(`The values is x: ${x} and y: ${y}`);
 	})
 	.start();
-
-TWEEN.autoPlay(true); // simplify the your code
 }
 ```
 
