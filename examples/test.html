@@ -15,7 +15,7 @@
 		
 		.line {
 			width: 200px;
-			height: 1px;
+			height: 2px;
 			position: absolute;
 		}
 	</style>
@@ -26,7 +26,8 @@
 	<div id="container"></div>
 
 	<script type="text/javascript" src="https://unpkg.com/es6-tween"></script>
-	<script type="text/javascript" src="https://unpkg.com/es6tween-plugin-render"></script>
+	<script type="text/javascript" !src="https://unpkg.com/es6tween-plugin-render"></script>
+	<script type="text/javascript" src="../../es6-tween-plugins/renderer/index.js"></script>
 	<script type="text/javascript">
 		TWEEN.autoPlay(true);
 
@@ -35,7 +36,7 @@
 		}
 
 		function update (v) {
-			v.el.style.transform = 'translate3d(' + v.x + 'px, 0px, 0px)';
+			v.el.style.transform = 'translate(' + v.x + 'px, 0px)';
 		}
 
 		var nodes = [],
@@ -62,7 +63,7 @@
 				div.setAttribute("class", "line");
 				div.style.top = [(Math.random() * wIh), "px"].join("");
 				//div.style.left = l + 'px';
-				div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
+				div.style.transform = "translate(" + l + "px, 0px)";
 				div.style.backgroundColor = bgC;
 				var a = new TWEEN.Tween(div, { x : l }).to({ x: tl }, 1000).easing(TWEEN.Easing.Quadratic.InOut).repeat(Infinity).yoyo(true).start();
 
@@ -71,7 +72,7 @@
 			}
 			c.appendChild(frag);
 		}
-		createTest(500);
+		createTest(100);
 	</script>
 
 </body>
