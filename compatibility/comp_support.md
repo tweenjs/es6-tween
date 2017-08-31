@@ -1,15 +1,26 @@
-# es6-tween compatiblity
+# Compatibility Table
 
 # Browsers
-* Chrome 15+
-* Firefox 15+
-* Opera 12+
-* IE9+
+* Chrome
+* Firefox 3.5+
+* Opera 9.5+
+* IE8+
+* Safari 5.1+
 
-# Devices
-* Android 5+
-* iOS7+
-* WP8+
+# OS (Fully working)
+* Android 4.1+
+* iOS6+
+* WP8.5+
+* OS X
+* Windows 7+
+
+# Device
+* iPhone
+* iPad
+* Android devices
+* Nokia Lumia
+* Samsung devices
+* - all devices should compatible with supported OS
 
 # Package managers
 * `bower`

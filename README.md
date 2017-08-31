@@ -9,7 +9,6 @@ ES6 implementation of <a href="https://github.com/tweenjs/tween.js">tween.js</a>
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![license](https://img.shields.io/github/license/tweenjs/es6-tween.svg)]()
-[![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=<badge_key>)](https://www.browserstack.com/automate/public-build/<badge_key>)
 [![Travis tests][travis-image]][travis-url]
 [![Flattr this][flattr-image]][flattr-url]
 <br/>
@@ -147,6 +146,7 @@ Then reference the library source:
 ## Compatiblity Testing
 
 Thanks to BrowserStack for providing us testing in a real devices to make it cross-browser, bug-free and better.
+BrowserStack saved my countless hours, before i spent on testing much of time, now it's very easy. I recommend to others use this service.
 I sure, BrowserStack helps us to make it, so i am linking to BrowserStack as our sponsor.
 [<img src="https://cloud.githubusercontent.com/assets/7864462/12837037/452a17c6-cb73-11e5-9f39-fc96893bc9bf.png" alt="Browser Stack Logo" width="400">](https://www.browserstack.com/)
 
