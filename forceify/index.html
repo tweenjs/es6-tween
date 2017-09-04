@@ -31,12 +31,13 @@
 	var forceValue = document.querySelector('#forceValue');
 	var force = new Forceify(forceMe);
 	force.onForce(function(ev) {
-		var force = ev.force;
-		if (force > 0.65) {
-			this.setAttribute("class", "active");
-		} else {
-			this.removeAttribute("class");
-		}
+		var force = ev.force, scale = 1 + (force * 1.5), transform = 'translateX(-50%) translateY(-50%) scale(' + scale + ')';
+		forceMe.style.transform = transform;
+		forceMe.style.webkitTransform = transform;
+		forceMe.style.mozTransform = transform;
+		forceMe.style.MsTransform = transform;
+		forceMe.style.msTransform = transform;
+		forceMe.style.OTransform = transform;
 		forceValue.textContent = 'Force: ' + force;
 	});
 	</script>
