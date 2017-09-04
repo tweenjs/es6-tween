@@ -33,7 +33,7 @@
 	force.onForce(function(ev) {
 		var force = ev.force, scale = 1 + (force * 1.5);
 		forceValue.innerHTML = 'Force: ' + ((force * 100) | 0) / 100;
-		var transform = 'translate3d(-50%, -50%, -0.01px) scale(' + scale + ')';
+		var transform = 'translate3d(-50%, -50%, 0.01px) scale3d(' + scale + ', ' + scale + ', ' + scale + ')';
 		forceMe.style.transform = transform;
 		forceMe.style.webkitTransform = transform;
 		forceMe.style.mozTransform = transform;
