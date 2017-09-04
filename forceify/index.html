@@ -31,14 +31,13 @@
 	var forceValue = document.querySelector('#forceValue');
 	var force = new Forceify(forceMe).setLongPressDuration(7000);
 	force.onForce(function(ev) {
-		var force = ev.force, scale = 1 + (force * 1.5);
-		forceValue.innerHTML = 'Force: ' + ((force * 100) | 0) / 100;
-		var transform = 'translate3d(-50%, -50%, 0.01px) scale3d(' + scale + ', ' + scale + ', ' + scale + ')';
-		forceMe.style.transform = transform;
-		forceMe.style.webkitTransform = transform;
-		forceMe.style.mozTransform = transform;
-		forceMe.style.MsTransform = transform;
-		forceMe.style.msTransform = transform;
+		var force = ev.force;
+		if (force > 0.65) {
+			this.setAttribute("class", "active");
+		} else {
+			this.removeAttribute("class");
+		}
+		forceValue.textContent = 'Force: ' + force;
 	});
 	</script>
 </body>

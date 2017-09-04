@@ -89,6 +89,12 @@ h1 {
     -moz-transform: translateX(-50%) translateY(-50%);
     -ms-transform: translateX(-50%) translateY(-50%);
     -webkit-transition: -webkit-transform .1s;
+    transition: transform .1s;
+}
+#forceMe.active {
+	-webkit-transform: translate(-50%, -50%) scale(2.5);
+	transform: translate(-50%, -50%) scale(2.5);
+	-ms-transform: translate(-50%, -50%) scale(2.5);
 }
 
 #forceValue {
