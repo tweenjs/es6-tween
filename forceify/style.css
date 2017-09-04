@@ -77,7 +77,7 @@ h1 {
     z-index: 99;
     width: 93px;
     height: 93px;
-    background: rgba(108, 168, 251);
+    background: rgb(108, 168, 251);
     opacity: 1;
     border-radius: 100%;
     position: absolute;
@@ -89,10 +89,6 @@ h1 {
     -moz-transform: translateX(-50%) translateY(-50%);
     -ms-transform: translateX(-50%) translateY(-50%);
     -webkit-transition: -webkit-transform .1s;
-}
-#forceMe.active {
-	transform: translate(-50%, -50%) scale(2.5);
-	-ms-transform: translate(-50%, -50%) scale(2.5);
 }
 
 #forceValue {
