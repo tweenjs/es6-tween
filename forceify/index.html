@@ -29,8 +29,8 @@
 	<script type="text/javascript">
 	var forceMe = document.querySelector('#forceMe');
 	var forceValue = document.querySelector('#forceValue');
-	var force = Forceify.RegisterNode(forceMe);
-	force.on('force', function(ev) {
+	var force = new Forceify(forceMe);
+	force.onForce(function(ev) {
 		var force = ev.force, scale = 1 + (force * 1.5);
 		forceValue.innerHTML = 'Force: ' + force;
 		var transform = 'translateX(-50%) translateY(-50%) scale(' + scale + ',' + scale + ')';
