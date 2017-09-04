@@ -27,7 +27,6 @@
 
     <script type="text/javascript" src="Forceify.js"></script>
 	<script type="text/javascript">
-	try {
 	var forceMe = document.querySelector('#forceMe');
 	var forceValue = document.querySelector('#forceValue');
 	var force = Forceify.RegisterNode(forceMe);
@@ -41,9 +40,6 @@
 		forceMe.style.MsTransform = transform;
 		forceMe.style.msTransform = transform;
 	});
-	} catch (e) {
-		alert(e);
-	}
 	</script>
 </body>
 </html>

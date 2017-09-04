@@ -17,6 +17,9 @@
     if (typeof performance === 'object' && !performance.now) {
         performance.now = function () { return Date.now() - last; };
     }
+    var now = function () {
+        return typeof performance !== 'undefined' && !!performance.now ? performance.now() : Date.now() - last;
+    };
     var globalEnv = typeof (global) !== 'undefined' ? global : typeof (window) !== 'undefined' ? window : typeof (exports) !== 'undefined' ? exports : this;
     reqAnimFrame(function update(time) {
         reqAnimFrame(update);
@@ -71,7 +74,7 @@
             this.endValue = 1;
             queue.push(this);
             tasks.push(this);
-            this._startTime = performance.now() + this._delayTime;
+            this._startTime = now() + this._delayTime;
             return this;
         };
         Logic.prototype.delay = function (amount) {
@@ -89,7 +92,7 @@
                 this.start();
             }
             else {
-                this._startTime = performance.now() + _delayTime;
+                this._startTime = now() + _delayTime;
             }
             if (asReverse) {
                 this.startValue = currentValue.force;
@@ -125,7 +128,7 @@
         function Forceify(el) {
             var forceifyID = 0;
             if (!el.forceifyQueueId) {
-                forceifyID = el.forceifyQueueId = Math.floor(performance.now() + Math.random() * 1000);
+                forceifyID = el.forceifyQueueId = Math.floor(Date.now() + (Math.random() * 1000));
             }
             else {
                 forceifyID = el.forceifyQueueId;
@@ -359,4 +362,3 @@
     Forceify.RegisterNode = registerEvent;
     return Forceify;
 }));
-//# sourceMappingURL=Forceify.js.map
