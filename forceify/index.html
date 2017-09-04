@@ -29,7 +29,7 @@
 	<script type="text/javascript">
 	var forceMe = document.querySelector('#forceMe');
 	var forceValue = document.querySelector('#forceValue');
-	var force = new Forceify(forceMe).setLongPressDuration(7000);
+	var force = new Forceify(forceMe);
 	force.onForce(function(ev) {
 		var force = ev.force;
 		if (force > 0.65) {
