@@ -88,8 +88,8 @@ h1 {
     -webkit-transform: translateX(-50%) translateY(-50%);
     -moz-transform: translateX(-50%) translateY(-50%);
     -ms-transform: translateX(-50%) translateY(-50%);
-    -webkit-transition: -webkit-transform .1s;
-    transition: transform .1s;
+    -webkit-transition: -webkit-transform .6s;
+    transition: transform .6s;
 }
 #forceMe.active {
 	-webkit-transform: translate(-50%, -50%) scale(2.5);
