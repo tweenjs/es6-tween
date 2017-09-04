@@ -32,9 +32,14 @@
 	var isTransformSupport = 'transform' in forceMe.style || 'msTransform' in forceMe.style;
 	var force = Forceify.RegisterNode(forceMe);
 	force.on('force', function(ev) {
-		var force = ev.force;
-		forceMe.style.transform = forceMe.style.webkitTransform = forceMe.style.msTransform = 'translate(-50%, -50%) scale(' + (1 + force * 1.5) + ')';
-		forceValue.textContent = 'Force: ' + force;
+		var force = ev.force, scale = 1 + (force * 1.5);
+		forceValue.innerHTML = 'Force: ' + force;
+		var transform = 'translate(-50%, -50%) scale(' + scale + ',' + scale + ')';
+		forceMe.style.webkitTransform = transform;
+		forceMe.style.mozTransform = transform;
+		forceMe.style.MsTransform = transform;
+		forceMe.style.msTransform = transform;
+		forceMe.style.transform = transform;
 	});
 	</script>
 </body>
