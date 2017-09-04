@@ -173,6 +173,7 @@
         };
         Forceify.prototype.setLongPressDuration = function (amount) {
             this._pressDuration = amount;
+            this._leaveDuration = amount * this._leaveDurationTolerance;
             return this;
         };
         Forceify.prototype.onForce = function (fn) {
