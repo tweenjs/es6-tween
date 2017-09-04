@@ -29,12 +29,11 @@
 	<script type="text/javascript">
 	var forceMe = document.querySelector('#forceMe');
 	var forceValue = document.querySelector('#forceValue');
-	var isTransformSupport = 'transform' in forceMe.style || 'msTransform' in forceMe.style;
 	var force = Forceify.RegisterNode(forceMe);
 	force.on('force', function(ev) {
 		var force = ev.force, scale = 1 + (force * 1.5);
 		forceValue.innerHTML = 'Force: ' + force;
-		var transform = 'translate(-50%, -50%) scale(' + scale + ',' + scale + ')';
+		var transform = 'translateX(-50%) translateY(-50%) scale(' + scale + ',' + scale + ')';
 		forceMe.style.transform = transform;
 		forceMe.style.webkitTransform = transform;
 		forceMe.style.mozTransform = transform;

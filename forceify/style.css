@@ -77,17 +77,17 @@ h1 {
     z-index: 99;
     width: 93px;
     height: 93px;
-    background: rgba(108, 168, 251, 0.72);
+    background: rgba(108, 168, 251);
     opacity: 1;
     border-radius: 100%;
     position: absolute;
     top: 235px;
     left: 50%;
     -webkit-touch-callout: none;
-    transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
+    transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -ms-transform: translateX(-50%) translateY(-50%);
     -webkit-transition: -webkit-transform .1s;
 }
 #forceMe.active {
