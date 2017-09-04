@@ -85,6 +85,8 @@ h1 {
     left: 50%;
     -webkit-touch-callout: none;
     transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     -webkit-transition: -webkit-transform .1s;
 }

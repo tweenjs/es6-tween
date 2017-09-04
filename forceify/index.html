@@ -35,11 +35,11 @@
 		var force = ev.force, scale = 1 + (force * 1.5);
 		forceValue.innerHTML = 'Force: ' + force;
 		var transform = 'translate(-50%, -50%) scale(' + scale + ',' + scale + ')';
+		forceMe.style.transform = transform;
 		forceMe.style.webkitTransform = transform;
 		forceMe.style.mozTransform = transform;
 		forceMe.style.MsTransform = transform;
 		forceMe.style.msTransform = transform;
-		forceMe.style.transform = transform;
 	});
 	</script>
 </body>
