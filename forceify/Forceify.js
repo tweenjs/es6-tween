@@ -124,6 +124,20 @@
     var _isRealForceTouch = 'onmouseforcewillbegin' in root || 'onmouseforcechanged' in root || 'onwebkitmouseforcewillbegin' in root || 'onwebkitmouseforcechanged' in root;
     var _isReal3DTouch = 'ontouchforcewillbegin' in root || 'ontouchforcechanged' in root || 'onwebkittouchforcewillbegin' in root || 'onwebkittouchforcechanged' in root;
     var _isNonBrowserEnv = 'tabris' in globalEnv || 'tabris' in root || 'tezNative' in globalEnv || 'tezNative' in root;
+    var getTouch = function (e, targ, changed) {
+        var touches = changed ? e.changedTouches : e.touches;
+        if (touches) {
+            var i = 0;
+            var maxLen = touches.length;
+            while (i < maxLen) {
+                if (!!touches[i] && touches[i].target === targ) {
+                    return touches[i];
+                }
+                i++;
+            }
+        }
+        return null;
+    };
     var Forceify = (function () {
         function Forceify(el) {
             var forceifyID = 0;
@@ -195,7 +209,26 @@
             }
             return this;
         };
+        Forceify.prototype.preventTouchCallout = function () {
+            var el = this.el;
+            var touchCallout = ['webkitTouchCallout', 'MozTouchCallout', 'msTouchCallout', 'khtmlUserSelect', 'touchCallout', 'webkitUserSelect', 'MozUserSelect', 'msUserSelect', 'khtmlUserSelect', 'userSelect', 'webkitUserDrag', 'MozUserDrag', 'msUserDrag', 'khtmlUserDrag', 'userDrag', 'webkitTouchAction', 'mozTouchAction', 'msTouchAction', 'khtmlTouchAction', 'touchAction'];
+            var touchCalloutLen = touchCallout.length;
+            var i = 0;
+            for (; i < touchCalloutLen; i++) {
+                var property = touchCallout[i];
+                if (property in el.style) {
+                    el.style[property] = 'none';
+                }
+            }
+            return this;
+        };
         Forceify.prototype.handleForceChange = function (e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
             if (e.force === undefined) {
                 if (e.webkitForce !== undefined) {
                     e.force = e.webkitForce / 3;
@@ -204,13 +237,21 @@
             else if (e.force !== undefined) {
                 e.force /= 3;
             }
-            else if (e.changedTouches[0] && e.changedTouches[0].force !== undefined) {
-                e.force = e.changedTouches[0].force;
+            else {
+                var touches = getTouch(e, this.el, true);
+                if (touches.force !== undefined) {
+                    e.force = touches.force;
+                }
+                else if (touches.webkitForce) {
+                    e.force = touches.force;
+                }
             }
             this._callback.call(this, e);
+            return false;
         };
         Forceify.prototype.init = function () {
             var _this = this;
+            this.preventTouchCallout();
             if (_isRealForceTouch) {
                 this.on('webkitmouseforcechanged', function (e) { return _this.handleForceChange(e); });
                 this.on('mouseforcechanged', function (e) { return _this.handleForceChange(e); });
@@ -291,7 +332,10 @@
             this.on(eventType, function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                var touches = e.touches[0];
+                var touches = getTouch(e, el);
+                if (touches === null) {
+                    return false;
+                }
                 var force = touches.force !== undefined ? touches.force : touches.webkitForce !== undefined ? touches.webkitForce : -1;
                 if (force === -1) {
                     return false;
@@ -311,10 +355,14 @@
             this.on(_eventPress, function (e) {
                 if (!isPressed) {
                     if (e.type === _eventPress) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        if (_isTouchSimulate && !_isReal3DTouch && !_isIOS9RealTouchDevices && e.touches && e.touches[0]) {
-                            var touches = e.touches[0];
+                        if (e.preventDefault) {
+                            e.preventDefault();
+                        }
+                        if (e.stopPropagation) {
+                            e.stopPropagation();
+                        }
+                        if (_isTouchSimulate && !_isReal3DTouch && !_isIOS9RealTouchDevices) {
+                            var touches = getTouch(e, el);
                             if (touches) {
                                 if (touches.force !== undefined || touches.webkitForce !== undefined) {
                                     _this._isIOS9RealTouchDevices = _isIOS9RealTouchDevices = true;
@@ -326,17 +374,23 @@
                         isPressed = _this.isPressed = true;
                     }
                 }
+                return false;
             });
             // LEAVE
             var leaveListener = function (e) {
                 if (isPressed) {
                     if (e.type === _eventUp || (e.type === _eventLeave && _this._resetOnLeave)) {
-                        e.preventDefault();
-                        e.stopPropagation();
+                        if (e.preventDefault) {
+                            e.preventDefault();
+                        }
+                        if (e.stopPropagation) {
+                            e.stopPropagation();
+                        }
                         _this.handleLeave();
                         isPressed = _this.isPressed = false;
                     }
                 }
+                return false;
             };
             this.on(_eventUp, leaveListener);
             this.on(_eventLeave, leaveListener);
@@ -363,3 +417,4 @@
     Forceify.RegisterNode = registerEvent;
     return Forceify;
 }));
+//# sourceMappingURL=Forceify.js.map

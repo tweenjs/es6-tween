@@ -4,41 +4,77 @@
     <meta charset="UTF-8">
     <title>Forceify</title>
     <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="devices.min.css">
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <div class="inner">
-        <div id="bg">
-            <h1>Forceify</h1>
-            <p>Use Force Touch in any device, today.</p>
-            <p class="button">
-                <a href="https://github.com/dalisoft/Forceify">Github</a>
-            </p>
-            <p class="footer">
-                Copyright (c) 2017 <a href="https://github.com/dalisoft">dalisoft</a><br/>
-				Site using <a href="https://github.com/Huxpro/forcify">Forcify.js</a> example/homepage for testing purpose
-            </p>
-        </div>
-        <div id="forceMe"></div>
-        <p id="forceValue">Force: 0.0000</p>
+    <div class="container">
 
+            <h1>Forceify</h1>
+            <p>The fastest, smartest and cross-device library for JavaScript</p>
+		<div class="cd-iphone-6 cd-black centerize">
+  <div class="cd-body">
+    <div class="cd-sound"></div>
+    <div class="cd-sleep"></div>
+    <div class="cd-camera"></div>
+    <div class="cd-ear"></div>
+    <div class="cd-home"></div>
+    <div class="cd-screen">
+        <div id="forceMe"></div>
+        <p id="forceValue">Force: 0, Deep Press:&nbsp;<span>No</span></p>
+    </div>
+  </div>
+</div>
+
+            <p>Grab package at <a href="https://github.com/dalisoft/Forceify" target="_blank">GitHub</a> or <a href="https://npmjs.org/package/forceify" target="_blank">NPM</a> or compiled at <a href="https://unpkg.com/forceify" target="_blank">unpkg</a>, <a href="https://npmcdn.com/forceify" target="_blank">npmcdn</a> or <a href="https://cdn.jsdelivr.net/npm/forceify" target="_blank">jsDelivr</a></p>
 
     </div>
 
     <script type="text/javascript" src="Forceify.js"></script>
 	<script type="text/javascript">
-	var forceMe = document.querySelector('#forceMe');
+
+	// Helpers function
+
+	// Lerp array (simple)
+	var steppize = function (force, args) {
+	var m = Math.round(force * (args.length - 1))
+	return args[m];
+	};
+
+	// Returns state of deep-press (aka Force Click)
+	var isDeepPress = function (force) {
+		return force > 0.645579000009;
+	}
+
+	// Check if there CSS3 3D-mode available?
+	var is3D = 'perspective' in forceMe.style || 'webkitPerspective' in forceMe.style || 'mozPerspective' in forceMe.style || 'MsPerspective' in forceMe.style || 'msPerspective' in forceMe.style || 'OPerspective' in forceMe.style;
+
+	// Setting cross-browser CSS3 Transform set helper
+	var setTransform = function (elem, transform) {
+		elem.style.transform = transform;
+		elem.style.webkitTransform = transform;
+		elem.style.mozTransform = transform;
+		elem.style.MsTransform = transform;
+		elem.style.msTransform = transform;
+		elem.style.OTransform = transform;
+	}
+
+	// Node selector
 	var forceValue = document.querySelector('#forceValue');
-	var force = new Forceify(forceMe);
-	force.onForce(function(ev) {
-		var force = ev.force, scale = 1 + (force * 1.5), transform = 'translateX(-50%) translateY(-50%) scale(' + scale + ')';
-		forceMe.style.transform = transform;
-		forceMe.style.webkitTransform = transform;
-		forceMe.style.mozTransform = transform;
-		forceMe.style.MsTransform = transform;
-		forceMe.style.msTransform = transform;
-		forceMe.style.OTransform = transform;
-		forceValue.textContent = 'Force: ' + force;
+
+	// Initialize the instance
+	new Forceify(forceMe).onForce(function(ev) {
+		var force = ev.force;
+		var scale = 1 + (force * 1.5);
+		var transform = is3D ? 'translate3d(-50%, -50%, 0) scale3d(' + scale + ', ' + scale + ', ' + scale + ')' : 'translate(-50%, -50%) scale(' + scale + ')';
+
+		setTransform(forceMe, transform);
+
+		var color = 'rgb(' + ((255 * force) | 0) + ', ' + 204 + ', ' + (255 - (255 * force) | 0) + ')';
+
+		forceMe.style.backgroundColor = color;
+
+		forceValue.innerHTML = 'Force: ' + ((force * 10000) | 0) / 10000 + ', Deep Press:&nbsp;<span style="color:' + color + ';font-weight:' + steppize(force, [100, 200, 300, 400, 500, 600, 700, 800, 900]) + '">' + (isDeepPress(force) ? 'Yes' : 'No') + '</span>';
 	});
 	</script>
 </body>

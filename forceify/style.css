@@ -7,21 +7,33 @@ html, body{
     -webkit-tap-highlight-color: transparent;
 }
 
-body {
-    color: #6ca8fb;
-    font-family: -apple-system, 'Helvetica Neue', Arial;
+html, body {
+    color: #fff;
+    font-family: -apple-system, 'Helvetica Neue', Segoe UI, Arial;
     padding: 0;
     margin: 0;
-    overflow: hidden;
     text-align: center;
+	background: #222;
+	text-shadow: 0 1px 0 #000;
 }
 
-.inner{
-    height: 500px;
-    margin-top: -250px;
-    position: absolute;
-    top: 50%;
+a {
+    color: #0cf;
+	text-decoration: none;
+}
+
+h1 {
+    font-weight: 100;
+    font-size: 50px;
+    margin-bottom: 0;
+}
+
+.container {
+    text-align: center;
     width: 100%;
+}
+.centerize {
+	margin: 0 auto;
 }
 .button{
     display: block;
@@ -43,58 +55,34 @@ body {
     font-weight: 900;
 }
 
-.footer{
-    position: absolute;
-    width: 100%;
-    bottom: 0px;
-    font-size: 13px;
+[class^='cd-iphone-6'] .cd-screen {
+	background-color: #333;
 }
-
-a {
-    color: inherit;
-}
-
-h1 {
-    font-weight: 100;
-    font-size: 50px;
-    margin-bottom: 0;
-}
-
-#background {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100vw;
-    max-width: 414px;
-    min-width: 320px;
-    height: 100vh;
-    transition: -webkit-filter .1s;
-    z-index: -1;
+.cd-screen > * {
+	display: block;
 }
 
 #forceMe {
     z-index: 99;
     width: 93px;
     height: 93px;
-    background: rgb(108, 168, 251);
+    background: rgb(0, 204, 255);
     opacity: 1;
     border-radius: 100%;
     position: absolute;
     top: 235px;
     left: 50%;
-    -webkit-touch-callout: none;
-    transform: translateX(-50%) translateY(-50%) scale(1);
-    -webkit-transform: translateX(-50%) translateY(-50%) scale(1);
-    -moz-transform: translateX(-50%) translateY(-50%) scale(1);
-    -ms-transform: translateX(-50%) translateY(-50%) scale(1);
-	-webkit-backface-visibility: hidden;
-	backface-visibility: hidden;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
 }
 
 #forceValue {
     position: absolute;
-    top: 340px;
+    top: 450px;
     width: 100%;
-    text-align: center;
+}
+#forceValue span {
+	color: #0cf;
 }
