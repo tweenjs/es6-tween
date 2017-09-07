@@ -9,6 +9,9 @@ import Easing from './Easing'
 import InterTween from 'intertween'
 import NodeCache from './NodeCache'
 import EventClass from './Event'
+import { create } from '../shim'
+
+Object.create = create
 
 // Events list
 export const EVENT_UPDATE = 'update'
@@ -26,6 +29,22 @@ let _id = 0 // Unique ID
 const defaultEasing = Easing.Linear.None
 
 class Tween extends EventClass {
+  static fromTo (node, object, to, params = {}) {
+    params.quickRender = params.quickRender ? params.quickRender : !to
+    let tween = new Tween(node, object).to(to, params)
+    if (params.quickRender) {
+      tween.render().update(tween._startTime)
+      tween._rendered = false
+      tween._onStartCallbackFired = false
+    }
+    return tween
+  }
+  static to (node, to, params) {
+    return Tween.fromTo(node, null, to, params)
+  }
+  static from (node, from, params) {
+    return Tween.fromTo(node, from, null, params)
+  }
   constructor (node, object) {
     super()
 
@@ -44,6 +63,7 @@ class Tween extends EventClass {
     let isArr = this.isArr = Array.isArray(object)
     this._valuesStart = isArr ? [] : {}
     this._valuesEnd = null
+    this._valuesFunc = {}
 
     this._duration = 1000
     this._easingFunction = defaultEasing
@@ -59,6 +79,7 @@ class Tween extends EventClass {
     this._onStartCallbackFired = false
     this._pausedTime = null
     this._isFinite = true
+    this._elapsed = 0
 
     return this
   }
@@ -145,8 +166,9 @@ class Tween extends EventClass {
       this._duration = typeof (duration) === 'function' ? duration(this._duration) : duration
     } else if (typeof duration === 'object') {
       for (let prop in duration) {
-        if (this[prop]) {
-          this[prop](...(Array.isArray(duration) ? duration : [duration]))
+        if (typeof this[prop] === 'function') {
+          let [arg1, arg2, arg3, arg4] = Array.isArray(duration[prop]) ? duration[prop] : [duration[prop]]
+          this[prop](arg1, arg2, arg3, arg4)
         }
       }
     }
@@ -161,29 +183,40 @@ class Tween extends EventClass {
 
     let {
       _valuesEnd,
+      _valuesFunc,
       _valuesStart,
       object,
-      Renderer
+      Renderer,
+      node,
+      InitialValues
     } = this
+
+    if (node && InitialValues) {
+      if (!object) {
+        object = this.object = NodeCache(node, InitialValues(node, _valuesEnd))
+      } else if (!_valuesEnd) {
+        _valuesEnd = this._valuesEnd = InitialValues(node, object)
+      }
+    }
 
     for (let property in _valuesEnd) {
       let start = object[property]
       let end = _valuesEnd[property]
 
       if (Plugins[property]) {
-        _valuesEnd[property] = new Plugins[property](this, start, end)
+        _valuesFunc[property] = new Plugins[property](this, start, end)
         continue
       }
 
-      if (object[property] === undefined) {
+      if (!object || object[property] === undefined) {
         continue
       }
 
-      if (typeof start === 'number' && typeof end === 'number') {
+      if (typeof end === 'number' && typeof start === 'number') {
         _valuesStart[property] = start
         _valuesEnd[property] = end
       } else {
-        _valuesEnd[property] = InterTween(start, end)
+        _valuesFunc[property] = InterTween(start, end)
       }
     }
 
@@ -208,26 +241,21 @@ class Tween extends EventClass {
   stop () {
     let {
       _isPlaying,
-      object
+      object,
+      _startTime,
+      _duration
     } = this
 
     if (!_isPlaying) {
       return this
     }
 
+    this.update(_startTime + _duration)
+
     remove(this)
     this._isPlaying = false
 
     return this.emit(EVENT_STOP, object)
-  }
-
-  end () {
-    const {
-      _startTime,
-      _duration
-    } = this
-
-    return this.update(_startTime + _duration)
   }
 
   delay (amount) {
@@ -309,8 +337,10 @@ class Tween extends EventClass {
       _duration,
       _valuesStart,
       _valuesEnd,
+      _valuesFunc,
       object,
       _isFinite,
+      _isPlaying,
       __render
     } = this
 
@@ -320,7 +350,7 @@ class Tween extends EventClass {
 
     time = time !== undefined ? time : now()
 
-    if (time < _startTime) {
+    if (!_isPlaying || time < _startTime) {
       return true
     }
 
@@ -339,18 +369,25 @@ class Tween extends EventClass {
     elapsed = elapsed > 1 ? 1 : elapsed
     elapsed = _reversed ? 1 - elapsed : elapsed
 
+    if (!object) {
+      return true
+    }
+
     for (property in _valuesEnd) {
       value = _easingFunction[property] ? _easingFunction[property](elapsed) : typeof _easingFunction === 'function' ? _easingFunction(elapsed) : defaultEasing(elapsed)
 
       let start = _valuesStart[property]
       let end = _valuesEnd[property]
+      let fnc = _valuesFunc[property]
 
-      if (end.update) {
-        end.update(value, elapsed)
+      if (fnc && fnc.update) {
+        fnc.update(value, elapsed)
+      } else if (fnc) {
+        object[property] = fnc(value)
       } else if (typeof end === 'number') {
         object[property] = start + (end - start) * value
-      } else if (typeof end === 'function') {
-        object[property] = end(value)
+      } else {
+        object[property] = end
       }
     }
 
@@ -385,8 +422,10 @@ class Tween extends EventClass {
         if (!preserve) {
           remove(this)
         }
+        this._isPlaying = false
         this.emit(EVENT_COMPLETE, object)
         this._repeat = this._r
+        _id--
 
         return false
       }

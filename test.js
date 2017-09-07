@@ -46,7 +46,7 @@ test('Events', t => {
 
 test('Value Interpolation', t => {
 
-    let obj = { a: 0, b: 'B value 1', c: { x: 2 }, d: [3], _e: 4 }
+    let obj = { a: 0, b: 'B value 1', c: { x: 2 }, d: [3], _e: 4, g: 5 }
 
     Object.defineProperty(obj, 'e', {
         get: () => obj._e,
@@ -54,7 +54,7 @@ test('Value Interpolation', t => {
     })
 
     let tween = new Tween(obj)
-        .to({ a: 1, b: 'B value 2', c: { x: 3 }, d: [4], _e: 5 }, 100)
+        .to({ a: 1, b: 'B value 2', c: { x: 3 }, d: [4], _e: 5, g: '+=1' }, 100)
         .start(0)
 
     update(0)
@@ -64,6 +64,7 @@ test('Value Interpolation', t => {
     t.is(obj.c.x, 2)
     t.is(obj.d[0], 3)
     t.is(obj.e, 4)
+    t.is(obj.g, 5)
 
     update(50)
 
@@ -82,6 +83,9 @@ test('Value Interpolation', t => {
     t.is(obj.e, 4.5, 'Getter/Setter interpolation not worked as excepted')
     t.log('Getter/Setter interpolation worked as excepted')
 
+    t.is(obj.g, 5.5, 'Relative number interpolation not worked as excepted')
+    t.log('Relative number interpolation worked as excepted')
+
 
     update(100)
 
@@ -90,14 +94,15 @@ test('Value Interpolation', t => {
     t.is(obj.c.x, 3)
     t.is(obj.d[0], 4)
     t.is(obj.e, 5)
+    t.is(obj.g, 6)
 
 })
 
 test('Value Array-based Interpolation', t => {
 
-    let obj = { x: 0 }
+    let obj = { x: 0, y: [2, 4, 6] }
     let tween = new Tween(obj)
-        .to({ x: [1, 3, 5] }, 100)
+        .to({ x: [1, 3, 5], y: 10 }, 100)
         .start(0)
 
     t.is(obj.x, 0)
@@ -106,6 +111,9 @@ test('Value Array-based Interpolation', t => {
 
     t.is(obj.x, 2, 'Interpolation failed')
     t.log('End-value interpolation was done')
+
+	t.deepEqual(obj.y, [6, 7, 8], 'Tween-them failed')
+	t.log('Start-value interpolation was done')
 
     tween.update(100)
 

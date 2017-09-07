@@ -1,6 +1,6 @@
 {
 	"name": "es6-tween",
-	"version": "3.5.9",
+	"version": "3.6.0",
 	"description": "ES6 implementation of amazing tween.js",
 	"browser": "dist/Tween.min.js",
 	"cdn": "dist/Tween.min.js",
@@ -13,12 +13,17 @@
 		"source": "rollup -c --environment min:false",
 		"minify": "rollup -c --environment min:true",
 		"build": "npm run source && npm run minify",
+		"source-lite": "rollup -c lite.js --environment min:false",
+		"minify-lite": "rollup -c lite.js --environment min:true",
+		"build-lite": "npm run source-lite && npm run minify-lite",
+		"prepare": "npm run build && npm run build-lite",
 		"dev": "rollup -c -w",
+		"dev-lite": "rollup -c lite.js -w",
 		"lint": "eslint src",
 		"fix": "eslint --fix src",
 		"test-unit": "nodeunit test/unit/nodeunitheadless.js",
 		"test": "npm run lint && ava --verbose",
-		"prepublishOnly": "npm run lint && npm run build && ava --verbose"
+		"prepublishOnly": "npm run lint && npm run prepare && ava --verbose"
 	},
 	"repository": {
 		"type": "git",

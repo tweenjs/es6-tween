@@ -1,12 +1,12 @@
 /* global process */
-import { root } from '../shim'
+import { root, requestAnimationFrame, cancelAnimationFrame } from '../shim'
 
 let _tweens = []
 let isStarted = false
 let _autoPlay = false
 let _tick
-const _ticker = root.requestAnimationFrame
-const _stopTicker = root.cancelAnimationFrame
+const _ticker = requestAnimationFrame
+const _stopTicker = cancelAnimationFrame
 
 const add = tween => {
   _tweens.push(tween)

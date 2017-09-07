@@ -2,6 +2,26 @@
 
 ES6 implementation of <a href="https://github.com/tweenjs/tween.js">tween.js</a>
 
+# News (`Lite` version is released)!
+
+You can use the `Lite` version of ES6 which lighter (~8Kb minified), faster (~10% faster executioin), simpler (like the original one), memory effecient and better (can tween second-level Objects/Array). Optimized for runtime performance, no-lag anymore.
+When you want building mobile apps that loading files from server, use `Lite` for better performance.
+Differences when using `Lite`:
+* 2-times lighter size
+* No `Timeline` instance
+* No `String` tween support
+* No `Deep tween` support (does 2-level)
+* Uses original `Interpolation` instances for `Bezier` interpolation
+* Faster performance and execution speed
+* Memory effecient
+* No more shims required
+* No `Plugins` support
+* No `DOM Get/Set`, `Renderer` instance/plugin/add-on support
+* No full-Event system, just 3 event support (`onStart`, `onUpdate`, `onComplete`)
+* No `seek`, `reverse` support
+* No event fire when `stop`, `pause`, `etc`
+* No `*`, `/`, `%` relatives support
+
 [![size](http://img.badgesize.io/https://unpkg.com/es6-tween?cache=false)](http://unpkg.com/es6-tween)
 [![gzipsize](http://img.badgesize.io/https://unpkg.com/es6-tween?compression=gzip&cache=false)](http://unpkg.com/es6-tween)
 [![CDNJS](https://img.shields.io/cdnjs/v/es6-tween.svg)](https://cdnjs.com/libraries/es6-tween)

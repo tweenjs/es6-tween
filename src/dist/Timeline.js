@@ -1,5 +1,5 @@
 import Tween, { EVENT_UPDATE, EVENT_RS, EVENT_REPEAT, EVENT_REVERSE, EVENT_COMPLETE } from './Tween'
-import { add, now } from './core'
+import { add, now, remove } from './core'
 import PlaybackPosition from './PlaybackPosition'
 
 let _id = 0
@@ -8,7 +8,7 @@ class Timeline extends Tween {
     super()
     this._totalDuration = 0
     this._startTime = now()
-    this._tweens = {}
+    this._tweens = []
     this._elapsed = 0
     this._id = _id++
     this._defaultParams = params
@@ -19,15 +19,37 @@ class Timeline extends Tween {
     return this
   }
 
+  fromTo (nodes, from, to, params) {
+    if (Array.isArray(nodes)) {
+      if (this._defaultParams) {
+        params = Object.assign(this._defaultParams, params)
+      }
+      const position = params.label
+      const offset = typeof position === 'number' ? position : this.position.parseLabel(typeof position !== 'undefined' ? position : 'afterLast', null)
+      nodes.map((node, i) => {
+        this.add(Tween.fromTo(node, typeof from === 'function' ? from(i, nodes.length) : from, typeof to === 'function' ? to(i, nodes.length) : to, typeof params === 'function' ? params(i, nodes.length) : params), offset + (params.stagger || 0) * i)
+      })
+    }
+    return this.start()
+  }
+
+  from (nodes, from, params) {
+    return this.fromTo(nodes, from, null, params)
+  }
+
+  to (nodes, to, params) {
+    return this.fromTo(nodes, null, to, params)
+  }
+
   addLabel (name, offset) {
     this.position.addLabel(name, offset)
     return this
   }
 
   map (fn) {
-    for (let tween in this._tweens) {
-      let _tween = this._tweens[tween]
-      fn(_tween, +tween)
+    for (let i = 0, len = this._tweens.length; i < len; i++) {
+      let _tween = this._tweens[i]
+      fn(_tween, i)
       this._totalDuration = Math.max(this._totalDuration, _tween._duration + _tween._startTime)
     }
     return this
@@ -50,15 +72,18 @@ class Timeline extends Tween {
 
     if (_defaultParams) {
       for (let method in _defaultParams) {
-        tween[method](_defaultParams[method])
+        if (typeof tween[method] === 'function') {
+          tween[method](_defaultParams[method])
+        }
       }
     }
 
     const offset = typeof position === 'number' ? position : this.position.parseLabel(typeof position !== 'undefined' ? position : 'afterLast', null)
-    tween._startTime = this._startTime
+    tween._startTime = Math.max(this._startTime, tween._delayTime)
     tween._startTime += offset
+    tween._isPlaying = true
     this._totalDuration = Math.max(_totalDuration, tween._startTime + tween._delayTime + tween._duration)
-    this._tweens[tween.id] = tween
+    this._tweens.push(tween)
     this.position.setLabel('afterLast', this._totalDuration)
     return this
   }
@@ -79,11 +104,6 @@ class Timeline extends Tween {
     return this.map(tween => tween.interpolation(interpolation))
   }
 
-  reverse () {
-    this._reversed = !this._reversed
-    return this.emit(EVENT_REVERSE)
-  }
-
   update (time) {
     let {
       _tweens,
@@ -94,29 +114,31 @@ class Timeline extends Tween {
       _reversed,
       _yoyo,
       _repeat,
-      _isFinite
+      _isFinite,
+      _elapsed,
+      _isPlaying
     } = this
 
-    if (time < _startTime) {
+    if (!_isPlaying || time < _startTime) {
       return true
     }
 
-    let elapsed = Math.min(1, Math.max(0, (time - _startTime) / _totalDuration))
+    let elapsed = (time - _startTime) / _totalDuration
+    elapsed = elapsed > 1 ? 1 : elapsed
     elapsed = _reversed ? 1 - elapsed : elapsed
+    elapsed = ((elapsed * 1000) | 0) / 1000
+    if (elapsed === _elapsed) {
+      return true
+    }
     this._elapsed = elapsed
 
     let timing = time - _startTime
     let _timing = _reversed ? _totalDuration - timing : timing
 
-    for (let tween in _tweens) {
-      let _tween = _tweens[tween]
-      if (_tween.skip) {
-        _tween.skip = false
-      } else if (_tween.update(_timing)) {
-        continue
-      } else {
-        _tween.skip = true
-      }
+    let i = 0
+    while (i < _tweens.length) {
+      _tweens[i].update(_timing)
+      i++
     }
 
     this.emit(EVENT_UPDATE, elapsed, timing)
@@ -130,23 +152,20 @@ class Timeline extends Tween {
         this.emit(_reversed ? EVENT_REVERSE : EVENT_REPEAT)
 
         if (_yoyo) {
-          this.reverse()
+          this._reversed = !_reversed
         }
 
         if (!_reversed && _repeatDelayTime) {
-          this._startTime += _totalDuration + _repeatDelayTime
+          this._startTime = time + _repeatDelayTime
         } else if (_reversed && _reverseDelayTime) {
-          this._startTime += _totalDuration + _reverseDelayTime
+          this._startTime = time + _reverseDelayTime
         } else {
-          this._startTime += _totalDuration
+          this._startTime = time
         }
 
-        for (let tween in _tweens) {
-          let _tween = _tweens[tween]
-          if (_tween.skip) {
-            _tween.skip = false
-          }
-          _tween.reassignValues()
+        while (i < _tweens.length) {
+          _tweens[i].reassignValues()
+          i++
         }
 
         return true
@@ -154,12 +173,8 @@ class Timeline extends Tween {
         this.emit(EVENT_COMPLETE)
         this._repeat = this._r
 
-        for (let tween in _tweens) {
-          let _tween = _tweens[tween]
-          if (_tween.skip) {
-            _tween.skip = false
-          }
-        }
+        remove(this)
+        this._isPlaying = false
 
         return false
       }
