@@ -206,6 +206,7 @@ Then reference the library source:
 ## Documentation
 
 * Original source: <a href="https://github.com/tweenjs/tween.js">check out at here</a>
+* [API documentation](./API.md)
 * [User guide](./docs/user_guide.md)
 * [Wiki page](https://github.com/tweenjs/es6-tween/wiki)
 * [Compatiblity](./compatibility/comp_support.md)
