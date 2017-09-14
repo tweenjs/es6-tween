@@ -1,6 +1,6 @@
 {
   "name": "es6-tween",
-  "version": "3.7.0",
+  "version": "3.7.2",
   "description": "ES6 implementation of amazing tween.js",
   "browser": "dist/Tween.min.js",
   "cdn": "dist/Tween.min.js",
@@ -22,7 +22,11 @@
     "lint": "eslint src",
     "fix": "eslint --fix src",
     "test": "npm run lint && ava --verbose",
-    "prepublishOnly": "npm run lint && npm run prepare && ava --verbose"
+	"doc-build-html": "documentation bin/documentation.js build src/** -f html -o doc",
+	"doc-live-html": "documentation bin/documentation.js build src/** -f html -o doc --watch",
+	"doc-build-md": "documentation bin/documentation.js build src/** -f md -o API.md",
+	"doc-live-md": "documentation bin/documentation.js build src/** -f md -o API.md --watch",
+    "prepublishOnly": "npm run lint && npm run doc-build-md && npm run prepare && ava --verbose"
   },
   "repository": {
     "type": "git",
@@ -45,6 +49,7 @@
   "homepage": "https://github.com/tweenjs/es6-tween#readme",
   "devDependencies": {
     "ava": "^0.22.0",
+    "documentation": "^5.3.1",
     "eslint": "latest",
     "eslint-plugin-import": "latest",
     "rollup": "^0.49.2",

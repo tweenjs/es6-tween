@@ -1,8 +1,21 @@
+/**
+ * Events class
+ * @example
+ * let ev = new EventClass()
+ * ev.on('listen', name => `Hello ${name}`)
+ * ev.emit('listen', 'World')
+ */
+
 export default class EventClass {
   constructor () {
     this._events = {}
   }
 
+  /**
+   * Adds `event` to Events system
+   * @param {String} event - Event listener name
+   * @param {Function} callback - Event listener callback
+   */
   on (event, callback) {
     if (!this._events[event]) {
       this._events[event] = []
@@ -12,6 +25,13 @@ export default class EventClass {
     return this
   }
 
+
+  /**
+   * Adds `event` to Events system.
+   * Removes itself after fired once
+   * @param {String} event - Event listener name
+   * @param {Function} callback - Event listener callback
+   */
   once (event, callback) {
     if (!this._events[event]) {
       this._events[event] = []
@@ -26,6 +46,11 @@ export default class EventClass {
     return this
   }
 
+  /**
+   * Removes `event` from Events system
+   * @param {String} event - Event listener name
+   * @param {Function} callback - Event listener callback
+   */
   off (event, callback) {
     let {_events} = this
 
@@ -42,6 +67,10 @@ export default class EventClass {
     return this
   }
 
+  /**
+   * Emits/Fired/Trigger `event` from Events system listeners
+   * @param {String} event - Event listener name
+   */
   emit (event, arg1, arg2, arg3, arg4) {
     let {_events} = this
 

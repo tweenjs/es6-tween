@@ -28,7 +28,23 @@ export const EVENT_SEEK = 'seek'
 let _id = 0 // Unique ID
 const defaultEasing = Easing.Linear.None
 
+/**
+ * Tween main constructor
+ * @namespace Tween
+ * @param {Object|Element} node Node Element or Tween initial object
+ * @param {Object=} object If Node Element is using, second argument is used for Tween initial object
+ * @example let tween = new Tween(myNode, {width:'100px'}).to({width:'300px'}, 2000).start()
+ */
 class Tween extends EventClass {
+  /**
+   * Easier way to call the Tween
+   * @param {Element} node DOM Element
+   * @param {Object} object - Initial value
+   * @param {Object} to - Target value
+   * @param {Object} params - Options of tweens
+   * @memberof Tween
+   * @static
+   */
   static fromTo (node, object, to, params = {}) {
     params.quickRender = params.quickRender ? params.quickRender : !to
     let tween = new Tween(node, object).to(to, params)
@@ -39,9 +55,25 @@ class Tween extends EventClass {
     }
     return tween
   }
+  /**
+   * Easier way calling constructor only applies the `to` value, useful for CSS Animation
+   * @param {Element} node DOM Element
+   * @param {Object} to - Target value
+   * @param {Object} params - Options of tweens
+   * @memberof Tween
+   * @static
+   */
   static to (node, to, params) {
     return Tween.fromTo(node, null, to, params)
   }
+  /**
+   * Easier way calling constructor only applies the `from` value, useful for CSS Animation
+   * @param {Element} node DOM Element
+   * @param {Object} from - Initial value
+   * @param {Object} params - Options of tweens
+   * @memberof Tween
+   * @static
+   */
   static from (node, from, params) {
     return Tween.fromTo(node, from, null, params)
   }
@@ -85,14 +117,26 @@ class Tween extends EventClass {
     return this
   }
 
+  /**
+   * @returns {Boolean} Returns the tween is playing
+   * @example tween.isPlaying() // returns `true` if tween in progress
+   */
   isPlaying () {
     return this._isPlaying
   }
 
+  /**
+   * @returns {Boolean} Returns the tween is started
+   * @example tween.isStarted() // returns `true` if tween in started
+   */
   isStarted () {
     return this._onStartCallbackFired
   }
 
+  /**
+   * Reverses the tween state/direction
+   * @example tween.reverse()
+   */
   reverse () {
     const {
       _reversed
@@ -103,10 +147,18 @@ class Tween extends EventClass {
     return this
   }
 
+  /**
+   * @returns {Boolean} Returns the tween is reversed
+   * @example tween.reversed() // returns `true` if tween in reversed state
+   */
   reversed () {
     return this._reversed
   }
 
+  /**
+   * Pauses tween
+   * @example tween.pause()
+   */
   pause () {
     if (!this._isPlaying) {
       return this
@@ -120,6 +172,10 @@ class Tween extends EventClass {
     return this.emit(EVENT_PAUSE, this.object)
   }
 
+  /**
+   * Play/Resume the tween 
+   * @example tween.play()
+   */
   play () {
     if (this._isPlaying) {
       return this
@@ -134,6 +190,10 @@ class Tween extends EventClass {
     return this.emit(EVENT_PLAY, this.object)
   }
 
+  /**
+   * Restarts tween from initial value
+   * @param {Boolean=} noDelay If this param is set to `true`, restarts tween without `delay`
+   */
   restart (noDelay) {
     this._repeat = this._r
     this._startTime = now() + (noDelay ? 0 : this._delayTime)
@@ -145,6 +205,11 @@ class Tween extends EventClass {
     return this.emit(EVENT_RS, this._object)
   }
 
+  /**
+   * Seek tween value by `time`
+   * @param {Time} time Tween update time
+   * @param {Boolean=} keepPlaying When this param is set to `false`, tween pausing after seek
+   */
   seek (time, keepPlaying) {
     this._startTime = now() + Math.max(0, Math.min(
       time, this._duration))
@@ -154,12 +219,21 @@ class Tween extends EventClass {
     return keepPlaying ? this : this.pause()
   }
 
+  /**
+   * Sets tween duration
+   * @param {Number} amount Duration is milliseconds
+   */
   duration (amount) {
     this._duration = typeof (amount) === 'function' ? amount(this._duration) : amount
 
     return this
   }
 
+  /**
+   * Sets target value and duration
+   * @param {Object} properties Target value (to value)
+   * @param {Number|Object=} [duration=1000] Duration of tween
+   */
   to (properties, duration = 1000) {
     this._valuesEnd = properties
 
@@ -177,6 +251,11 @@ class Tween extends EventClass {
     return this
   }
 
+
+  /**
+   * Renders and computes value at first render
+   * @private
+   */
   render () {
     if (this._rendered) {
       return this
@@ -231,6 +310,10 @@ class Tween extends EventClass {
     return this
   }
 
+  /**
+   * Start the tweening
+   * @param {Number} time setting manual time instead of Current browser timestamp
+   */
   start (time) {
     this._startTime = time !== undefined ? time : now()
     this._startTime += this._delayTime
@@ -242,6 +325,9 @@ class Tween extends EventClass {
     return this
   }
 
+  /**
+   * Stops the tween 
+   */
   stop () {
     let {
       _isPlaying,
@@ -262,6 +348,10 @@ class Tween extends EventClass {
     return this.emit(EVENT_STOP, object)
   }
 
+  /**
+   * Set delay of tween
+   * @param {Number} amount Sets tween delay / wait duration
+   */
   delay (amount) {
     this._delayTime = typeof (amount) === 'function' ? amount(this._delayTime) : amount
     this._startTime += this._delayTime
@@ -269,6 +359,10 @@ class Tween extends EventClass {
     return this
   }
 
+  /**
+   * Sets how times tween is repeating
+   * @param {amount} the times of repeat
+   */
   repeat (amount) {
     this._repeat = typeof (amount) === 'function' ? amount(this._repeat) : amount
     this._r = this._repeat
@@ -277,18 +371,31 @@ class Tween extends EventClass {
     return this
   }
 
+  /**
+   * Set delay of each repeat of tween
+   * @param {Number} amount Sets tween repeat delay / repeat wait duration
+   */
   repeatDelay (amount) {
     this._repeatDelayTime = typeof (amount) === 'function' ? amount(this._repeatDelayTime) : amount
 
     return this
   }
 
+  /**
+   * Set delay of each repeat alternate of tween
+   * @param {Number} amount Sets tween repeat alternate delay / repeat alternate wait duration
+   */
   reverseDelay (amount) {
     this._reverseDelayTime = typeof (amount) === 'function' ? amount(this._reverseDelayTime) : amount
 
     return this
   }
 
+  /**
+   * Set `yoyo` state (enables reverse in repeat)
+   * @param {Boolean} state Enables alternate direction for repeat
+   * @param {Function=} _easingReverse Easing function in reverse direction
+   */
   yoyo (state, _easingReverse) {
     this._yoyo = typeof (state) === 'function' ? state(this._yoyo) : state === null ? this._yoyo : state
     this._easingReverse = _easingReverse || defaultEasing
@@ -296,8 +403,12 @@ class Tween extends EventClass {
     return this
   }
 
-  easing (fn) {
-    this._easingFunction = fn
+  /**
+   * Set easing
+   * @param {Function=} _easingFunction Easing function in non-reverse direction
+   */
+  easing (_easingFunction) {
+    this._easingFunction = _easingFunction
 
     return this
   }
@@ -324,11 +435,11 @@ class Tween extends EventClass {
     return this
   }
 
-  get (time) {
-    this.update(time)
-    return this.object
-  }
-
+  /**
+   * Updates initial object to target value by given `time`
+   * @param {Time} time Current time
+   * @param {Boolean=} preserve Prevents from removing tween from store
+   */
   update (time, preserve) {
     let {
       _onStartCallbackFired,

@@ -16,6 +16,12 @@ export const shuffle = a => {
 }
 
 let _id = 0
+/**
+ * Tween main constructor
+ * @namespace Timeline
+ * @param {Object=} params Default params for new tweens
+ * @example let tl = new Timeline({delay:200})
+ */
 class Timeline extends Tween {
   constructor (params) {
     super()
@@ -63,6 +69,16 @@ class Timeline extends Tween {
       return nodes.map((node, i) => ((stagger || 0) * i) + offset)
     }
   }
+
+  /**
+   * See {@link #tweenfromto|Tween#fromTo} for more information, as it's more like a that method
+   * @param {NodeCollection|Array} nodes DOM Elements Collection (converted to Array)
+   * @param {Object} from - Initial value
+   * @param {Object} to - Target value
+   * @param {Object} params - Options of tweens
+   * @memberof Timeline
+   * @static
+   */
   fromTo (nodes, from, to, params) {
     if (Array.isArray(nodes)) {
       if (this._defaultParams) {
@@ -78,14 +94,35 @@ class Timeline extends Tween {
     return this.start()
   }
 
+  /**
+   * See {@link #tweenfrom|Tween#from} for more information, as it's more like a that method
+   * @param {NodeCollection|Array} nodes DOM Elements Collection (converted to Array)
+   * @param {Object} from - Initial value
+   * @param {Object} params - Options of tweens
+   * @memberof Timeline
+   * @static
+   */
   from (nodes, from, params) {
     return this.fromTo(nodes, from, null, params)
   }
 
+  /**
+   * See {@link #tweento|Tween#to} for more information, as it's more like a that method
+   * @param {NodeCollection|Array} nodes DOM Elements Collection (converted to Array)
+   * @param {Object} to - Target value
+   * @param {Object} params - Options of tweens
+   * @memberof Timeline
+   * @static
+   */
   to (nodes, to, params) {
     return this.fromTo(nodes, null, to, params)
   }
 
+  /**
+   * Add label to Timeline
+   * @param {String} name Label name
+   * @param {any} offset Label value, can be `number` and/or `string`
+   */
   addLabel (name, offset) {
     this.position.addLabel(name, offset)
     return this
@@ -100,6 +137,11 @@ class Timeline extends Tween {
     return this
   }
 
+  /**
+   * Add tween to Timeline
+   * @param {Tween} tween Tween instance
+   * @param {position} position Can be label name, number or relative number to label
+   */
   add (tween, position) {
     if (Array.isArray(tween)) {
       tween.map(_tween => {
@@ -133,6 +175,7 @@ class Timeline extends Tween {
     return this
   }
 
+  /** See {@link #tweenrestart|Tween#restart} */
   restart () {
     this._startTime += now()
 
