@@ -32,11 +32,13 @@ if ( isMinify ) {
 }
 
 export default {
-  entry: 'src/Tween.Lite.js',
+  input: 'src/Tween.Lite.js',
+  output: {
   format: 'umd',
-  sourceMap: true,
+  file: `lite/Tween${minSuffix}.js`
+  },
+  sourcemap: true,
   context: 'this',
-  dest: `lite/Tween${minSuffix}.js`,
-  moduleName: 'TWEEN',
+  name: 'TWEEN',
   plugins: plugins
 }

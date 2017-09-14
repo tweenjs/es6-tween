@@ -67,6 +67,7 @@ class Tween extends EventClass {
 
     this._duration = 1000
     this._easingFunction = defaultEasing
+    this._easingReverse = defaultEasing
 
     this._startTime = 0
     this._delayTime = 0
@@ -200,11 +201,14 @@ class Tween extends EventClass {
     }
 
     for (let property in _valuesEnd) {
-      let start = object[property]
+      let start = object && object[property]
       let end = _valuesEnd[property]
 
       if (Plugins[property]) {
-        _valuesFunc[property] = new Plugins[property](this, start, end)
+        let plugin = Plugins[property].prototype.update ? new Plugins[property](this, start, end, property, object) : Plugins[property](this, start, end, property, object)
+        if (plugin) {
+          _valuesFunc[property] = plugin
+        }
         continue
       }
 
@@ -285,8 +289,9 @@ class Tween extends EventClass {
     return this
   }
 
-  yoyo (state) {
-    this._yoyo = typeof (state) === 'function' ? state(this._yoyo) : state
+  yoyo (state, _easingReverse) {
+    this._yoyo = typeof (state) === 'function' ? state(this._yoyo) : state === null ? this._yoyo : state
+    this._easingReverse = _easingReverse || defaultEasing
 
     return this
   }
@@ -328,6 +333,7 @@ class Tween extends EventClass {
     let {
       _onStartCallbackFired,
       _easingFunction,
+      _easingReverse,
       _repeat,
       _repeatDelayTime,
       _reverseDelayTime,
@@ -347,6 +353,7 @@ class Tween extends EventClass {
     let elapsed
     let value
     let property
+    let currentEasing
 
     time = time !== undefined ? time : now()
 
@@ -369,12 +376,14 @@ class Tween extends EventClass {
     elapsed = elapsed > 1 ? 1 : elapsed
     elapsed = _reversed ? 1 - elapsed : elapsed
 
+    currentEasing = _reversed ? _easingReverse : _easingFunction
+
     if (!object) {
       return true
     }
 
     for (property in _valuesEnd) {
-      value = _easingFunction[property] ? _easingFunction[property](elapsed) : typeof _easingFunction === 'function' ? _easingFunction(elapsed) : defaultEasing(elapsed)
+      value = currentEasing[property] ? currentEasing[property](elapsed) : typeof currentEasing === 'function' ? currentEasing(elapsed) : defaultEasing(elapsed)
 
       let start = _valuesStart[property]
       let end = _valuesEnd[property]
@@ -420,12 +429,12 @@ class Tween extends EventClass {
         return true
       } else {
         if (!preserve) {
+          this._isPlaying = false
           remove(this)
+          _id--
         }
-        this._isPlaying = false
         this.emit(EVENT_COMPLETE, object)
         this._repeat = this._r
-        _id--
 
         return false
       }
