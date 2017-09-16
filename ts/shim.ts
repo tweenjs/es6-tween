@@ -13,10 +13,6 @@ export let assign = Object.assign || ((source: object, ...args) => {
   }
   return source
 })
-
-if (!Array.isArray) {
-  Array.isArray = (arg => arg && arg.push && arg.splice)
-}
 export let root = typeof (window) !== 'undefined' ? window : typeof (global) !== 'undefined' ? global : this
 export let requestAnimationFrame = root.requestAnimationFrame || (fn => root.setTimeout(fn, 16))
 export let cancelAnimationFrame = root.cancelAnimationFrame || (id => root.clearTimeout(id))

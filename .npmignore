@@ -8,6 +8,10 @@ examples
 ts
 logo
 performance
-guide_nodes/
+guide_notes
 CONTRIBUTING.md
 ISSUE_TEMPLATE.md
+API.md
+.travis.yml
+package-lock.json
+yarn.lock

@@ -1,6 +1,6 @@
 {
   "name": "es6-tween",
-  "version": "3.7.3",
+  "version": "3.8.3",
   "description": "ES6 implementation of amazing tween.js",
   "browser": "full/Tween.min.js",
   "cdn": "full/Tween.min.js",
@@ -9,7 +9,7 @@
   "directories": {
     "example": "examples"
   },
-  "types": "src/Tween.d.ts",
+  "types": "typings/Tween.d.ts",
   "scripts": {
     "source": "rollup -c --environment min:false",
     "minify": "rollup -c --environment min:true",
@@ -17,12 +17,12 @@
     "source-lite": "rollup -c rollup.config.lite.js --environment min:false",
     "minify-lite": "rollup -c rollup.config.lite.js --environment min:true",
     "build-lite": "npm run source-lite && npm run minify-lite",
-    "prepare": "npm run build && npm run build-lite",
+    "prepare": "tsc && npm run build && npm run build-lite",
     "dev": "rollup -c -w",
     "dev-lite": "rollup -c rollup.config.lite.js -w",
     "lint": "eslint --fix src",
     "test": "npm run lint && ava --verbose",
-    "prepublishOnly": "npm run lint && npm run doc-md && npm run prepare && ava --verbose",
+    "prepublish": "npm run prepare && npm run lint && npm run doc-md && ava --verbose",
     "doc": "node_modules/.bin/jsdoc --readme README.md --configure jsdoc.json --verbose",
     "doc-md": "jsdoc2md src/** > API.md"
   },

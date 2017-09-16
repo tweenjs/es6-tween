@@ -287,7 +287,7 @@ class Tween extends EventClass {
    * @example let tween = new Tween({x:0}).to({x:100}, 2000)
    * @memberof Tween
    */
-  public to(properties: Object, duration: any = 1000) {
+  public to(properties: Object, duration: any = 1000, maybeUsed?: any) {
     this._valuesEnd = properties
 
     if (typeof duration === 'number' || typeof (duration) === 'function') {

@@ -3,12 +3,16 @@
 <dl>
 <dt><a href="#EventClass">EventClass</a></dt>
 <dd></dd>
-<dt><a href="#Timeline">Timeline</a> ⇐ <code><a href="#Tween">Tween</a></code></dt>
-<dd></dd>
-<dt><a href="#Tween">Tween</a> ⇐ <code><a href="#EventClass">EventClass</a></code></dt>
-<dd></dd>
 <dt><a href="#Lite">Lite</a></dt>
-<dd></dd>
+<dd><p>Tween Lite main constructor</p>
+</dd>
+<dt><a href="#Timeline">Timeline</a> ⇐ <code><a href="#Tween">Tween</a></code></dt>
+<dd><p>Timeline main constructor.</p>
+<p>It works same as <code>Tween</code> instance, using <code>.repeat</code>, <code>.restart</code> or <code>etc</code> works like a <code>Tween</code>, so please see <code>Tween</code> class for methods</p>
+</dd>
+<dt><a href="#Tween">Tween</a> ⇐ <code><a href="#EventClass">EventClass</a></code></dt>
+<dd><p>Tween main constructor</p>
+</dd>
 </dl>
 
 ## Objects
@@ -25,23 +29,11 @@
 **Kind**: global class  
 
 * [EventClass](#EventClass)
-    * [new EventClass()](#new_EventClass_new)
     * [.on(event, callback)](#EventClass+on)
     * [.once(event, callback)](#EventClass+once)
     * [.off(event, callback)](#EventClass+off)
     * [.emit(event)](#EventClass+emit)
 
-<a name="new_EventClass_new"></a>
-
-### new EventClass()
-Events class
-
-**Example**  
-```js
-let ev = new EventClass()
-ev.on('listen', name => `Hello ${name}`)
-ev.emit('listen', 'World')
-```
 <a name="EventClass+on"></a>
 
 ### eventClass.on(event, callback)
@@ -57,8 +49,7 @@ Adds `event` to Events system
 <a name="EventClass+once"></a>
 
 ### eventClass.once(event, callback)
-Adds `event` to Events system.
-Removes itself after fired once
+Adds `event` to Events system.Removes itself after fired once
 
 **Kind**: instance method of [<code>EventClass</code>](#EventClass)  
 
@@ -90,9 +81,312 @@ Emits/Fired/Trigger `event` from Events system listeners
 | --- | --- | --- |
 | event | <code>string</code> | Event listener name |
 
+<a name="Lite"></a>
+
+## Lite
+Tween Lite main constructor
+
+**Kind**: global class  
+
+* [Lite](#Lite)
+    * [new Lite(object)](#new_Lite_new)
+    * [.onStart(callback)](#Lite+onStart)
+    * [.onUpdate(callback)](#Lite+onUpdate)
+    * [.onComplete(callback)](#Lite+onComplete)
+    * [.isPlaying()](#Lite+isPlaying) ⇒ <code>boolean</code>
+    * [.isStarted()](#Lite+isStarted) ⇒ <code>boolean</code>
+    * [.pause()](#Lite+pause)
+    * [.play()](#Lite+play)
+    * [.duration(amount)](#Lite+duration)
+    * [.to(properties, [duration])](#Lite+to)
+    * [.start(time)](#Lite+start)
+    * [.stop()](#Lite+stop)
+    * [.delay(amount)](#Lite+delay)
+    * [.repeat(amount)](#Lite+repeat)
+    * [.repeatDelay(amount)](#Lite+repeatDelay)
+    * [.reverseDelay(amount)](#Lite+reverseDelay)
+    * [.yoyo(state)](#Lite+yoyo)
+    * [.easing(_easingFunction)](#Lite+easing)
+    * [.interpolation(_interpolationFunction)](#Lite+interpolation)
+    * [.update(time, [preserve])](#Lite+update)
+
+<a name="new_Lite_new"></a>
+
+### new Lite(object)
+
+| Param | Type | Description |
+| --- | --- | --- |
+| object | <code>object</code> | initial object |
+
+**Example**  
+```js
+import {Tween} from 'es6-tween/src/Tween.Lite'let tween = new Tween({x:0}).to({x:100}, 2000).start()
+```
+<a name="Lite+onStart"></a>
+
+### lite.onStart(callback)
+onStart callback
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callback | <code>function</code> | Function should be fired after tween is started |
+
+**Example**  
+```js
+tween.onStart(object => console.log(object))
+```
+<a name="Lite+onUpdate"></a>
+
+### lite.onUpdate(callback)
+onUpdate callback
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callback | <code>function</code> | Function should be fired while tween is in progress |
+
+**Example**  
+```js
+tween.onUpdate(object => console.log(object))
+```
+<a name="Lite+onComplete"></a>
+
+### lite.onComplete(callback)
+onComplete callback
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callback | <code>function</code> | Function should be fired after tween is finished |
+
+**Example**  
+```js
+tween.onComplete(object => console.log(object))
+```
+<a name="Lite+isPlaying"></a>
+
+### lite.isPlaying() ⇒ <code>boolean</code>
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+**Returns**: <code>boolean</code> - State of playing of tween  
+**Example**  
+```js
+tween.isPlaying() // returns `true` if tween in progress
+```
+<a name="Lite+isStarted"></a>
+
+### lite.isStarted() ⇒ <code>boolean</code>
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+**Returns**: <code>boolean</code> - State of started of tween  
+**Example**  
+```js
+tween.isStarted() // returns `true` if tween in started
+```
+<a name="Lite+pause"></a>
+
+### lite.pause()
+Pauses tween
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+**Example**  
+```js
+tween.pause()
+```
+<a name="Lite+play"></a>
+
+### lite.play()
+Play/Resume the tween
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+**Example**  
+```js
+tween.play()
+```
+<a name="Lite+duration"></a>
+
+### lite.duration(amount)
+Sets tween duration
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| amount | <code>number</code> | Duration is milliseconds |
+
+**Example**  
+```js
+tween.duration(2000)
+```
+<a name="Lite+to"></a>
+
+### lite.to(properties, [duration])
+Sets target value and duration
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| properties | <code>object</code> |  | Target value (to value) |
+| [duration] | <code>number</code> | <code>1000</code> | Duration of tween |
+
+**Example**  
+```js
+new Tween({x:0}).to({x:200}, 2000)
+```
+<a name="Lite+start"></a>
+
+### lite.start(time)
+Start the tweening
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| time | <code>number</code> | setting manual time instead of Current browser timestamp |
+
+**Example**  
+```js
+tween.start()
+```
+<a name="Lite+stop"></a>
+
+### lite.stop()
+Stops the tween
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+**Example**  
+```js
+tween.stop()
+```
+<a name="Lite+delay"></a>
+
+### lite.delay(amount)
+Set delay of tween
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| amount | <code>number</code> | Sets tween delay / wait duration |
+
+**Example**  
+```js
+tween.delay(500)
+```
+<a name="Lite+repeat"></a>
+
+### lite.repeat(amount)
+Sets how times tween is repeating
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| amount | <code>amount</code> | the times of repeat |
+
+**Example**  
+```js
+tween.repeat(2)
+```
+<a name="Lite+repeatDelay"></a>
+
+### lite.repeatDelay(amount)
+Set delay of each repeat of tween
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| amount | <code>number</code> | Sets tween repeat delay / repeat wait duration |
+
+**Example**  
+```js
+tween.repeatDelay(500)
+```
+<a name="Lite+reverseDelay"></a>
+
+### lite.reverseDelay(amount)
+Set delay of each repeat alternate of tween
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| amount | <code>number</code> | Sets tween repeat alternate delay / repeat alternate wait duration |
+
+**Example**  
+```js
+tween.reverseDelay(500)
+```
+<a name="Lite+yoyo"></a>
+
+### lite.yoyo(state)
+Set `yoyo` state (enables reverse in repeat)
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| state | <code>boolean</code> | Enables alternate direction for repeat |
+
+**Example**  
+```js
+tween.yoyo(true)
+```
+<a name="Lite+easing"></a>
+
+### lite.easing(_easingFunction)
+Set easing
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| _easingFunction | <code>function</code> | Easing function |
+
+**Example**  
+```js
+tween.easing(Easing.Quadratic.InOut)
+```
+<a name="Lite+interpolation"></a>
+
+### lite.interpolation(_interpolationFunction)
+Set interpolation
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| _interpolationFunction | <code>function</code> | Interpolation function |
+
+**Example**  
+```js
+tween.interpolation(Interpolation.Bezier)
+```
+<a name="Lite+update"></a>
+
+### lite.update(time, [preserve])
+Updates initial object to target value by given `time`
+
+**Kind**: instance method of [<code>Lite</code>](#Lite)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| time | <code>Time</code> | Current time |
+| [preserve] | <code>boolean</code> | Prevents from removing tween from store |
+
+**Example**  
+```js
+tween.update(500)
+```
 <a name="Timeline"></a>
 
 ## Timeline ⇐ [<code>Tween</code>](#Tween)
+Timeline main constructor.It works same as `Tween` instance, using `.repeat`, `.restart` or `etc` works like a `Tween`, so please see `Tween` class for methods
+
 **Kind**: global class  
 **Extends**: [<code>Tween</code>](#Tween)  
 
@@ -129,10 +423,6 @@ Emits/Fired/Trigger `event` from Events system listeners
 <a name="new_Timeline_new"></a>
 
 ### new Timeline([params])
-Timeline main constructor.
-
-It works same as `Tween` instance, using `.repeat`, `.restart` or `etc` works like a `Tween`, so please see `Tween` class for methods
-
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -150,9 +440,9 @@ let tl = new Timeline({delay:200})
 | Param | Type | Description |
 | --- | --- | --- |
 | nodes | <code>Array.&lt;Element&gt;</code> | DOM Elements Collection (converted to Array) |
-| from | <code>Object</code> | Initial value |
-| to | <code>Object</code> | Target value |
-| params | <code>Object</code> | Options of tweens |
+| from | <code>object</code> | Initial value |
+| to | <code>object</code> | Target value |
+| params | <code>object</code> | Options of tweens |
 
 **Example**  
 ```js
@@ -166,8 +456,8 @@ tl.fromTo(nodes, {x:0}, {x:200}, {duration:1000, stagger:200})
 | Param | Type | Description |
 | --- | --- | --- |
 | nodes | <code>Array.&lt;Element&gt;</code> | DOM Elements Collection (converted to Array) |
-| from | <code>Object</code> | Initial value |
-| params | <code>Object</code> | Options of tweens |
+| from | <code>object</code> | Initial value |
+| params | <code>object</code> | Options of tweens |
 
 **Example**  
 ```js
@@ -182,8 +472,8 @@ tl.from(nodes, {x:200}, {duration:1000, stagger:200})
 | Param | Type | Description |
 | --- | --- | --- |
 | nodes | <code>Array.&lt;Element&gt;</code> | DOM Elements Collection (converted to Array) |
-| to | <code>Object</code> | Target value |
-| params | <code>Object</code> | Options of tweens |
+| to | <code>object</code> | Target value |
+| params | <code>object</code> | Options of tweens |
 
 **Example**  
 ```js
@@ -251,7 +541,6 @@ tween.reverse()
 ```
 <a name="Tween+reversed"></a>
 
-<<<<<<< Updated upstream
 ### timeline.reversed() ⇒ <code>boolean</code>
 **Kind**: instance method of [<code>Timeline</code>](#Timeline)  
 **Returns**: <code>boolean</code> - State of reversed  
@@ -260,12 +549,6 @@ tween.reverse()
 tween.reversed() // returns `true` if tween in reversed state
 ```
 <a name="Tween+pause"></a>
-=======
--   `nodes` **(NodeList | [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** DOM Elements Collection (converted to Array)
--   `from` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Initial value
--   `to` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Target value
--   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options of tweens
->>>>>>> Stashed changes
 
 ### timeline.pause()
 Pauses tween
@@ -280,39 +563,28 @@ tween.pause()
 ### timeline.play()
 Play/Resume the tween
 
-<<<<<<< Updated upstream
 **Kind**: instance method of [<code>Timeline</code>](#Timeline)  
 **Example**  
 ```js
 tween.play()
 ```
 <a name="Tween+restart"></a>
-=======
--   `nodes` **(NodeList | [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** DOM Elements Collection (converted to Array)
--   `from` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Initial value
--   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options of tweens
->>>>>>> Stashed changes
 
 ### timeline.restart([noDelay])
 Restarts tween from initial value
 
 **Kind**: instance method of [<code>Timeline</code>](#Timeline)  
+**Overrides**: [<code>restart</code>](#Tween+restart)  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | [noDelay] | <code>boolean</code> | If this param is set to `true`, restarts tween without `delay` |
 
-<<<<<<< Updated upstream
 **Example**  
 ```js
 tween.restart()
 ```
 <a name="Tween+seek"></a>
-=======
--   `nodes` **(NodeList | [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** DOM Elements Collection (converted to Array)
--   `to` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Target value
--   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options of tweens
->>>>>>> Stashed changes
 
 ### timeline.seek(time, [keepPlaying])
 Seek tween value by `time`
@@ -360,12 +632,8 @@ tween.start()
 ```
 <a name="Tween+stop"></a>
 
-<<<<<<< Updated upstream
 ### timeline.stop()
 Stops the tween
-=======
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** State of playing of tween
->>>>>>> Stashed changes
 
 **Kind**: instance method of [<code>Timeline</code>](#Timeline)  
 **Example**  
@@ -389,12 +657,8 @@ tween.delay(500)
 ```
 <a name="Tween+repeat"></a>
 
-<<<<<<< Updated upstream
 ### timeline.repeat(amount)
 Sets how times tween is repeating
-=======
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** State of started of tween
->>>>>>> Stashed changes
 
 **Kind**: instance method of [<code>Timeline</code>](#Timeline)  
 
@@ -438,12 +702,8 @@ tween.reverseDelay(500)
 ```
 <a name="Tween+yoyo"></a>
 
-<<<<<<< Updated upstream
 ### timeline.yoyo(state, [_easingReverse])
 Set `yoyo` state (enables reverse in repeat)
-=======
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** State of reversed
->>>>>>> Stashed changes
 
 **Kind**: instance method of [<code>Timeline</code>](#Timeline)  
 
@@ -462,6 +722,7 @@ tween.yoyo(true)
 Set easing
 
 **Kind**: instance method of [<code>Timeline</code>](#Timeline)  
+**Overrides**: [<code>easing</code>](#Tween+easing)  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -477,6 +738,7 @@ tween.easing(Easing.Elastic.InOut)
 Updates initial object to target value by given `time`
 
 **Kind**: instance method of [<code>Timeline</code>](#Timeline)  
+**Overrides**: [<code>update</code>](#Tween+update)  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -502,8 +764,7 @@ Adds `event` to Events system
 <a name="EventClass+once"></a>
 
 ### timeline.once(event, callback)
-Adds `event` to Events system.
-Removes itself after fired once
+Adds `event` to Events system.Removes itself after fired once
 
 **Kind**: instance method of [<code>Timeline</code>](#Timeline)  
 
@@ -538,6 +799,8 @@ Emits/Fired/Trigger `event` from Events system listeners
 <a name="Tween"></a>
 
 ## Tween ⇐ [<code>EventClass</code>](#EventClass)
+Tween main constructor
+
 **Kind**: global class  
 **Extends**: [<code>EventClass</code>](#EventClass)  
 
@@ -575,8 +838,6 @@ Emits/Fired/Trigger `event` from Events system listeners
 <a name="new_Tween_new"></a>
 
 ### new Tween(node, [object])
-Tween main constructor
-
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -699,7 +960,7 @@ Sets target value and duration
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| properties | <code>Object</code> |  | Target value (to value) |
+| properties | <code>object</code> |  | Target value (to value) |
 | [duration] | <code>number</code> \| <code>Object</code> | <code>1000</code> | Duration of tween |
 
 **Example**  
@@ -853,8 +1114,7 @@ Adds `event` to Events system
 <a name="EventClass+once"></a>
 
 ### tween.once(event, callback)
-Adds `event` to Events system.
-Removes itself after fired once
+Adds `event` to Events system.Removes itself after fired once
 
 **Kind**: instance method of [<code>Tween</code>](#Tween)  
 
@@ -896,9 +1156,9 @@ Easier way to call the Tween
 | Param | Type | Description |
 | --- | --- | --- |
 | node | <code>Element</code> | DOM Element |
-| object | <code>Object</code> | Initial value |
-| to | <code>Object</code> | Target value |
-| params | <code>Object</code> | Options of tweens |
+| object | <code>object</code> | Initial value |
+| to | <code>object</code> | Target value |
+| params | <code>object</code> | Options of tweens |
 
 **Example**  
 ```js
@@ -914,8 +1174,8 @@ Easier way calling constructor only applies the `to` value, useful for CSS Anima
 | Param | Type | Description |
 | --- | --- | --- |
 | node | <code>Element</code> | DOM Element |
-| to | <code>Object</code> | Target value |
-| params | <code>Object</code> | Options of tweens |
+| to | <code>object</code> | Target value |
+| params | <code>object</code> | Options of tweens |
 
 **Example**  
 ```js
@@ -931,315 +1191,12 @@ Easier way calling constructor only applies the `from` value, useful for CSS Ani
 | Param | Type | Description |
 | --- | --- | --- |
 | node | <code>Element</code> | DOM Element |
-| from | <code>Object</code> | Initial value |
-| params | <code>Object</code> | Options of tweens |
+| from | <code>object</code> | Initial value |
+| params | <code>object</code> | Options of tweens |
 
 **Example**  
 ```js
 Tween.from(node, {x:200}, {duration:1000})
-```
-<a name="Lite"></a>
-
-## Lite
-**Kind**: global class  
-
-* [Lite](#Lite)
-    * [new Lite(object)](#new_Lite_new)
-    * [.onStart(callback)](#Lite+onStart)
-    * [.onUpdate(callback)](#Lite+onUpdate)
-    * [.onComplete(callback)](#Lite+onComplete)
-    * [.isPlaying()](#Lite+isPlaying) ⇒ <code>boolean</code>
-    * [.isStarted()](#Lite+isStarted) ⇒ <code>boolean</code>
-    * [.pause()](#Lite+pause)
-    * [.play()](#Lite+play)
-    * [.duration(amount)](#Lite+duration)
-    * [.to(properties, [duration])](#Lite+to)
-    * [.start(time)](#Lite+start)
-    * [.stop()](#Lite+stop)
-    * [.delay(amount)](#Lite+delay)
-    * [.repeat(amount)](#Lite+repeat)
-    * [.repeatDelay(amount)](#Lite+repeatDelay)
-    * [.reverseDelay(amount)](#Lite+reverseDelay)
-    * [.yoyo(state)](#Lite+yoyo)
-    * [.easing(_easingFunction)](#Lite+easing)
-    * [.interpolation(_interpolationFunction)](#Lite+interpolation)
-    * [.update(time, [preserve])](#Lite+update)
-
-<a name="new_Lite_new"></a>
-
-### new Lite(object)
-Tween Lite main constructor
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| object | <code>Object</code> | initial object |
-
-**Example**  
-```js
-import {Tween} from 'es6-tween/src/Tween.Lite'
-
-let tween = new Tween({x:0}).to({x:100}, 2000).start()
-```
-<a name="Lite+onStart"></a>
-
-### lite.onStart(callback)
-onStart callback
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| callback | <code>function</code> | Function should be fired after tween is started |
-
-**Example**  
-```js
-tween.onStart(object => console.log(object))
-```
-<a name="Lite+onUpdate"></a>
-
-### lite.onUpdate(callback)
-onUpdate callback
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| callback | <code>function</code> | Function should be fired while tween is in progress |
-
-**Example**  
-```js
-tween.onUpdate(object => console.log(object))
-```
-<a name="Lite+onComplete"></a>
-
-### lite.onComplete(callback)
-onComplete callback
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| callback | <code>function</code> | Function should be fired after tween is finished |
-
-**Example**  
-```js
-tween.onComplete(object => console.log(object))
-```
-<a name="Lite+isPlaying"></a>
-
-### lite.isPlaying() ⇒ <code>boolean</code>
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-**Returns**: <code>boolean</code> - State of playing of tween  
-**Example**  
-```js
-tween.isPlaying() // returns `true` if tween in progress
-```
-<a name="Lite+isStarted"></a>
-
-### lite.isStarted() ⇒ <code>boolean</code>
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-**Returns**: <code>boolean</code> - State of started of tween  
-**Example**  
-```js
-tween.isStarted() // returns `true` if tween in started
-```
-<a name="Lite+pause"></a>
-
-### lite.pause()
-Pauses tween
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-**Example**  
-```js
-tween.pause()
-```
-<a name="Lite+play"></a>
-
-### lite.play()
-Play/Resume the tween
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-**Example**  
-```js
-tween.play()
-```
-<a name="Lite+duration"></a>
-
-### lite.duration(amount)
-Sets tween duration
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| amount | <code>number</code> | Duration is milliseconds |
-
-**Example**  
-```js
-tween.duration(2000)
-```
-<a name="Lite+to"></a>
-
-### lite.to(properties, [duration])
-Sets target value and duration
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| properties | <code>Object</code> |  | Target value (to value) |
-| [duration] | <code>number</code> | <code>1000</code> | Duration of tween |
-
-**Example**  
-```js
-new Tween({x:0}).to({x:200}, 2000)
-```
-<a name="Lite+start"></a>
-
-### lite.start(time)
-Start the tweening
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| time | <code>number</code> | setting manual time instead of Current browser timestamp |
-
-**Example**  
-```js
-tween.start()
-```
-<a name="Lite+stop"></a>
-
-### lite.stop()
-Stops the tween
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-**Example**  
-```js
-tween.stop()
-```
-<a name="Lite+delay"></a>
-
-### lite.delay(amount)
-Set delay of tween
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| amount | <code>number</code> | Sets tween delay / wait duration |
-
-**Example**  
-```js
-tween.delay(500)
-```
-<a name="Lite+repeat"></a>
-
-### lite.repeat(amount)
-Sets how times tween is repeating
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| amount | <code>amount</code> | the times of repeat |
-
-**Example**  
-```js
-tween.repeat(2)
-```
-<a name="Lite+repeatDelay"></a>
-
-### lite.repeatDelay(amount)
-Set delay of each repeat of tween
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| amount | <code>number</code> | Sets tween repeat delay / repeat wait duration |
-
-**Example**  
-```js
-tween.repeatDelay(500)
-```
-<a name="Lite+reverseDelay"></a>
-
-### lite.reverseDelay(amount)
-Set delay of each repeat alternate of tween
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| amount | <code>number</code> | Sets tween repeat alternate delay / repeat alternate wait duration |
-
-**Example**  
-```js
-tween.reverseDelay(500)
-```
-<a name="Lite+yoyo"></a>
-
-### lite.yoyo(state)
-Set `yoyo` state (enables reverse in repeat)
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| state | <code>boolean</code> | Enables alternate direction for repeat |
-
-**Example**  
-```js
-tween.yoyo(true)
-```
-<a name="Lite+easing"></a>
-
-### lite.easing(_easingFunction)
-Set easing
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| _easingFunction | <code>function</code> | Easing function |
-
-**Example**  
-```js
-tween.easing(Easing.Quadratic.InOut)
-```
-<a name="Lite+interpolation"></a>
-
-### lite.interpolation(_interpolationFunction)
-Set interpolation
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| _interpolationFunction | <code>function</code> | Interpolation function |
-
-**Example**  
-```js
-tween.interpolation(Interpolation.Bezier)
-```
-<a name="Lite+update"></a>
-
-### lite.update(time, [preserve])
-Updates initial object to target value by given `time`
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| time | <code>Time</code> | Current time |
-| [preserve] | <code>boolean</code> | Prevents from removing tween from store |
-
-**Example**  
-```js
-tween.update(500)
 ```
 <a name="TWEEN"></a>
 
@@ -1251,8 +1208,7 @@ Lightweight, effecient and modular ES6 version of tween.js
 **Copyright**: 2017 @dalisoft and es6-tween contributors  
 **Example**  
 ```js
-// ES6
-const {add, remove, isRunning, autoPlay} = TWEEN
+// ES6const {add, remove, isRunning, autoPlay} = TWEEN
 ```
 
 * [TWEEN](#TWEEN) : <code>object</code>
@@ -1276,9 +1232,7 @@ The plugins store object
 **Kind**: static namespace of [<code>TWEEN</code>](#TWEEN)  
 **Example**  
 ```js
-let num = Plugins.num = function (node, start, end) {
-return t => start + (end - start) * t
-}
+let num = Plugins.num = function (node, start, end) {return t => start + (end - start) * t}
 ```
 <a name="TWEEN.Easing"></a>
 
@@ -1288,9 +1242,7 @@ List of full easings
 **Kind**: static namespace of [<code>TWEEN</code>](#TWEEN)  
 **Example**  
 ```js
-import {Easing} from 'es6-tween'
-
-// then set via new Tween({x:0}).to({x:100}, 1000).easing(Easing.Quadratic.InOut).start()
+import {Tween, Easing} from 'es6-tween'// then set via new Tween({x:0}).to({x:100}, 1000).easing(Easing.Quadratic.InOut).start()
 ```
 <a name="TWEEN.Interpolation"></a>
 
@@ -1300,10 +1252,7 @@ List of full Interpolation
 **Kind**: static namespace of [<code>TWEEN</code>](#TWEEN)  
 **Example**  
 ```js
-import {Interpolation, Tween} from 'es6-tween'
-
-let bezier = Interpolation.Bezier
-new Tween({x:0}).to({x:[0, 4, 8, 12, 15, 20, 30, 40, 20, 40, 10, 50]}, 1000).interpolation(bezier).start()
+import {Interpolation, Tween} from 'es6-tween'let bezier = Interpolation.Beziernew Tween({x:0}).to({x:[0, 4, 8, 12, 15, 20, 30, 40, 20, 40, 10, 50]}, 1000).interpolation(bezier).start()
 ```
 <a name="TWEEN.add"></a>
 
@@ -1318,9 +1267,7 @@ Adds tween to list
 
 **Example**  
 ```js
-let tween = new Tween({x:0})
-tween.to({x:200}, 1000)
-TWEEN.add(tween)
+let tween = new Tween({x:0})tween.to({x:200}, 1000)TWEEN.add(tween)
 ```
 <a name="TWEEN.autoPlay"></a>
 
