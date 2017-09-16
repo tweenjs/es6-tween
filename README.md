@@ -203,13 +203,48 @@ Then reference the library source:
 * Can also use custom easing functions
 * Much of easings
 
+## Compatiblity
+All ES5 supported browsers including IE9+
+
+#### Browsers
+* Chrome
+* Firefox 3.5+
+* Opera 9.5+
+* IE8+
+* Safari 5.1+
+
+#### OS (Fully working)
+* Android 4.1+
+* iOS6+
+* WP8.5+
+* OS X
+* Windows 7+
+
+#### Device
+* iPhone
+* iPad
+* Android devices
+* Nokia Lumia
+* Samsung devices
+* - all devices should compatible with supported OS
+
+#### Package managers
+* `bower`
+* `npm`
+* `yarn`
+
+#### Bundler
+* `Rollup`
+
+#### Transpiler
+* `Buble`
+
 ## Documentation
 
 * Original source: <a href="https://github.com/tweenjs/tween.js">check out at here</a>
 * [Full documentation](https://tweenjs.github.io/es6-tween/)
 * [API documentation](./API.md)
 * [Wiki page](https://github.com/tweenjs/es6-tween/wiki)
-* [Compatiblity](./compatibility/comp_support.md)
 * [Tutorial](http://learningthreejs.com/blog/2011/08/17/tweenjs-for-smooth-animation/)  using tween.js with three.js
 
 ## Compatiblity Testing
@@ -241,7 +276,7 @@ If you want to add any feature or change existing features, you *must* run the t
 
 ## Thanks to: 
 * [es6-tween contributors](https://github.com/tweenjs/es6-tween/graphs/contributors)
-* Rollup, Buble, Travis CI, BrowserStack and others (make issue, if i'm missed you) with their teams, devs and supporters
+* Rollup, Buble, Travis CI, BrowserStack, jsDoc, docdash theme, TypeScript and others (make issue, if i'm missed you) with their teams, devs and supporters
 
 ## Projects using es6-tween
 
