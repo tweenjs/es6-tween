@@ -126,7 +126,7 @@ PR are welcome...
 import { Easing, Tween, autoPlay } from 'es6-tween'
 
 // Lite
-import { Easing, Interpolation, Tween, autoPlay } from 'es6-tween/src/Tween.Lite'
+import { Easing, Interpolation, Tween, autoPlay } from 'es6-tween/src/index.lite'
 ```
 
 #### Using [getlibs](https://github.com/activewidgets/getlibs)
@@ -139,7 +139,7 @@ import { Easing, Interpolation, Tween, autoPlay } from 'es6-tween/src/Tween.Lite
 import { Easing, Tween, autoPlay } from 'es6-tween'
 
 // Lite
-import { Easing, Interpolation, Tween, autoPlay } from 'es6-tween/src/Tween.Lite'
+import { Easing, Interpolation, Tween, autoPlay } from 'es6-tween/src/index.lite'
 
 
 // CommonJS
