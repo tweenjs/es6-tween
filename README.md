@@ -36,7 +36,7 @@ let tween = new TWEEN.Tween(coords)
 
 # `Lite` version
 
-You can use the `Lite` version of ES6 which lighter (~9Kb minified, ~3Kb min&gzip), faster (~10% faster executioin), simpler (like the original one), memory effecient and better (can tween second-level Objects/Array). Optimized for runtime performance, no-lag anymore.
+You can use the `Lite` version of ES6 which lighter (~9Kb minified, ~3Kb min&gzip), faster (~10% faster execution speed), simpler (like the original one), memory effecient and better (can tween second-level Objects/Array). Optimized for runtime performance, no-lag anymore.
 When you want building mobile apps that loading files from server, use `Lite` for better performance.
 Differences when using `Lite`:
 

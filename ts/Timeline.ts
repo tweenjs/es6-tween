@@ -1,8 +1,8 @@
-import Tween, { EVENT_UPDATE, EVENT_RS, EVENT_REPEAT, EVENT_REVERSE, EVENT_COMPLETE } from './Tween'
 import { add, now, remove } from './core'
 import PlaybackPosition from './PlaybackPosition'
+import Tween, { EVENT_COMPLETE, EVENT_REPEAT, EVENT_REVERSE, EVENT_RS, EVENT_UPDATE } from './Tween'
 
-export const shuffle = a => {
+export const shuffle = (a) => {
   let j
   let x
   let i
@@ -17,42 +17,54 @@ export const shuffle = a => {
 
 let _id = 0
 /**
- * Tween main constructor
- * @namespace Timeline
+ * Timeline main constructor.
+ *
+ * It works same as `Tween` instance, using `.repeat`, `.restart` or `etc` works like a `Tween`, so please see `Tween` class for methods
+ * @constructor
  * @param {Object=} params Default params for new tweens
  * @example let tl = new Timeline({delay:200})
+ * @extends Tween
  */
 class Timeline extends Tween {
-  constructor (params) {
+  public _duration: number
+  public _isFinite: boolean
+  public _isPlaying: boolean
+  public _reversed: boolean
+  public _elapsed: number
+  public _id: number
+  private _defaultParams: Object
+  private _tweens: any[]
+  private position: PlaybackPosition
+  constructor(params: Object) {
     super()
-    this._totalDuration = 0
+    this._duration = 0
     this._startTime = now()
     this._tweens = []
     this._elapsed = 0
     this._id = _id++
     this._defaultParams = params
     this.position = new PlaybackPosition()
-    this.position.addLabel('afterLast', this._totalDuration)
+    this.position.addLabel('afterLast', this._duration)
     this.position.addLabel('afterInit', this._startTime)
 
     return this
   }
-  mapTotal (fn) {
+  public mapTotal(fn) {
     fn.call(this, this._tweens)
     return this
   }
-  timingOrder (fn) {
-    const timing = fn(this._tweens.map(t => t._startTime))
+  public timingOrder(fn) {
+    const timing = fn(this._tweens.map((t) => t._startTime))
     this._tweens.map((tween, i) => { tween._startTime = timing[i] })
     return this
   }
-  getTiming (mode, nodes, params, offset = 0) {
+  public getTiming(mode, nodes, params, offset = 0) {
     if (mode === 'reverse') {
       const { stagger } = params
       const totalStagger = (stagger || 0) * (nodes.length - 1)
       return nodes.map((node, i) => totalStagger - ((stagger || 0) * i) + offset)
     } else if (mode === 'async') {
-      return nodes.map(node => offset)
+      return nodes.map((node) => offset)
     } else if (mode === 'sequence' || mode === 'delayed') {
       let { stagger } = params
       if (!stagger) {
@@ -60,7 +72,7 @@ class Timeline extends Tween {
       }
       return nodes.map((node, i) => (stagger * i) + offset)
     } else if (mode === 'oneByOne') {
-      return nodes.map(node => params.duration)
+      return nodes.map((node) => params.duration)
     } else if (mode === 'shuffle') {
       const { stagger } = params
       return shuffle(nodes.map((node, i) => ((stagger || 0) * i) + offset))
@@ -71,15 +83,15 @@ class Timeline extends Tween {
   }
 
   /**
-   * See {@link #tweenfromto|Tween#fromTo} for more information, as it's more like a that method
-   * @param {NodeCollection|Array} nodes DOM Elements Collection (converted to Array)
-   * @param {Object} from - Initial value
-   * @param {Object} to - Target value
-   * @param {Object} params - Options of tweens
+   * @param {Array<Element>} nodes DOM Elements Collection (converted to Array)
+   * @param {object} from - Initial value
+   * @param {object} to - Target value
+   * @param {object} params - Options of tweens
+   * @example tl.fromTo(nodes, {x:0}, {x:200}, {duration:1000, stagger:200})
    * @memberof Timeline
    * @static
    */
-  fromTo (nodes, from, to, params) {
+  public fromTo(nodes, from, to, params) {
     if (Array.isArray(nodes)) {
       if (this._defaultParams) {
         params = { ...this._defaultParams, ...params }
@@ -95,44 +107,46 @@ class Timeline extends Tween {
   }
 
   /**
-   * See {@link #tweenfrom|Tween#from} for more information, as it's more like a that method
-   * @param {NodeCollection|Array} nodes DOM Elements Collection (converted to Array)
-   * @param {Object} from - Initial value
-   * @param {Object} params - Options of tweens
+   * @param {Array<Element>} nodes DOM Elements Collection (converted to Array)
+   * @param {object} from - Initial value
+   * @param {object} params - Options of tweens
+   * @example tl.from(nodes, {x:200}, {duration:1000, stagger:200})
    * @memberof Timeline
    * @static
    */
-  from (nodes, from, params) {
+  public from(nodes, from, params) {
     return this.fromTo(nodes, from, null, params)
   }
 
   /**
-   * See {@link #tweento|Tween#to} for more information, as it's more like a that method
-   * @param {NodeCollection|Array} nodes DOM Elements Collection (converted to Array)
-   * @param {Object} to - Target value
-   * @param {Object} params - Options of tweens
+   * @param {Array<Element>} nodes DOM Elements Collection (converted to Array)
+   * @param {object} to - Target value
+   * @param {object} params - Options of tweens
+   * @example tl.to(nodes, {x:200}, {duration:1000, stagger:200})
    * @memberof Timeline
    * @static
    */
-  to (nodes, to, params) {
+  public to(nodes, to, params) {
     return this.fromTo(nodes, null, to, params)
   }
 
   /**
    * Add label to Timeline
-   * @param {String} name Label name
+   * @param {string} name Label name
    * @param {any} offset Label value, can be `number` and/or `string`
+   * @example tl.add('label1', 200)
+   * @memberof Timeline
    */
-  addLabel (name, offset) {
+  public addLabel(name, offset) {
     this.position.addLabel(name, offset)
     return this
   }
 
-  map (fn) {
+  public map(fn) {
     for (let i = 0, len = this._tweens.length; i < len; i++) {
-      let _tween = this._tweens[i]
+      const _tween = this._tweens[i]
       fn(_tween, i)
-      this._totalDuration = Math.max(this._totalDuration, _tween._duration + _tween._startTime)
+      this._duration = Math.max(this._duration, _tween._duration + _tween._startTime)
     }
     return this
   }
@@ -141,10 +155,12 @@ class Timeline extends Tween {
    * Add tween to Timeline
    * @param {Tween} tween Tween instance
    * @param {position} position Can be label name, number or relative number to label
+   * @example tl.add(new Tween(node, {x:0}).to({x:200}, 200))
+   * @memberof Timeline
    */
-  add (tween, position) {
+  public add(tween, position) {
     if (Array.isArray(tween)) {
-      tween.map(_tween => {
+      tween.map((_tween) => {
         this.add(_tween, position)
       })
       return this
@@ -152,13 +168,13 @@ class Timeline extends Tween {
       tween = new Tween(tween.from).to(tween.to, tween)
     }
 
-    let {
+    const {
       _defaultParams,
-      _totalDuration
+      _duration
     } = this
 
     if (_defaultParams) {
-      for (let method in _defaultParams) {
+      for (const method in _defaultParams) {
         if (typeof tween[method] === 'function') {
           tween[method](_defaultParams[method])
         }
@@ -169,14 +185,13 @@ class Timeline extends Tween {
     tween._startTime = Math.max(this._startTime, tween._delayTime)
     tween._startTime += offset
     tween._isPlaying = true
-    this._totalDuration = Math.max(_totalDuration, tween._startTime + tween._delayTime + tween._duration)
+    this._duration = Math.max(_duration, tween._startTime + tween._delayTime + tween._duration)
     this._tweens.push(tween)
-    this.position.setLabel('afterLast', this._totalDuration)
+    this.position.setLabel('afterLast', this._duration)
     return this
   }
 
-  /** See {@link #tweenrestart|Tween#restart} */
-  restart () {
+  public restart() {
     this._startTime += now()
 
     add(this)
@@ -184,18 +199,18 @@ class Timeline extends Tween {
     return this.emit(EVENT_RS)
   }
 
-  easing (easing) {
-    return this.map(tween => tween.easing(easing))
+  public easing(easing) {
+    return this.map((tween) => tween.easing(easing))
   }
 
-  interpolation (interpolation) {
-    return this.map(tween => tween.interpolation(interpolation))
+  public interpolation(interpolation) {
+    return this.map((tween) => tween.interpolation(interpolation))
   }
 
-  update (time) {
-    let {
+  public update(time) {
+    const {
       _tweens,
-      _totalDuration,
+      _duration,
       _repeatDelayTime,
       _reverseDelayTime,
       _startTime,
@@ -211,7 +226,7 @@ class Timeline extends Tween {
       return true
     }
 
-    let elapsed = (time - _startTime) / _totalDuration
+    let elapsed = (time - _startTime) / _duration
     elapsed = elapsed > 1 ? 1 : elapsed
     elapsed = _reversed ? 1 - elapsed : elapsed
     elapsed = ((elapsed * 1000) | 0) / 1000
@@ -221,8 +236,8 @@ class Timeline extends Tween {
     }
     this._elapsed = elapsed
 
-    let timing = time - _startTime
-    let _timing = _reversed ? _totalDuration - timing : timing
+    const timing = time - _startTime
+    const _timing = _reversed ? _duration - timing : timing
 
     let i = 0
     while (i < _tweens.length) {
@@ -242,7 +257,7 @@ class Timeline extends Tween {
 
         if (_yoyo) {
           this._reversed = !_reversed
-          this.timingOrder(timing => timing.reverse())
+          this.timingOrder((timing) => timing.reverse())
         }
 
         if (!_reversed && _repeatDelayTime) {
@@ -273,12 +288,8 @@ class Timeline extends Tween {
     return true
   }
 
-  elapsed (value) {
-    return value !== undefined ? this.update(value * this._totalDuration) : this._elapsed
-  }
-
-  seek (value) {
-    return this.update(value < 1.1 ? value * this._totalDuration : value)
+  public elapsed(value) {
+    return value !== undefined ? this.update(value * this._duration) : this._elapsed
   }
 }
 export default Timeline

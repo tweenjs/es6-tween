@@ -251,6 +251,7 @@ tween.reverse()
 ```
 <a name="Tween+reversed"></a>
 
+<<<<<<< Updated upstream
 ### timeline.reversed() ⇒ <code>boolean</code>
 **Kind**: instance method of [<code>Timeline</code>](#Timeline)  
 **Returns**: <code>boolean</code> - State of reversed  
@@ -259,6 +260,12 @@ tween.reverse()
 tween.reversed() // returns `true` if tween in reversed state
 ```
 <a name="Tween+pause"></a>
+=======
+-   `nodes` **(NodeList | [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** DOM Elements Collection (converted to Array)
+-   `from` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Initial value
+-   `to` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Target value
+-   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options of tweens
+>>>>>>> Stashed changes
 
 ### timeline.pause()
 Pauses tween
@@ -273,12 +280,18 @@ tween.pause()
 ### timeline.play()
 Play/Resume the tween
 
+<<<<<<< Updated upstream
 **Kind**: instance method of [<code>Timeline</code>](#Timeline)  
 **Example**  
 ```js
 tween.play()
 ```
 <a name="Tween+restart"></a>
+=======
+-   `nodes` **(NodeList | [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** DOM Elements Collection (converted to Array)
+-   `from` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Initial value
+-   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options of tweens
+>>>>>>> Stashed changes
 
 ### timeline.restart([noDelay])
 Restarts tween from initial value
@@ -289,11 +302,17 @@ Restarts tween from initial value
 | --- | --- | --- |
 | [noDelay] | <code>boolean</code> | If this param is set to `true`, restarts tween without `delay` |
 
+<<<<<<< Updated upstream
 **Example**  
 ```js
 tween.restart()
 ```
 <a name="Tween+seek"></a>
+=======
+-   `nodes` **(NodeList | [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** DOM Elements Collection (converted to Array)
+-   `to` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Target value
+-   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options of tweens
+>>>>>>> Stashed changes
 
 ### timeline.seek(time, [keepPlaying])
 Seek tween value by `time`
@@ -341,8 +360,12 @@ tween.start()
 ```
 <a name="Tween+stop"></a>
 
+<<<<<<< Updated upstream
 ### timeline.stop()
 Stops the tween
+=======
+Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** State of playing of tween
+>>>>>>> Stashed changes
 
 **Kind**: instance method of [<code>Timeline</code>](#Timeline)  
 **Example**  
@@ -366,8 +389,12 @@ tween.delay(500)
 ```
 <a name="Tween+repeat"></a>
 
+<<<<<<< Updated upstream
 ### timeline.repeat(amount)
 Sets how times tween is repeating
+=======
+Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** State of started of tween
+>>>>>>> Stashed changes
 
 **Kind**: instance method of [<code>Timeline</code>](#Timeline)  
 
@@ -411,8 +438,12 @@ tween.reverseDelay(500)
 ```
 <a name="Tween+yoyo"></a>
 
+<<<<<<< Updated upstream
 ### timeline.yoyo(state, [_easingReverse])
 Set `yoyo` state (enables reverse in repeat)
+=======
+Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** State of reversed
+>>>>>>> Stashed changes
 
 **Kind**: instance method of [<code>Timeline</code>](#Timeline)  
 

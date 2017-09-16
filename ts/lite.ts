@@ -1,7 +1,7 @@
 import {
   add,
-  remove,
-  now
+  now,
+  remove
 }
   from './core'
 import Easing from './Easing'
@@ -9,8 +9,40 @@ import Interpolation from './Interpolation'
 
 let _id = 0 // Unique ID
 
-class Tween {
-  constructor (object) {
+/**
+ * Tween Lite main constructor
+ * @constructor
+ * @param {object} object initial object
+ * @example
+ * import {Tween} from 'es6-tween/src/Tween.Lite'
+ *
+ * let tween = new Tween({x:0}).to({x:100}, 2000).start()
+ */
+class Lite {
+  public id: number
+  public object: Object
+  public _valuesStart: Object
+  public _valuesStartRepeat: Object
+  public _valuesEnd: Object
+  public _duration: number
+  public _easingFunction: Function
+  public _interpolationFunction: Function
+  public _startTime: number
+  public _delayTime: number
+  public _repeatDelayTime: number
+  public _reverseDelayTime: number
+  public _repeat: number
+  public _yoyo: boolean
+  public _onStartCallback: Function
+  public _onUpdateCallback: Function
+  public _onCompleteCallback: Function
+  public _pausedTime: number
+  private _r: number
+  private _reversed: boolean
+  private _onStartCallbackFired: boolean
+  private _isFinite: boolean
+  private _isPlaying: boolean
+  constructor(object: Object) {
     this.id = _id++
     this.object = object
     this._valuesStart = {}
@@ -41,33 +73,66 @@ class Tween {
     return this
   }
 
-  onStart (callback) {
+  /**
+   * onStart callback
+   * @param {Function} callback Function should be fired after tween is started
+   * @example tween.onStart(object => console.log(object))
+   * @memberof Lite
+   */
+  public onStart(callback: Function) {
     this._onStartCallback = callback
 
     return this
   }
 
-  onUpdate (callback) {
+  /**
+   * onUpdate callback
+   * @param {Function} callback Function should be fired while tween is in progress
+   * @example tween.onUpdate(object => console.log(object))
+   * @memberof Lite
+   */
+  public onUpdate(callback: Function) {
     this._onUpdateCallback = callback
 
     return this
   }
 
-  onComplete (callback) {
+  /**
+   * onComplete callback
+   * @param {Function} callback Function should be fired after tween is finished
+   * @example tween.onComplete(object => console.log(object))
+   * @memberof Lite
+   */
+  public onComplete(callback: Function) {
     this._onCompleteCallback = callback
 
     return this
   }
 
-  isPlaying () {
+  /**
+   * @return {boolean} State of playing of tween
+   * @example tween.isPlaying() // returns `true` if tween in progress
+   * @memberof Lite
+   */
+  public isPlaying(): boolean {
     return this._isPlaying
   }
 
-  isStarted () {
+  /**
+   * @return {boolean} State of started of tween
+   * @example tween.isStarted() // returns `true` if tween in started
+   * @memberof Lite
+   */
+  public isStarted(): boolean {
     return this._onStartCallbackFired
   }
 
-  pause () {
+  /**
+   * Pauses tween
+   * @example tween.pause()
+   * @memberof Lite
+   */
+  public pause() {
     if (!this._isPlaying) {
       return this
     }
@@ -80,7 +145,12 @@ class Tween {
     return this
   }
 
-  play () {
+  /**
+   * Play/Resume the tween
+   * @example tween.play()
+   * @memberof Lite
+   */
+  public play() {
     if (this._isPlaying) {
       return this
     }
@@ -94,13 +164,26 @@ class Tween {
     return this
   }
 
-  duration (amount) {
+  /**
+   * Sets tween duration
+   * @param {number} amount Duration is milliseconds
+   * @example tween.duration(2000)
+   * @memberof Lite
+   */
+  public duration(amount: number) {
     this._duration = typeof (amount) === 'function' ? amount(this._duration) : amount
 
     return this
   }
 
-  to (properties, duration = 1000) {
+  /**
+   * Sets target value and duration
+   * @param {object} properties Target value (to value)
+   * @param {number} [duration=1000] Duration of tween
+   * @example new Tween({x:0}).to({x:200}, 2000)
+   * @memberof Lite
+   */
+  public to(properties: Object, duration: number = 1000) {
     this._valuesEnd = properties
 
     this._duration = duration
@@ -108,11 +191,17 @@ class Tween {
     return this
   }
 
-  start (time) {
+  /**
+   * Start the tweening
+   * @param {number} time setting manual time instead of Current browser timestamp
+   * @example tween.start()
+   * @memberof Lite
+   */
+  public start(time?: number) {
     this._startTime = time !== undefined ? time : now()
     this._startTime += this._delayTime
 
-    let {
+    const {
       _valuesEnd,
       _valuesStartRepeat,
       _valuesStart,
@@ -120,15 +209,15 @@ class Tween {
       object
     } = this
 
-    for (let property in _valuesEnd) {
-      let start = object[property]
+    for (const property in _valuesEnd) {
+      const start = object[property]
       let end = _valuesEnd[property]
 
       if (!object || object[property] === undefined) {
         continue
       }
 
-      let obj = object[property]
+      const obj = object[property]
 
       if (typeof start === 'number') {
         if (typeof end === 'string') {
@@ -136,18 +225,18 @@ class Tween {
           end = start + parseFloat(end)
         } else if (Array.isArray(end)) {
           end.unshift(start)
-          let _endArr = end
-          end = t => {
+          const _endArr = end
+          end = (t) => {
             return _interpolationFunction(_endArr, t)
           }
         }
       } else if (typeof end === 'object') {
         if (Array.isArray(end)) {
-          let _endArr = end
-          let _start = start.map(item => item)
+          const _endArr = end
+          const _start = start.map((item) => item)
           let i
           const len = end.length
-          end = t => {
+          end = (t) => {
             i = 0
             for (; i < len; i++) {
               obj[i] = typeof _start[i] === 'number' ? _start[i] + (_endArr[i] - _start[i]) * t : _endArr[i]
@@ -155,13 +244,13 @@ class Tween {
             return obj
           }
         } else {
-          let _endObj = end
-          let _start = {}
-          for (let p in start) {
+          const _endObj = end
+          const _start = {}
+          for (const p in start) {
             _start[p] = start[p]
           }
-          end = t => {
-            for (let i in end) {
+          end = (t) => {
+            for (const i in end) {
               obj[i] = typeof _start[i] === 'number' ? _start[i] + (_endObj[i] - _start[i]) * t : _endObj[i]
             }
             return obj
@@ -180,8 +269,13 @@ class Tween {
     return this
   }
 
-  stop () {
-    let {
+  /**
+   * Stops the tween
+   * @example tween.stop()
+   * @memberof Lite
+   */
+  public stop() {
+    const {
       _isPlaying,
       _startTime,
       _duration
@@ -199,13 +293,25 @@ class Tween {
     return this
   }
 
-  delay (amount) {
+  /**
+   * Set delay of tween
+   * @param {number} amount Sets tween delay / wait duration
+   * @example tween.delay(500)
+   * @memberof Lite
+   */
+  public delay(amount: number) {
     this._delayTime = typeof (amount) === 'function' ? amount(this._delayTime) : amount
 
     return this
   }
 
-  repeat (amount) {
+  /**
+   * Sets how times tween is repeating
+   * @param {amount} amount the times of repeat
+   * @example tween.repeat(2)
+   * @memberof Lite
+   */
+  public repeat(amount: number) {
     this._repeat = typeof (amount) === 'function' ? amount(this._repeat) : amount
     this._r = this._repeat
     this._isFinite = isFinite(amount)
@@ -213,25 +319,49 @@ class Tween {
     return this
   }
 
-  repeatDelay (amount) {
+  /**
+   * Set delay of each repeat of tween
+   * @param {number} amount Sets tween repeat delay / repeat wait duration
+   * @example tween.repeatDelay(500)
+   * @memberof Lite
+   */
+  public repeatDelay(amount: number) {
     this._repeatDelayTime = typeof (amount) === 'function' ? amount(this._repeatDelayTime) : amount
 
     return this
   }
 
-  reverseDelay (amount) {
+  /**
+   * Set delay of each repeat alternate of tween
+   * @param {number} amount Sets tween repeat alternate delay / repeat alternate wait duration
+   * @example tween.reverseDelay(500)
+   * @memberof Lite
+   */
+  public reverseDelay(amount: number) {
     this._reverseDelayTime = typeof (amount) === 'function' ? amount(this._reverseDelayTime) : amount
 
     return this
   }
 
-  yoyo (state) {
+  /**
+   * Set `yoyo` state (enables reverse in repeat)
+   * @param {boolean} state Enables alternate direction for repeat
+   * @example tween.yoyo(true)
+   * @memberof Lite
+   */
+  public yoyo(state: boolean) {
     this._yoyo = typeof (state) === 'function' ? state(this._yoyo) : state
 
     return this
   }
 
-  easing (fn) {
+  /**
+   * Set easing
+   * @param {Function} _easingFunction Easing function
+   * @example tween.easing(Easing.Quadratic.InOut)
+   * @memberof Lite
+   */
+  public easing(fn: Function) {
     if (typeof fn === 'function') {
       this._easingFunction = fn
     }
@@ -239,23 +369,29 @@ class Tween {
     return this
   }
 
-  interpolation (fn) {
-    if (typeof fn === 'function') {
-      this._interpolationFunction = fn
+  /**
+   * Set interpolation
+   * @param {Function} _interpolationFunction Interpolation function
+   * @example tween.interpolation(Interpolation.Bezier)
+   * @memberof Lite
+   */
+  public interpolation(_interpolationFunction: Function) {
+    if (typeof _interpolationFunction === 'function') {
+      this._interpolationFunction = _interpolationFunction
     }
 
     return this
   }
 
-  reassignValues () {
+  public reassignValues() {
     const {
       _valuesStart,
       _valuesEnd,
       object
     } = this
 
-    for (let property in _valuesEnd) {
-      let start = _valuesStart[property]
+    for (const property in _valuesEnd) {
+      const start = _valuesStart[property]
 
       object[property] = start
     }
@@ -263,8 +399,15 @@ class Tween {
     return this
   }
 
-  update (time, preserve) {
-    let {
+  /**
+   * Updates initial object to target value by given `time`
+   * @param {Time} time Current time
+   * @param {boolean=} preserve Prevents from removing tween from store
+   * @example tween.update(500)
+   * @memberof Lite
+   */
+  public update(time: number, preserve?: boolean) {
+    const {
       _onStartCallbackFired,
       _easingFunction,
       _repeat,
@@ -310,8 +453,8 @@ class Tween {
     value = _easingFunction(elapsed)
 
     for (property in _valuesEnd) {
-      let start = _valuesStart[property]
-      let end = _valuesEnd[property]
+      const start = _valuesStart[property]
+      const end = _valuesEnd[property]
 
       if (start === undefined) {
         continue
@@ -371,4 +514,4 @@ class Tween {
   }
 }
 
-export default Tween
+export default Lite

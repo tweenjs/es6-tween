@@ -1,4 +1,6 @@
-dist/
-modules/
-node_modules/
+dist
+src
+docs
+guide_notes
+node_modules
 npm-debug.log

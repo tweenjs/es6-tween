@@ -8,6 +8,8 @@ const { min } = process.env
 const isMinify = min === 'true'
 const minSuffix = isMinify ? '.min' : ''
 
+let mode = (isMinify ? '' : 'un') + 'compressed'
+
 const plugins = [
 	// ES6->ES5 syntax/code transpiler
 	buble({
@@ -33,18 +35,18 @@ if ( isMinify ) {
 	// Minify
 	uglify({
 		sourceMap: {
-			filename: `src/Tween.js`,
-			url: `dist/Tween${minSuffix}.js.map`
+			filename: `src/index.js`,
+			url: `full/Tween${minSuffix}.js.map`
 		}
 	}, minify)
 	);
 }
 
 export default {
-  input: 'src/Tween.js',
+  input: 'src/index.js',
   output: {
   format: 'umd',
-  file: `dist/Tween${minSuffix}.js`
+  file: `full/Tween${minSuffix}.js`
   },
   sourcemap: true,
   context: 'this',

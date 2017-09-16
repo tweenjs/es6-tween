@@ -1,10 +1,20 @@
+/**
+ * List of full Interpolation
+ * @namespace TWEEN.Interpolation
+ * @example
+ * import {Interpolation, Tween} from 'es6-tween'
+ *
+ * let bezier = Interpolation.Bezier
+ * new Tween({x:0}).to({x:[0, 4, 8, 12, 15, 20, 30, 40, 20, 40, 10, 50]}, 1000).interpolation(bezier).start()
+ * @memberof TWEEN
+ */
 const Interpolation = {
 
   Linear (v, k) {
-    let m = v.length - 1
-    let f = m * k
-    let i = Math.floor(f)
-    let fn = Interpolation.Utils.Linear
+    const m = v.length - 1
+    const f = m * k
+    const i = Math.floor(f)
+    const fn = Interpolation.Utils.Linear
 
     if (k < 0) {
       return fn(v[0], v[1], f)
@@ -19,9 +29,9 @@ const Interpolation = {
 
   Bezier (v, k) {
     let b = 0
-    let n = v.length - 1
-    let pw = Math.pow
-    let bn = Interpolation.Utils.Bernstein
+    const n = v.length - 1
+    const pw = Math.pow
+    const bn = Interpolation.Utils.Bernstein
 
     for (let i = 0; i <= n; i++) {
       b += pw(1 - k, n - i) * pw(k, i) * v[i] * bn(n, i)
@@ -31,10 +41,10 @@ const Interpolation = {
   },
 
   CatmullRom (v, k) {
-    let m = v.length - 1
+    const m = v.length - 1
     let f = m * k
     let i = Math.floor(f)
-    let fn = Interpolation.Utils.CatmullRom
+    const fn = Interpolation.Utils.CatmullRom
 
     if (v[0] === v[m]) {
       if (k < 0) {
@@ -62,15 +72,15 @@ const Interpolation = {
     },
 
     Bernstein (n, i) {
-      let fc = Interpolation.Utils.Factorial
+      const fc = Interpolation.Utils.Factorial
 
       return fc(n) / fc(i) / fc(n - i)
     },
 
     Factorial: (function () {
-      let a = [1]
+      const a = [1]
 
-      return n => {
+      return (n) => {
         let s = 1
 
         if (a[n]) {
@@ -87,10 +97,10 @@ const Interpolation = {
     })(),
 
     CatmullRom (p0, p1, p2, p3, t) {
-      let v0 = (p2 - p0) * 0.5
-      let v1 = (p3 - p1) * 0.5
-      let t2 = t * t
-      let t3 = t * t2
+      const v0 = (p2 - p0) * 0.5
+      const v1 = (p3 - p1) * 0.5
+      const t2 = t * t
+      const t3 = t * t2
 
       return (2 * p1 - 2 * p2 + v0 + v1) * t3 + (-3 * p1 + 3 * p2 - 2 * v0 - v1) * t2 + v0 * t + p1
     }
