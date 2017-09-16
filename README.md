@@ -208,7 +208,6 @@ Then reference the library source:
 * Original source: <a href="https://github.com/tweenjs/tween.js">check out at here</a>
 * [Full documentation](https://tweenjs.github.io/es6-tween/)
 * [API documentation](./API.md)
-* [User guide](./docs/user_guide.md)
 * [Wiki page](https://github.com/tweenjs/es6-tween/wiki)
 * [Compatiblity](./compatibility/comp_support.md)
 * [Tutorial](http://learningthreejs.com/blog/2011/08/17/tweenjs-for-smooth-animation/)  using tween.js with three.js
