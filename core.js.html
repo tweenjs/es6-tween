@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>core.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="EventClass.html">EventClass</a><ul class='methods'><li data-type='method'><a href="EventClass.html#emit">emit</a></li><li data-type='method'><a href="EventClass.html#off">off</a></li><li data-type='method'><a href="EventClass.html#on">on</a></li><li data-type='method'><a href="EventClass.html#once">once</a></li></ul></li><li><a href="Lite.html">Lite</a><ul class='methods'><li data-type='method'><a href="Lite.html#delay">delay</a></li><li data-type='method'><a href="Lite.html#duration">duration</a></li><li data-type='method'><a href="Lite.html#easing">easing</a></li><li data-type='method'><a href="Lite.html#interpolation">interpolation</a></li><li data-type='method'><a href="Lite.html#isPlaying">isPlaying</a></li><li data-type='method'><a href="Lite.html#isStarted">isStarted</a></li><li data-type='method'><a href="Lite.html#onComplete">onComplete</a></li><li data-type='method'><a href="Lite.html#onStart">onStart</a></li><li data-type='method'><a href="Lite.html#onUpdate">onUpdate</a></li><li data-type='method'><a href="Lite.html#pause">pause</a></li><li data-type='method'><a href="Lite.html#play">play</a></li><li data-type='method'><a href="Lite.html#repeat">repeat</a></li><li data-type='method'><a href="Lite.html#repeatDelay">repeatDelay</a></li><li data-type='method'><a href="Lite.html#reverseDelay">reverseDelay</a></li><li data-type='method'><a href="Lite.html#start">start</a></li><li data-type='method'><a href="Lite.html#stop">stop</a></li><li data-type='method'><a href="Lite.html#to">to</a></li><li data-type='method'><a href="Lite.html#update">update</a></li><li data-type='method'><a href="Lite.html#yoyo">yoyo</a></li></ul></li><li><a href="Timeline.html">Timeline</a><ul class='methods'><li data-type='method'><a href="Timeline.html#add">add</a></li><li data-type='method'><a href="Timeline.html#addLabel">addLabel</a></li><li data-type='method'><a href="Timeline.html#delay">delay</a></li><li data-type='method'><a href="Timeline.html#duration">duration</a></li><li data-type='method'><a href="Timeline.html#easing">easing</a></li><li data-type='method'><a href="Timeline.html#emit">emit</a></li><li data-type='method'><a href="Timeline.html#from">from</a></li><li data-type='method'><a href="Timeline.html#fromTo">fromTo</a></li><li data-type='method'><a href="Timeline.html#isPlaying">isPlaying</a></li><li data-type='method'><a href="Timeline.html#isStarted">isStarted</a></li><li data-type='method'><a href="Timeline.html#off">off</a></li><li data-type='method'><a href="Timeline.html#on">on</a></li><li data-type='method'><a href="Timeline.html#once">once</a></li><li data-type='method'><a href="Timeline.html#pause">pause</a></li><li data-type='method'><a href="Timeline.html#play">play</a></li><li data-type='method'><a href="Timeline.html#reassignValues">reassignValues</a></li><li data-type='method'><a href="Timeline.html#render">render</a></li><li data-type='method'><a href="Timeline.html#repeat">repeat</a></li><li data-type='method'><a href="Timeline.html#repeatDelay">repeatDelay</a></li><li data-type='method'><a href="Timeline.html#restart">restart</a></li><li data-type='method'><a href="Timeline.html#reverse">reverse</a></li><li data-type='method'><a href="Timeline.html#reversed">reversed</a></li><li data-type='method'><a href="Timeline.html#reverseDelay">reverseDelay</a></li><li data-type='method'><a href="Timeline.html#seek">seek</a></li><li data-type='method'><a href="Timeline.html#start">start</a></li><li data-type='method'><a href="Timeline.html#stop">stop</a></li><li data-type='method'><a href="Timeline.html#to">to</a></li><li data-type='method'><a href="Timeline.html#update">update</a></li><li data-type='method'><a href="Timeline.html#yoyo">yoyo</a></li></ul></li><li><a href="Tween.html">Tween</a><ul class='methods'><li data-type='method'><a href="Tween.html#.from">from</a></li><li data-type='method'><a href="Tween.html#.fromTo">fromTo</a></li><li data-type='method'><a href="Tween.html#.to">to</a></li><li data-type='method'><a href="Tween.html#delay">delay</a></li><li data-type='method'><a href="Tween.html#duration">duration</a></li><li data-type='method'><a href="Tween.html#easing">easing</a></li><li data-type='method'><a href="Tween.html#emit">emit</a></li><li data-type='method'><a href="Tween.html#isPlaying">isPlaying</a></li><li data-type='method'><a href="Tween.html#isStarted">isStarted</a></li><li data-type='method'><a href="Tween.html#off">off</a></li><li data-type='method'><a href="Tween.html#on">on</a></li><li data-type='method'><a href="Tween.html#once">once</a></li><li data-type='method'><a href="Tween.html#pause">pause</a></li><li data-type='method'><a href="Tween.html#play">play</a></li><li data-type='method'><a href="Tween.html#reassignValues">reassignValues</a></li><li data-type='method'><a href="Tween.html#render">render</a></li><li data-type='method'><a href="Tween.html#repeat">repeat</a></li><li data-type='method'><a href="Tween.html#repeatDelay">repeatDelay</a></li><li data-type='method'><a href="Tween.html#restart">restart</a></li><li data-type='method'><a href="Tween.html#reverse">reverse</a></li><li data-type='method'><a href="Tween.html#reversed">reversed</a></li><li data-type='method'><a href="Tween.html#reverseDelay">reverseDelay</a></li><li data-type='method'><a href="Tween.html#seek">seek</a></li><li data-type='method'><a href="Tween.html#start">start</a></li><li data-type='method'><a href="Tween.html#stop">stop</a></li><li data-type='method'><a href="Tween.html#to">to</a></li><li data-type='method'><a href="Tween.html#update">update</a></li><li data-type='method'><a href="Tween.html#yoyo">yoyo</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="TWEEN_.html">TWEEN</a><ul class='methods'><li data-type='method'><a href="TWEEN_.html#.add">add</a></li><li data-type='method'><a href="TWEEN_.html#.autoPlay">autoPlay</a></li><li data-type='method'><a href="TWEEN_.html#.get">get</a></li><li data-type='method'><a href="TWEEN_.html#.has">has</a></li><li data-type='method'><a href="TWEEN_.html#.isRunning">isRunning</a></li><li data-type='method'><a href="TWEEN_.html#.remove">remove</a></li><li data-type='method'><a href="TWEEN_.html#.removeAll">removeAll</a></li><li data-type='method'><a href="TWEEN_.html#.update">update</a></li></ul></li><li><a href="TWEEN.Easing.html">Easing</a></li><li><a href="TWEEN.Interpolation.html">Interpolation</a></li><li><a href="TWEEN.Plugins.html">Plugins</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">core.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* global process */
+import { cancelAnimationFrame, requestAnimationFrame, root } from './shim';
+/**
+ * Lightweight, effecient and modular ES6 version of tween.js
+ * @copyright 2017 @dalisoft and es6-tween contributors
+ * @license MIT
+ * @namespace TWEEN
+ * @example
+ * // ES6
+ * const {add, remove, isRunning, autoPlay} = TWEEN
+ */
+const _tweens = [];
+let isStarted = false;
+let _autoPlay = false;
+let _tick;
+const _ticker = requestAnimationFrame;
+const _stopTicker = cancelAnimationFrame;
+/**
+ * Adds tween to list
+ * @param {Tween} tween Tween instance
+ * @memberof TWEEN
+ * @example
+ * let tween = new Tween({x:0})
+ * tween.to({x:200}, 1000)
+ * TWEEN.add(tween)
+ */
+const add = (tween) => {
+    _tweens.push(tween);
+    if (_autoPlay &amp;&amp; !isStarted) {
+        _tick = _ticker(update);
+        isStarted = true;
+    }
+};
+/**
+ * @returns {Array&lt;Tween>} List of tweens in Array
+ * @memberof TWEEN
+ * TWEEN.getAll() // list of tweens
+ */
+const getAll = () => _tweens;
+/**
+ * Runs update loop automaticlly
+ * @param {Boolean} state State of auto-run of update loop
+ * @example TWEEN.autoPlay(true)
+ * @memberof TWEEN
+ */
+const autoPlay = (state) => {
+    _autoPlay = state;
+};
+/**
+ * Removes all tweens from list
+ * @example TWEEN.removeAll() // removes all tweens, stored in global tweens list
+ * @memberof TWEEN
+ */
+const removeAll = () => {
+    _tweens.length = 0;
+};
+/**
+ * @param {Tween} tween Tween Instance to be matched
+ * @return {Tween} Matched tween
+ * @memberof TWEEN
+ * @example
+ * TWEEN.get(tween)
+ */
+const get = (tween) => {
+    for (let i = 0; i &lt; _tweens.length; i++) {
+        if (tween === _tweens[i]) {
+            return _tweens[i];
+        }
+    }
+    return null;
+};
+/**
+ * @param {Tween} tween Tween Instance to be matched
+ * @return {Boolean} Status of Exists tween or not
+ * @memberof TWEEN
+ * @example
+ * TWEEN.has(tween)
+ */
+const has = (tween) => {
+    return get(tween) !== null;
+};
+/**
+ * Removes tween from list
+ * @param {Tween} tween Tween instance
+ * @memberof TWEEN
+ * @example
+ * TWEEN.remove(tween)
+ */
+const remove = (tween) => {
+    const i = _tweens.indexOf(tween);
+    if (i !== -1) {
+        _tweens.splice(i, 1);
+    }
+};
+const now = (function () {
+    if (typeof (process) !== 'undefined' &amp;&amp; process.hrtime !== undefined) {
+        return function () {
+            const time = process.hrtime();
+            // Convert [seconds, nanoseconds] to milliseconds.
+            return time[0] * 1000 + time[1] / 1000000;
+        };
+        // In a browser, use window.performance.now if it is available.
+    }
+    else if (root.performance !== undefined &amp;&amp;
+        root.performance.now !== undefined) {
+        // This must be bound, because directly assigning this function
+        // leads to an invocation exception in Chrome.
+        return root.performance.now.bind(root.performance);
+        // Use Date.now if it is available.
+    }
+    else {
+        const offset = root.performance &amp;&amp; root.performance.timing &amp;&amp; root.performance.timing.navigationStart ? root.performance.timing.navigationStart : Date.now();
+        return function () {
+            return Date.now() - offset;
+        };
+    }
+}());
+/**
+ * Updates global tweens by given time
+ * @param {number|Time} time Timestamp
+ * @param {Boolean=} preserve Prevents tween to be removed after finish
+ * @memberof TWEEN
+ * @example
+ * TWEEN.update(500)
+ */
+const update = (time, preserve) => {
+    time = time !== undefined ? time : now();
+    _tick = _ticker(update);
+    if (_tweens.length === 0) {
+        _stopTicker(_tick);
+        isStarted = false;
+        return false;
+    }
+    let i = 0;
+    while (i &lt; _tweens.length) {
+        _tweens[i].update(time, preserve);
+        i++;
+    }
+    return true;
+};
+/**
+ * The state of ticker running
+ * @return {Boolean} Status of running updates on all tweens
+ * @memberof TWEEN
+ * @example TWEEN.isRunning()
+ */
+const isRunning = () => isStarted;
+/**
+ * The plugins store object
+ * @namespace TWEEN.Plugins
+ * @memberof TWEEN
+ * @example
+ * let num = Plugins.num = function (node, start, end) {
+ * return t => start + (end - start) * t
+ * }
+ *
+ * @static
+ */
+const Plugins = {};
+// Normalise time when visiblity is changed (if available) ...
+if (root.document &amp;&amp; root.document.addEventListener) {
+    const doc = root.document;
+    let timeDiff = 0;
+    let timePause = 0;
+    doc.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            timePause = now();
+            _stopTicker(_tick);
+            isStarted = false;
+        }
+        else {
+            timeDiff = now() - timePause;
+            for (let i = 0, length = _tweens.length; i &lt; length; i++) {
+                _tweens[i]._startTime += timeDiff;
+            }
+            _tick = _ticker(update);
+            isStarted = true;
+        }
+        return true;
+    });
+}
+export { Plugins, get, has, getAll, removeAll, remove, add, now, update, autoPlay, isRunning };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Sep 16 2017 21:57:50 GMT+0500 (Западная Азия (зима)) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
