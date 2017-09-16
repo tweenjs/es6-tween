@@ -12,6 +12,5 @@ before_install:
 before_script:
   - npm prune
 script:
-  - npm run lint
-  - npm run build
-  - ava --verbose
+  - npm run prepare
+  - npm run test
