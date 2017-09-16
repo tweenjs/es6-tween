@@ -4,7 +4,7 @@ ES6 implementation of <a href="https://github.com/tweenjs/tween.js">tween.js</a>
 
 [![size](http://img.badgesize.io/https://unpkg.com/es6-tween?cache=false)](http://unpkg.com/es6-tween)
 [![gzipsize](http://img.badgesize.io/https://unpkg.com/es6-tween?compression=gzip&cache=false)](http://unpkg.com/es6-tween)
-[![size-lite](http://img.badgesize.io/https://unpkg.com/es6-tween/lite/Tween.min.js?label=lite%20size)](http://unpkg.com/es6-tween/lite/Tween.min.js)
+[![size-lite](http://img.badgesize.io/https://unpkg.com/es6-tween/lite/Tween.min.js?label=lite%20size&cache=false)](http://unpkg.com/es6-tween/lite/Tween.min.js)
 [![gzipsize-lite](http://img.badgesize.io/https://unpkg.com/es6-tween/lite/Tween.min.js?compression=gzip&cache=false&label=lite%20gzip%20size)](http://unpkg.com/es6-tween/lite/Tween.min.js)
 [![CDNJS](https://img.shields.io/cdnjs/v/es6-tween.svg)](https://cdnjs.com/libraries/es6-tween)
 [![jsdelivr](https://img.shields.io/badge/cdn-jsdelivr-brightgreen.svg)](https://cdn.jsdelivr.net/npm/es6-tween)  [![unpkg](https://img.shields.io/badge/cdn-unpkg-brightgreen.svg)](https://unpkg.com/es6-tween)  [![npmcdn](https://img.shields.io/badge/cdn-npmcdn-brightgreen.svg)](https://npmcdn.com/es6-tween)
