@@ -13,5 +13,3 @@ CONTRIBUTING.md
 ISSUE_TEMPLATE.md
 API.md
 .travis.yml
-package-lock.json
-yarn.lock
