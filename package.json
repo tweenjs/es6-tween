@@ -1,6 +1,6 @@
 {
   "name": "es6-tween",
-  "version": "3.8.5",
+  "version": "3.8.6",
   "description": "ES6 implementation of amazing tween.js",
   "browser": "full/Tween.min.js",
   "cdn": "full/Tween.min.js",
@@ -62,6 +62,6 @@
     "uglify-es": "latest"
   },
   "dependencies": {
-    "intertween": "0.0.16"
+    "intertween": "0.0.17"
   }
 }
