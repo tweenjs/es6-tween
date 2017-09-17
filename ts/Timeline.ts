@@ -21,6 +21,8 @@ let _id = 0
  *
  * It works same as `Tween` instance, using `.repeat`, `.restart` or `etc` works like a `Tween`, so please see `Tween` class for methods
  * @constructor
+ * @class
+ * @namespace Timeline
  * @param {Object=} params Default params for new tweens
  * @example let tl = new Timeline({delay:200})
  * @extends Tween

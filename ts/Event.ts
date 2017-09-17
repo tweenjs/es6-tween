@@ -2,6 +2,7 @@
  * Events class
  * @constructor
  * @class
+ * @namespace EventClass
  * @example
  * let ev = new EventClass()
  * ev.on('listen', name => `Hello ${name}`)

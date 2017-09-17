@@ -39,6 +39,8 @@ export interface RenderType {
 /**
  * Tween main constructor
  * @constructor
+ * @class
+ * @namespace Tween
  * @extends EventClass
  * @param {Object|Element} node Node Element or Tween initial object
  * @param {Object=} object If Node Element is using, second argument is used for Tween initial object

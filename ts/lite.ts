@@ -12,6 +12,8 @@ let _id = 0 // Unique ID
 /**
  * Tween Lite main constructor
  * @constructor
+ * @class
+ * @namespace Lite
  * @param {object} object initial object
  * @example
  * import {Tween} from 'es6-tween/src/Tween.Lite'
