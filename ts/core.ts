@@ -44,7 +44,7 @@ const add = (tween) => {
  * @example
  * TWEEN.onTick(time => console.log(time))
  */
-const onTick = fn => _tweens.push(fn)
+const onTick = fn => _tweens.push({update:fn})
 
 /**
  * @returns {Array<Tween>} List of tweens in Array
