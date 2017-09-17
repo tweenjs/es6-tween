@@ -1,6 +1,6 @@
 {
   "name": "es6-tween",
-  "version": "3.8.6",
+  "version": "3.8.7",
   "description": "ES6 implementation of amazing tween.js",
   "browser": "full/Tween.min.js",
   "cdn": "full/Tween.min.js",
@@ -22,9 +22,9 @@
     "dev-lite": "rollup -c rollup.config.lite.js -w",
     "lint": "eslint --fix src",
     "test": "npm run lint && ava --verbose",
-    "prepublish": "npm run prepare && npm run test && npm run doc-md",
-    "doc": "node_modules/.bin/jsdoc --readme README.md --configure jsdoc.json --verbose",
-    "doc-md": "jsdoc2md src/** > API.md"
+    "prepublish": "npm run prepare && npm run test && npm run doc && npm run doc-md",
+    "doc": "tsc && jsdoc --readme README.md --configure jsdoc.json --verbose",
+    "doc-md": "tsc && jsdoc2md src/** > API.md"
   },
   "repository": {
     "type": "git",

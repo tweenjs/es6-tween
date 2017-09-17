@@ -1216,6 +1216,7 @@ Lightweight, effecient and modular ES6 version of tween.js
     * [.Easing](#TWEEN.Easing) : <code>object</code>
     * [.Interpolation](#TWEEN.Interpolation) : <code>object</code>
     * [.add(tween)](#TWEEN.add)
+    * [.onTick(fn)](#TWEEN.onTick)
     * [.autoPlay(state)](#TWEEN.autoPlay)
     * [.removeAll()](#TWEEN.removeAll)
     * [.get(tween)](#TWEEN.get) ⇒ [<code>Tween</code>](#Tween)
@@ -1268,6 +1269,21 @@ Adds tween to list
 **Example**  
 ```js
 let tween = new Tween({x:0})tween.to({x:200}, 1000)TWEEN.add(tween)
+```
+<a name="TWEEN.onTick"></a>
+
+### TWEEN.onTick(fn)
+Adds ticker like event
+
+**Kind**: static method of [<code>TWEEN</code>](#TWEEN)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fn | <code>function</code> | callback |
+
+**Example**  
+```js
+TWEEN.onTick(time => console.log(time))
 ```
 <a name="TWEEN.autoPlay"></a>
 

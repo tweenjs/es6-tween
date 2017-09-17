@@ -465,7 +465,7 @@ class Tween extends EventClass {
    */
   public yoyo(state: boolean, _easingReverse?: Function) {
     this._yoyo = typeof (state) === 'function' ? state(this._yoyo) : state === null ? this._yoyo : state
-    this._easingReverse = _easingReverse || defaultEasing
+    this._easingReverse = _easingReverse || this._easingFunction
 
     return this
   }

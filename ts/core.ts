@@ -38,6 +38,15 @@ const add = (tween) => {
 }
 
 /**
+ * Adds ticker like event
+ * @param {Function} fn callback
+ * @memberof TWEEN
+ * @example
+ * TWEEN.onTick(time => console.log(time))
+ */
+const onTick = fn => _tweens.push(fn)
+
+/**
  * @returns {Array<Tween>} List of tweens in Array
  * @memberof TWEEN
  * TWEEN.getAll() // list of tweens
@@ -200,4 +209,4 @@ if (root.document && root.document.addEventListener) {
   })
 }
 
-export { Plugins, get, has, getAll, removeAll, remove, add, now, update, autoPlay, isRunning }
+export { Plugins, get, has, getAll, removeAll, remove, add, now, update, autoPlay, onTick, isRunning }
