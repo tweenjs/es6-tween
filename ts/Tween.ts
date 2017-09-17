@@ -474,7 +474,7 @@ class Tween extends EventClass {
 
   /**
    * Set easing
-   * @param {Function} _easingFunction Easing function in non-reverse direction
+   * @param {Function} _easingFunction Easing function, applies in non-reverse direction if Tween#yoyo second argument is applied
    * @example tween.easing(Easing.Elastic.InOut)
    * @memberof Tween
    */

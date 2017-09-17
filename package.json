@@ -23,7 +23,7 @@
     "lint": "eslint --fix src",
     "test": "npm run lint && ava --verbose",
     "prepublish": "npm run prepare && npm run test && npm run doc && npm run doc-md",
-    "doc": "tsc && jsdoc --readme README.md --configure jsdoc.json --verbose",
+    "doc": "tsc && jsdoc --tutorials guide_notes --readme README.md --configure jsdoc.json --verbose",
     "doc-md": "tsc && jsdoc2md src/** > API.md"
   },
   "repository": {
