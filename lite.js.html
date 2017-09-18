@@ -37,10 +37,10 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { add, now, remove } from './core';
-import Easing from './Easing';
-import Interpolation from './Interpolation';
-let _id = 0; // Unique ID
+            <pre class="prettyprint source linenums"><code>import { add, now, remove } from './core'
+import Easing from './Easing'
+import Interpolation from './Interpolation'
+let _id = 0 // Unique ID
 /**
  * Tween Lite main constructor
  * @constructor
@@ -53,376 +53,368 @@ let _id = 0; // Unique ID
  * let tween = new Tween({x:0}).to({x:100}, 2000).start()
  */
 class Lite {
-    constructor(object) {
-        this.id = _id++;
-        this.object = object;
-        this._valuesStart = {};
-        this._valuesEnd = null;
-        this._valuesStartRepeat = {};
-        this._duration = 1000;
-        this._easingFunction = Easing.Linear.None;
-        this._interpolationFunction = Interpolation.Linear;
-        this._startTime = 0;
-        this._delayTime = 0;
-        this._repeat = 0;
-        this._r = 0;
-        this._isPlaying = false;
-        this._yoyo = false;
-        this._reversed = false;
-        this._onStartCallbackFired = false;
-        this._pausedTime = null;
-        this._isFinite = true;
-        /* Callbacks */
-        this._onStartCallback = null;
-        this._onUpdateCallback = null;
-        this._onCompleteCallback = null;
-        return this;
-    }
-    /**
+  constructor (object) {
+    this.id = _id++
+    this.object = object
+    this._valuesStart = {}
+    this._valuesEnd = null
+    this._valuesStartRepeat = {}
+    this._duration = 1000
+    this._easingFunction = Easing.Linear.None
+    this._interpolationFunction = Interpolation.Linear
+    this._startTime = 0
+    this._delayTime = 0
+    this._repeat = 0
+    this._r = 0
+    this._isPlaying = false
+    this._yoyo = false
+    this._reversed = false
+    this._onStartCallbackFired = false
+    this._pausedTime = null
+    this._isFinite = true
+    /* Callbacks */
+    this._onStartCallback = null
+    this._onUpdateCallback = null
+    this._onCompleteCallback = null
+    return this
+  }
+  /**
      * onStart callback
      * @param {Function} callback Function should be fired after tween is started
      * @example tween.onStart(object => console.log(object))
      * @memberof Lite
      */
-    onStart(callback) {
-        this._onStartCallback = callback;
-        return this;
-    }
-    /**
+  onStart (callback) {
+    this._onStartCallback = callback
+    return this
+  }
+  /**
      * onUpdate callback
      * @param {Function} callback Function should be fired while tween is in progress
      * @example tween.onUpdate(object => console.log(object))
      * @memberof Lite
      */
-    onUpdate(callback) {
-        this._onUpdateCallback = callback;
-        return this;
-    }
-    /**
+  onUpdate (callback) {
+    this._onUpdateCallback = callback
+    return this
+  }
+  /**
      * onComplete callback
      * @param {Function} callback Function should be fired after tween is finished
      * @example tween.onComplete(object => console.log(object))
      * @memberof Lite
      */
-    onComplete(callback) {
-        this._onCompleteCallback = callback;
-        return this;
-    }
-    /**
+  onComplete (callback) {
+    this._onCompleteCallback = callback
+    return this
+  }
+  /**
      * @return {boolean} State of playing of tween
      * @example tween.isPlaying() // returns `true` if tween in progress
      * @memberof Lite
      */
-    isPlaying() {
-        return this._isPlaying;
-    }
-    /**
+  isPlaying () {
+    return this._isPlaying
+  }
+  /**
      * @return {boolean} State of started of tween
      * @example tween.isStarted() // returns `true` if tween in started
      * @memberof Lite
      */
-    isStarted() {
-        return this._onStartCallbackFired;
-    }
-    /**
+  isStarted () {
+    return this._onStartCallbackFired
+  }
+  /**
      * Pauses tween
      * @example tween.pause()
      * @memberof Lite
      */
-    pause() {
-        if (!this._isPlaying) {
-            return this;
-        }
-        this._isPlaying = false;
-        remove(this);
-        this._pausedTime = now();
-        return this;
+  pause () {
+    if (!this._isPlaying) {
+      return this
     }
-    /**
+    this._isPlaying = false
+    remove(this)
+    this._pausedTime = now()
+    return this
+  }
+  /**
      * Play/Resume the tween
      * @example tween.play()
      * @memberof Lite
      */
-    play() {
-        if (this._isPlaying) {
-            return this;
-        }
-        this._isPlaying = true;
-        this._startTime += now() - this._pausedTime;
-        add(this);
-        this._pausedTime = now();
-        return this;
+  play () {
+    if (this._isPlaying) {
+      return this
     }
-    /**
+    this._isPlaying = true
+    this._startTime += now() - this._pausedTime
+    add(this)
+    this._pausedTime = now()
+    return this
+  }
+  /**
      * Sets tween duration
      * @param {number} amount Duration is milliseconds
      * @example tween.duration(2000)
      * @memberof Lite
      */
-    duration(amount) {
-        this._duration = typeof (amount) === 'function' ? amount(this._duration) : amount;
-        return this;
-    }
-    /**
+  duration (amount) {
+    this._duration = typeof (amount) === 'function' ? amount(this._duration) : amount
+    return this
+  }
+  /**
      * Sets target value and duration
      * @param {object} properties Target value (to value)
      * @param {number} [duration=1000] Duration of tween
      * @example new Tween({x:0}).to({x:200}, 2000)
      * @memberof Lite
      */
-    to(properties, duration = 1000) {
-        this._valuesEnd = properties;
-        this._duration = duration;
-        return this;
-    }
-    /**
+  to (properties, duration = 1000) {
+    this._valuesEnd = properties
+    this._duration = duration
+    return this
+  }
+  /**
      * Start the tweening
      * @param {number} time setting manual time instead of Current browser timestamp
      * @example tween.start()
      * @memberof Lite
      */
-    start(time) {
-        this._startTime = time !== undefined ? time : now();
-        this._startTime += this._delayTime;
-        const { _valuesEnd, _valuesStartRepeat, _valuesStart, _interpolationFunction, object } = this;
-        for (const property in _valuesEnd) {
-            const start = object[property];
-            let end = _valuesEnd[property];
-            if (!object || object[property] === undefined) {
-                continue;
-            }
-            const obj = object[property];
-            if (typeof start === 'number') {
-                if (typeof end === 'string') {
-                    _valuesStartRepeat[property] = end;
-                    end = start + parseFloat(end);
-                }
-                else if (Array.isArray(end)) {
-                    end.unshift(start);
-                    const _endArr = end;
-                    end = (t) => {
-                        return _interpolationFunction(_endArr, t);
-                    };
-                }
-            }
-            else if (typeof end === 'object') {
-                if (Array.isArray(end)) {
-                    const _endArr = end;
-                    const _start = start.map((item) => item);
-                    let i;
-                    const len = end.length;
-                    end = (t) => {
-                        i = 0;
-                        for (; i &lt; len; i++) {
-                            obj[i] = typeof _start[i] === 'number' ? _start[i] + (_endArr[i] - _start[i]) * t : _endArr[i];
-                        }
-                        return obj;
-                    };
-                }
-                else {
-                    const _endObj = end;
-                    const _start = {};
-                    for (const p in start) {
-                        _start[p] = start[p];
-                    }
-                    end = (t) => {
-                        for (const i in end) {
-                            obj[i] = typeof _start[i] === 'number' ? _start[i] + (_endObj[i] - _start[i]) * t : _endObj[i];
-                        }
-                        return obj;
-                    };
-                }
-            }
-            _valuesStart[property] = start;
-            _valuesEnd[property] = end;
+  start (time) {
+    this._startTime = time !== undefined ? time : now()
+    this._startTime += this._delayTime
+    const { _valuesEnd, _valuesStartRepeat, _valuesStart, _interpolationFunction, object } = this
+    for (const property in _valuesEnd) {
+      const start = object[property]
+      let end = _valuesEnd[property]
+      if (!object || object[property] === undefined) {
+        continue
+      }
+      const obj = object[property]
+      if (typeof start === 'number') {
+        if (typeof end === 'string') {
+          _valuesStartRepeat[property] = end
+          end = start + parseFloat(end)
+        } else if (Array.isArray(end)) {
+          end.unshift(start)
+          const _endArr = end
+          end = (t) => {
+            return _interpolationFunction(_endArr, t)
+          }
         }
-        add(this);
-        this._isPlaying = true;
-        return this;
+      } else if (typeof end === 'object') {
+        if (Array.isArray(end)) {
+          const _endArr = end
+          const _start = start.map((item) => item)
+          let i
+          const len = end.length
+          end = (t) => {
+            i = 0
+            for (; i &lt; len; i++) {
+              obj[i] = typeof _start[i] === 'number' ? _start[i] + (_endArr[i] - _start[i]) * t : _endArr[i]
+            }
+            return obj
+          }
+        } else {
+          const _endObj = end
+          const _start = {}
+          for (const p in start) {
+            _start[p] = start[p]
+          }
+          end = (t) => {
+            for (const i in end) {
+              obj[i] = typeof _start[i] === 'number' ? _start[i] + (_endObj[i] - _start[i]) * t : _endObj[i]
+            }
+            return obj
+          }
+        }
+      }
+      _valuesStart[property] = start
+      _valuesEnd[property] = end
     }
-    /**
+    add(this)
+    this._isPlaying = true
+    return this
+  }
+  /**
      * Stops the tween
      * @example tween.stop()
      * @memberof Lite
      */
-    stop() {
-        const { _isPlaying, _startTime, _duration } = this;
-        if (!_isPlaying) {
-            return this;
-        }
-        this.update(_startTime + _duration);
-        remove(this);
-        this._isPlaying = false;
-        return this;
+  stop () {
+    const { _isPlaying, _startTime, _duration } = this
+    if (!_isPlaying) {
+      return this
     }
-    /**
+    this.update(_startTime + _duration)
+    remove(this)
+    this._isPlaying = false
+    return this
+  }
+  /**
      * Set delay of tween
      * @param {number} amount Sets tween delay / wait duration
      * @example tween.delay(500)
      * @memberof Lite
      */
-    delay(amount) {
-        this._delayTime = typeof (amount) === 'function' ? amount(this._delayTime) : amount;
-        return this;
-    }
-    /**
+  delay (amount) {
+    this._delayTime = typeof (amount) === 'function' ? amount(this._delayTime) : amount
+    return this
+  }
+  /**
      * Sets how times tween is repeating
      * @param {amount} amount the times of repeat
      * @example tween.repeat(2)
      * @memberof Lite
      */
-    repeat(amount) {
-        this._repeat = typeof (amount) === 'function' ? amount(this._repeat) : amount;
-        this._r = this._repeat;
-        this._isFinite = isFinite(amount);
-        return this;
-    }
-    /**
+  repeat (amount) {
+    this._repeat = typeof (amount) === 'function' ? amount(this._repeat) : amount
+    this._r = this._repeat
+    this._isFinite = isFinite(amount)
+    return this
+  }
+  /**
      * Set delay of each repeat of tween
      * @param {number} amount Sets tween repeat delay / repeat wait duration
      * @example tween.repeatDelay(500)
      * @memberof Lite
      */
-    repeatDelay(amount) {
-        this._repeatDelayTime = typeof (amount) === 'function' ? amount(this._repeatDelayTime) : amount;
-        return this;
-    }
-    /**
+  repeatDelay (amount) {
+    this._repeatDelayTime = typeof (amount) === 'function' ? amount(this._repeatDelayTime) : amount
+    return this
+  }
+  /**
      * Set delay of each repeat alternate of tween
      * @param {number} amount Sets tween repeat alternate delay / repeat alternate wait duration
      * @example tween.reverseDelay(500)
      * @memberof Lite
      */
-    reverseDelay(amount) {
-        this._reverseDelayTime = typeof (amount) === 'function' ? amount(this._reverseDelayTime) : amount;
-        return this;
-    }
-    /**
+  reverseDelay (amount) {
+    this._reverseDelayTime = typeof (amount) === 'function' ? amount(this._reverseDelayTime) : amount
+    return this
+  }
+  /**
      * Set `yoyo` state (enables reverse in repeat)
      * @param {boolean} state Enables alternate direction for repeat
      * @example tween.yoyo(true)
      * @memberof Lite
      */
-    yoyo(state) {
-        this._yoyo = typeof (state) === 'function' ? state(this._yoyo) : state;
-        return this;
-    }
-    /**
+  yoyo (state) {
+    this._yoyo = typeof (state) === 'function' ? state(this._yoyo) : state
+    return this
+  }
+  /**
      * Set easing
      * @param {Function} _easingFunction Easing function
      * @example tween.easing(Easing.Quadratic.InOut)
      * @memberof Lite
      */
-    easing(fn) {
-        if (typeof fn === 'function') {
-            this._easingFunction = fn;
-        }
-        return this;
+  easing (fn) {
+    if (typeof fn === 'function') {
+      this._easingFunction = fn
     }
-    /**
+    return this
+  }
+  /**
      * Set interpolation
      * @param {Function} _interpolationFunction Interpolation function
      * @example tween.interpolation(Interpolation.Bezier)
      * @memberof Lite
      */
-    interpolation(_interpolationFunction) {
-        if (typeof _interpolationFunction === 'function') {
-            this._interpolationFunction = _interpolationFunction;
-        }
-        return this;
+  interpolation (_interpolationFunction) {
+    if (typeof _interpolationFunction === 'function') {
+      this._interpolationFunction = _interpolationFunction
     }
-    reassignValues() {
-        const { _valuesStart, _valuesEnd, object } = this;
-        for (const property in _valuesEnd) {
-            const start = _valuesStart[property];
-            object[property] = start;
-        }
-        return this;
+    return this
+  }
+  reassignValues () {
+    const { _valuesStart, _valuesEnd, object } = this
+    for (const property in _valuesEnd) {
+      const start = _valuesStart[property]
+      object[property] = start
     }
-    /**
+    return this
+  }
+  /**
      * Updates initial object to target value by given `time`
      * @param {Time} time Current time
      * @param {boolean=} preserve Prevents from removing tween from store
      * @example tween.update(500)
      * @memberof Lite
      */
-    update(time, preserve) {
-        const { _onStartCallbackFired, _easingFunction, _repeat, _repeatDelayTime, _reverseDelayTime, _yoyo, _reversed, _startTime, _duration, _valuesStart, _valuesEnd, _valuesStartRepeat, object, _isFinite, _isPlaying, _onStartCallback, _onUpdateCallback, _onCompleteCallback } = this;
-        let elapsed;
-        let value;
-        let property;
-        time = time !== undefined ? time : now();
-        if (!_isPlaying || time &lt; _startTime) {
-            return true;
-        }
-        if (!_onStartCallbackFired) {
-            if (_onStartCallback) {
-                _onStartCallback(object);
-            }
-            this._onStartCallbackFired = true;
-        }
-        elapsed = (time - _startTime) / _duration;
-        elapsed = elapsed > 1 ? 1 : elapsed;
-        elapsed = _reversed ? 1 - elapsed : elapsed;
-        value = _easingFunction(elapsed);
-        for (property in _valuesEnd) {
-            const start = _valuesStart[property];
-            const end = _valuesEnd[property];
-            if (start === undefined) {
-                continue;
-            }
-            else if (typeof end === 'function') {
-                object[property] = end(value);
-            }
-            else if (typeof end === 'number') {
-                object[property] = start + (end - start) * value;
-            }
-        }
-        if (_onUpdateCallback) {
-            _onUpdateCallback(object, elapsed);
-        }
-        if (elapsed === 1 || (_reversed &amp;&amp; elapsed === 0)) {
-            if (_repeat) {
-                if (_isFinite) {
-                    this._repeat--;
-                }
-                if (!_reversed) {
-                    for (property in _valuesStartRepeat) {
-                        _valuesStart[property] = _valuesEnd[property];
-                        _valuesEnd[property] += parseFloat(_valuesStartRepeat[property]);
-                    }
-                }
-                if (_yoyo) {
-                    this._reversed = !_reversed;
-                }
-                if (!_reversed &amp;&amp; _repeatDelayTime) {
-                    this._startTime = time + _repeatDelayTime;
-                }
-                else if (_reversed &amp;&amp; _reverseDelayTime) {
-                    this._startTime = time + _reverseDelayTime;
-                }
-                else {
-                    this._startTime = time;
-                }
-                return true;
-            }
-            else {
-                if (!preserve) {
-                    remove(this);
-                }
-                this._isPlaying = false;
-                if (_onCompleteCallback) {
-                    _onCompleteCallback();
-                }
-                this._repeat = this._r;
-                _id--;
-                return false;
-            }
-        }
-        return true;
+  update (time, preserve) {
+    const { _onStartCallbackFired, _easingFunction, _repeat, _repeatDelayTime, _reverseDelayTime, _yoyo, _reversed, _startTime, _duration, _valuesStart, _valuesEnd, _valuesStartRepeat, object, _isFinite, _isPlaying, _onStartCallback, _onUpdateCallback, _onCompleteCallback } = this
+    let elapsed
+    let value
+    let property
+    time = time !== undefined ? time : now()
+    if (!_isPlaying || time &lt; _startTime) {
+      return true
     }
+    if (!_onStartCallbackFired) {
+      if (_onStartCallback) {
+        _onStartCallback(object)
+      }
+      this._onStartCallbackFired = true
+    }
+    elapsed = (time - _startTime) / _duration
+    elapsed = elapsed > 1 ? 1 : elapsed
+    elapsed = _reversed ? 1 - elapsed : elapsed
+    value = _easingFunction(elapsed)
+    for (property in _valuesEnd) {
+      const start = _valuesStart[property]
+      const end = _valuesEnd[property]
+      if (start === undefined) {
+        continue
+      } else if (typeof end === 'function') {
+        object[property] = end(value)
+      } else if (typeof end === 'number') {
+        object[property] = start + (end - start) * value
+      }
+    }
+    if (_onUpdateCallback) {
+      _onUpdateCallback(object, elapsed)
+    }
+    if (elapsed === 1 || (_reversed &amp;&amp; elapsed === 0)) {
+      if (_repeat) {
+        if (_isFinite) {
+          this._repeat--
+        }
+        if (!_reversed) {
+          for (property in _valuesStartRepeat) {
+            _valuesStart[property] = _valuesEnd[property]
+            _valuesEnd[property] += parseFloat(_valuesStartRepeat[property])
+          }
+        }
+        if (_yoyo) {
+          this._reversed = !_reversed
+        }
+        if (!_reversed &amp;&amp; _repeatDelayTime) {
+          this._startTime = time + _repeatDelayTime
+        } else if (_reversed &amp;&amp; _reverseDelayTime) {
+          this._startTime = time + _reverseDelayTime
+        } else {
+          this._startTime = time
+        }
+        return true
+      } else {
+        if (!preserve) {
+          remove(this)
+        }
+        this._isPlaying = false
+        if (_onCompleteCallback) {
+          _onCompleteCallback()
+        }
+        this._repeat = this._r
+        _id--
+        return false
+      }
+    }
+    return true
+  }
 }
-export default Lite;
+export default Lite
 </code></pre>
         </article>
     </section>
@@ -435,7 +427,7 @@ export default Lite;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Sep 17 2017 18:52:37 GMT+0500 (Западная Азия (зима)) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Sep 18 2017 22:40:40 GMT+0500 (Западная Азия (зима)) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

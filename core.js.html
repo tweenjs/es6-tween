@@ -38,7 +38,7 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/* global process */
-import { cancelAnimationFrame, requestAnimationFrame, root } from './shim';
+import { cancelAnimationFrame, requestAnimationFrame, root } from './shim'
 /**
  * Lightweight, effecient and modular ES6 version of tween.js
  * @copyright 2017 @dalisoft and es6-tween contributors
@@ -48,12 +48,12 @@ import { cancelAnimationFrame, requestAnimationFrame, root } from './shim';
  * // ES6
  * const {add, remove, isRunning, autoPlay} = TWEEN
  */
-const _tweens = [];
-let isStarted = false;
-let _autoPlay = false;
-let _tick;
-const _ticker = requestAnimationFrame;
-const _stopTicker = cancelAnimationFrame;
+const _tweens = []
+let isStarted = false
+let _autoPlay = false
+let _tick
+const _ticker = requestAnimationFrame
+const _stopTicker = cancelAnimationFrame
 /**
  * Adds tween to list
  * @param {Tween} tween Tween instance
@@ -64,12 +64,12 @@ const _stopTicker = cancelAnimationFrame;
  * TWEEN.add(tween)
  */
 const add = (tween) => {
-    _tweens.push(tween);
-    if (_autoPlay &amp;&amp; !isStarted) {
-        _tick = _ticker(update);
-        isStarted = true;
-    }
-};
+  _tweens.push(tween)
+  if (_autoPlay &amp;&amp; !isStarted) {
+    _tick = _ticker(update)
+    isStarted = true
+  }
+}
 /**
  * Adds ticker like event
  * @param {Function} fn callback
@@ -77,13 +77,13 @@ const add = (tween) => {
  * @example
  * TWEEN.onTick(time => console.log(time))
  */
-const onTick = fn => _tweens.push({ update: fn });
+const onTick = fn => _tweens.push({ update: fn })
 /**
  * @returns {Array&lt;Tween>} List of tweens in Array
  * @memberof TWEEN
  * TWEEN.getAll() // list of tweens
  */
-const getAll = () => _tweens;
+const getAll = () => _tweens
 /**
  * Runs update loop automaticlly
  * @param {Boolean} state State of auto-run of update loop
@@ -91,16 +91,16 @@ const getAll = () => _tweens;
  * @memberof TWEEN
  */
 const autoPlay = (state) => {
-    _autoPlay = state;
-};
+  _autoPlay = state
+}
 /**
  * Removes all tweens from list
  * @example TWEEN.removeAll() // removes all tweens, stored in global tweens list
  * @memberof TWEEN
  */
 const removeAll = () => {
-    _tweens.length = 0;
-};
+  _tweens.length = 0
+}
 /**
  * @param {Tween} tween Tween Instance to be matched
  * @return {Tween} Matched tween
@@ -109,13 +109,13 @@ const removeAll = () => {
  * TWEEN.get(tween)
  */
 const get = (tween) => {
-    for (let i = 0; i &lt; _tweens.length; i++) {
-        if (tween === _tweens[i]) {
-            return _tweens[i];
-        }
+  for (let i = 0; i &lt; _tweens.length; i++) {
+    if (tween === _tweens[i]) {
+      return _tweens[i]
     }
-    return null;
-};
+  }
+  return null
+}
 /**
  * @param {Tween} tween Tween Instance to be matched
  * @return {Boolean} Status of Exists tween or not
@@ -124,8 +124,8 @@ const get = (tween) => {
  * TWEEN.has(tween)
  */
 const has = (tween) => {
-    return get(tween) !== null;
-};
+  return get(tween) !== null
+}
 /**
  * Removes tween from list
  * @param {Tween} tween Tween instance
@@ -134,34 +134,32 @@ const has = (tween) => {
  * TWEEN.remove(tween)
  */
 const remove = (tween) => {
-    const i = _tweens.indexOf(tween);
-    if (i !== -1) {
-        _tweens.splice(i, 1);
-    }
-};
+  const i = _tweens.indexOf(tween)
+  if (i !== -1) {
+    _tweens.splice(i, 1)
+  }
+}
 const now = (function () {
-    if (typeof (process) !== 'undefined' &amp;&amp; process.hrtime !== undefined) {
-        return function () {
-            const time = process.hrtime();
-            // Convert [seconds, nanoseconds] to milliseconds.
-            return time[0] * 1000 + time[1] / 1000000;
-        };
-        // In a browser, use window.performance.now if it is available.
+  if (typeof (process) !== 'undefined' &amp;&amp; process.hrtime !== undefined) {
+    return function () {
+      const time = process.hrtime()
+      // Convert [seconds, nanoseconds] to milliseconds.
+      return time[0] * 1000 + time[1] / 1000000
     }
-    else if (root.performance !== undefined &amp;&amp;
+    // In a browser, use window.performance.now if it is available.
+  } else if (root.performance !== undefined &amp;&amp;
         root.performance.now !== undefined) {
-        // This must be bound, because directly assigning this function
-        // leads to an invocation exception in Chrome.
-        return root.performance.now.bind(root.performance);
-        // Use Date.now if it is available.
+    // This must be bound, because directly assigning this function
+    // leads to an invocation exception in Chrome.
+    return root.performance.now.bind(root.performance)
+    // Use Date.now if it is available.
+  } else {
+    const offset = root.performance &amp;&amp; root.performance.timing &amp;&amp; root.performance.timing.navigationStart ? root.performance.timing.navigationStart : Date.now()
+    return function () {
+      return Date.now() - offset
     }
-    else {
-        const offset = root.performance &amp;&amp; root.performance.timing &amp;&amp; root.performance.timing.navigationStart ? root.performance.timing.navigationStart : Date.now();
-        return function () {
-            return Date.now() - offset;
-        };
-    }
-}());
+  }
+}())
 /**
  * Updates global tweens by given time
  * @param {number|Time} time Timestamp
@@ -171,27 +169,29 @@ const now = (function () {
  * TWEEN.update(500)
  */
 const update = (time, preserve) => {
-    time = time !== undefined ? time : now();
-    _tick = _ticker(update);
-    if (_tweens.length === 0) {
-        _stopTicker(_tick);
-        isStarted = false;
-        return false;
-    }
-    let i = 0;
-    while (i &lt; _tweens.length) {
-        _tweens[i].update(time, preserve);
-        i++;
-    }
-    return true;
-};
+  time = time !== undefined ? time : now()
+  if (_autoPlay &amp;&amp; isStarted) {
+    _tick = _ticker(update)
+  }
+  if (_tweens.length === 0) {
+    _stopTicker(_tick)
+    isStarted = false
+    return false
+  }
+  let i = 0
+  while (i &lt; _tweens.length) {
+    _tweens[i].update(time, preserve)
+    i++
+  }
+  return true
+}
 /**
  * The state of ticker running
  * @return {Boolean} Status of running updates on all tweens
  * @memberof TWEEN
  * @example TWEEN.isRunning()
  */
-const isRunning = () => isStarted;
+const isRunning = () => isStarted
 /**
  * The plugins store object
  * @namespace TWEEN.Plugins
@@ -203,30 +203,29 @@ const isRunning = () => isStarted;
  *
  * @static
  */
-const Plugins = {};
+const Plugins = {}
 // Normalise time when visiblity is changed (if available) ...
 if (root.document &amp;&amp; root.document.addEventListener) {
-    const doc = root.document;
-    let timeDiff = 0;
-    let timePause = 0;
-    doc.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            timePause = now();
-            _stopTicker(_tick);
-            isStarted = false;
-        }
-        else {
-            timeDiff = now() - timePause;
-            for (let i = 0, length = _tweens.length; i &lt; length; i++) {
-                _tweens[i]._startTime += timeDiff;
-            }
-            _tick = _ticker(update);
-            isStarted = true;
-        }
-        return true;
-    });
+  const doc = root.document
+  let timeDiff = 0
+  let timePause = 0
+  doc.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      timePause = now()
+      _stopTicker(_tick)
+      isStarted = false
+    } else {
+      timeDiff = now() - timePause
+      for (let i = 0, length = _tweens.length; i &lt; length; i++) {
+        _tweens[i]._startTime += timeDiff
+      }
+      _tick = _ticker(update)
+      isStarted = true
+    }
+    return true
+  })
 }
-export { Plugins, get, has, getAll, removeAll, remove, add, now, update, autoPlay, onTick, isRunning };
+export { Plugins, get, has, getAll, removeAll, remove, add, now, update, autoPlay, onTick, isRunning }
 </code></pre>
         </article>
     </section>
@@ -239,7 +238,7 @@ export { Plugins, get, has, getAll, removeAll, remove, add, now, update, autoPla
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Sep 17 2017 18:52:37 GMT+0500 (Западная Азия (зима)) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Sep 18 2017 22:40:40 GMT+0500 (Западная Азия (зима)) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
