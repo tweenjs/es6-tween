@@ -25,8 +25,8 @@
 
 	<div id="container"></div>
 
-	<script src="../dist/Tween.js"></script>
-	<script src="../../es6-tween-plugins/renderer/index.js"></script>
+	<script src="../full/Tween.js"></script>
+	<script src="../../es6-tween-plugins/renderer/render.js"></script>
 	<script !src="../../es6-tween-plugins/transform/transform.js"></script>
 	<script>
 		TWEEN.autoPlay(true);
@@ -62,10 +62,10 @@
 					tl = Math.floor(random(-200, 200));
 				div.setAttribute("class", "line");
 				div.style.top = [(Math.random() * wIh), "px"].join("");
-				div.style.left = l + 'px';
-				//div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
+				//div.style.left = l + 'px';
+				div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
 				div.style.backgroundColor = bgC;
-				var a = new TWEEN.Tween(div, { left : l }).to({ left: tl }, 1000).easing(TWEEN.Easing.Quadratic.InOut).repeat(Infinity).yoyo(true).start();
+				var a = new TWEEN.Tween(div, { x : l }).to({ x: tl }, 1000).easing(TWEEN.Easing.Quadratic.InOut).repeat(Infinity).yoyo(true).start();
 
 				frag.appendChild(div);
 

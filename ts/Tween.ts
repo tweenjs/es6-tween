@@ -49,9 +49,7 @@ export interface RenderType {
 class Tween extends EventClass {
   public id: number
   public object: Object
-  public _valuesStart: Object
-  public _valuesFunc: Object
-  public _valuesEnd: Object
+  public _valuesEnd: any
   public _duration: number
   public _easingFunction: Function
   public _easingReverse: Function
@@ -69,7 +67,6 @@ class Tween extends EventClass {
   public _isFinite: boolean
   public _isPlaying: boolean
   public _elapsed: number
-  public isArr: boolean
   private _onStartCallbackFired: boolean
   private _rendered: boolean
   private __render: RenderType
@@ -133,10 +130,7 @@ class Tween extends EventClass {
         this.object = object
       }
     }
-    const isArr = this.isArr = Array.isArray(object)
-    this._valuesStart = isArr ? [] : {}
     this._valuesEnd = null
-    this._valuesFunc = {}
 
     this._duration = 1000
     this._easingFunction = defaultEasing
@@ -313,53 +307,33 @@ class Tween extends EventClass {
    */
   public render() {
     if (this._rendered) {
-      return this
+      return this;
     }
-
-    let {
-      _valuesEnd,
-      _valuesFunc,
-      _valuesStart,
-      object,
-      Renderer,
-      node,
-      InitialValues
-    } = this
-
+    let { _valuesEnd, object, Renderer, node, InitialValues, _easingFunction } = this;
     if (node && InitialValues) {
       if (!object) {
-        object = this.object = NodeCache(node, InitialValues(node, _valuesEnd))
-      } else if (!_valuesEnd) {
-        _valuesEnd = this._valuesEnd = InitialValues(node, object)
+        object = this.object = NodeCache(node, InitialValues(node, _valuesEnd));
+      }
+      else if (!_valuesEnd) {
+        _valuesEnd = this._valuesEnd = InitialValues(node, object);
       }
     }
-
     for (const property in _valuesEnd) {
-      const start = object && object[property]
-      const end = _valuesEnd[property]
-
+      const start = object && object[property];
+      const end = _valuesEnd[property];
       if (Plugins[property]) {
-        const plugin = Plugins[property].prototype.update ? new Plugins[property](this, start, end, property, object) : Plugins[property](this, start, end, property, object)
+        const plugin = Plugins[property].prototype.update ? new Plugins[property](this, start, end, property, object) : Plugins[property](this, start, end, property, object);
         if (plugin) {
-          _valuesFunc[property] = plugin
+          _valuesEnd[property] = plugin;
         }
-        continue
-      }
-
-      if (!object || object[property] === undefined) {
-        continue
-      }
-
-      if (typeof end === 'number' && typeof start === 'number') {
-        _valuesStart[property] = start
-        _valuesEnd[property] = end
-      } else {
-        _valuesFunc[property] = InterTween(start, end)
+        continue;
       }
     }
+
+    this._valuesEnd = InterTween(object, _valuesEnd, null, _easingFunction)
 
     if (Renderer && this.node) {
-      this.__render = new Renderer(this, object, _valuesEnd)
+      this.__render = new Renderer(this, object, _valuesEnd);
     }
 
     return this
@@ -491,22 +465,17 @@ class Tween extends EventClass {
    */
   public reassignValues() {
     const {
-      _valuesStart,
       _valuesEnd,
-      object,
-      isArr
+      object
     } = this
 
-    let property: any
-    for (property in _valuesEnd) {
-      if (isArr) {
-        property = parseInt(property)
-      }
+    const _valuesStart: any = _valuesEnd(0)
+
+    for (const property in _valuesStart) {
 
       const start = _valuesStart[property]
-      const end = _valuesEnd[property]
 
-      object[property] = typeof end === 'function' ? end(0) : start
+      object[property] = start
     }
 
     return this
@@ -520,7 +489,7 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public update(time: number, preserve?: boolean) {
-    const {
+    let {
       _onStartCallbackFired,
       _easingFunction,
       _easingReverse,
@@ -531,19 +500,15 @@ class Tween extends EventClass {
       _reversed,
       _startTime,
       _duration,
-      _valuesStart,
       _valuesEnd,
-      _valuesFunc,
       object,
       _isFinite,
       _isPlaying,
       __render
     } = this
 
-    let elapsed
-    let value
-    let property
-    let currentEasing
+    let elapsed: number
+    let currentEasing: Function
 
     time = time !== undefined ? time : now()
 
@@ -555,6 +520,7 @@ class Tween extends EventClass {
       if (!this._rendered) {
         this.render()
         this._rendered = true
+        _valuesEnd = this._valuesEnd
       }
 
       this.emit(EVENT_START, object)
@@ -568,27 +534,11 @@ class Tween extends EventClass {
 
     currentEasing = _reversed ? _easingReverse : _easingFunction
 
-    if (!object) {
+    if (typeof _valuesEnd !== 'function' || !object) {
       return true
     }
 
-    for (property in _valuesEnd) {
-      value = currentEasing[property] ? currentEasing[property](elapsed) : typeof currentEasing === 'function' ? currentEasing(elapsed) : defaultEasing(elapsed)
-
-      const start = _valuesStart[property]
-      const end = _valuesEnd[property]
-      const fnc = _valuesFunc[property]
-
-      if (fnc && fnc.update) {
-        fnc.update(value, elapsed)
-      } else if (fnc) {
-        object[property] = fnc(value)
-      } else if (typeof end === 'number') {
-        object[property] = start + (end - start) * value
-      } else {
-        object[property] = end
-      }
-    }
+    _valuesEnd(elapsed, elapsed, currentEasing)
 
     if (__render) {
       __render.update(object, elapsed)

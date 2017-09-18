@@ -937,7 +937,7 @@ Set easing
 
 | Param | Type | Description |
 | --- | --- | --- |
-| _easingFunction | <code>function</code> | Easing function in non-reverse direction |
+| _easingFunction | <code>function</code> | Easing function, applies in non-reverse direction if Tween#yoyo second argument is applied |
 
 **Example**  
 ```js

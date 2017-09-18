@@ -44,7 +44,7 @@ const add = (tween) => {
  * @example
  * TWEEN.onTick(time => console.log(time))
  */
-const onTick = fn => _tweens.push({update:fn})
+const onTick = fn => _tweens.push({ update: fn })
 
 /**
  * @returns {Array<Tween>} List of tweens in Array
@@ -147,7 +147,9 @@ const now = (function () {
 const update = (time: number, preserve?: boolean) => {
   time = time !== undefined ? time : now()
 
-  _tick = _ticker(update)
+  if (_autoPlay && isStarted) {
+    _tick = _ticker(update)
+  }
 
   if (_tweens.length === 0) {
     _stopTicker(_tick)
