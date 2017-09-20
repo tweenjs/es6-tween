@@ -33,6 +33,7 @@ Lightweight, effecient and modular ES6 version of tween.js
 ```
 
 * [TWEEN](#TWEEN) : <code>object</code>
+    * [.lastTime](#TWEEN.lastTime)
     * [.Plugins](#TWEEN.Plugins) : <code>object</code>
     * [.Easing](#TWEEN.Easing) : <code>object</code>
     * [.Interpolation](#TWEEN.Interpolation) : <code>object</code>
@@ -43,9 +44,25 @@ Lightweight, effecient and modular ES6 version of tween.js
     * [.get(tween)](#TWEEN.get) ⇒ [<code>Tween</code>](#Tween)
     * [.has(tween)](#TWEEN.has) ⇒ <code>Boolean</code>
     * [.remove(tween)](#TWEEN.remove)
-    * [.update(time, [preserve])](#TWEEN.update)
+    * [.getTime()](#TWEEN.getTime) ⇒ <code>number</code> \| <code>Time</code>
     * [.isRunning()](#TWEEN.isRunning) ⇒ <code>Boolean</code>
 
+<a name="TWEEN.lastTime"></a>
+
+### TWEEN.lastTime
+Updates global tweens by given time
+
+**Kind**: static property of [<code>TWEEN</code>](#TWEEN)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| time | <code>number</code> \| <code>Time</code> | Timestamp |
+| [preserve] | <code>Boolean</code> | Prevents tween to be removed after finish |
+
+**Example**  
+```js
+TWEEN.update(500)
+```
 <a name="TWEEN.Plugins"></a>
 
 ### TWEEN.Plugins : <code>object</code>
@@ -174,21 +191,16 @@ Removes tween from list
 ```js
 TWEEN.remove(tween)
 ```
-<a name="TWEEN.update"></a>
+<a name="TWEEN.getTime"></a>
 
-### TWEEN.update(time, [preserve])
-Updates global tweens by given time
+### TWEEN.getTime() ⇒ <code>number</code> \| <code>Time</code>
+Normalised tweens global time
 
 **Kind**: static method of [<code>TWEEN</code>](#TWEEN)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| time | <code>number</code> \| <code>Time</code> | Timestamp |
-| [preserve] | <code>Boolean</code> | Prevents tween to be removed after finish |
-
+**Returns**: <code>number</code> \| <code>Time</code> - Normalised tweens global time  
 **Example**  
 ```js
-TWEEN.update(500)
+TWEEN.getTime()
 ```
 <a name="TWEEN.isRunning"></a>
 

@@ -1,4 +1,4 @@
-import { add, now, remove } from './core'
+import { add, now, remove, getTime } from './core'
 import PlaybackPosition from './PlaybackPosition'
 import Tween, { EVENT_COMPLETE, EVENT_REPEAT, EVENT_REVERSE, EVENT_RS, EVENT_UPDATE } from './Tween'
 
@@ -40,7 +40,7 @@ class Timeline extends Tween {
   constructor(params: Object) {
     super()
     this._duration = 0
-    this._startTime = now()
+    this._startTime = now() - getTime()
     this._tweens = []
     this._elapsed = 0
     this._id = _id++
@@ -183,9 +183,9 @@ class Timeline extends Tween {
       }
     }
 
-    const offset = typeof position === 'number' ? position : this.position.parseLabel(typeof position !== 'undefined' ? position : 'afterLast', null)
-    tween._startTime = Math.max(this._startTime, tween._delayTime)
-    tween._startTime += offset
+    const offset: number = typeof position === 'number' ? position : this.position.parseLabel(typeof position !== 'undefined' ? position : 'afterLast', null)
+    tween._startTime = Math.max(this._startTime, tween._delayTime, offset)
+    tween._delayTime = offset
     tween._isPlaying = true
     this._duration = Math.max(_duration, tween._startTime + tween._delayTime + tween._duration)
     this._tweens.push(tween)
@@ -194,7 +194,7 @@ class Timeline extends Tween {
   }
 
   public restart() {
-    this._startTime += now()
+    this._startTime += now() - getTime()
 
     add(this)
 
@@ -220,7 +220,6 @@ class Timeline extends Tween {
       _yoyo,
       _repeat,
       _isFinite,
-      _elapsed,
       _isPlaying
     } = this
 
@@ -231,19 +230,13 @@ class Timeline extends Tween {
     let elapsed = (time - _startTime) / _duration
     elapsed = elapsed > 1 ? 1 : elapsed
     elapsed = _reversed ? 1 - elapsed : elapsed
-    elapsed = ((elapsed * 1000) | 0) / 1000
-
-    if (elapsed === _elapsed) {
-      return true
-    }
-    this._elapsed = elapsed
 
     const timing = time - _startTime
     const _timing = _reversed ? _duration - timing : timing
 
-    let i = 0
+    let i: number = 0
     while (i < _tweens.length) {
-      _tweens[i].update(_timing, true)
+      _tweens[i].update(_timing)
       i++
     }
 
@@ -270,8 +263,9 @@ class Timeline extends Tween {
           this._startTime = time
         }
 
+        i = 0
         while (i < _tweens.length) {
-          _tweens[i].reassignValues()
+          _tweens[i].reassignValues(time)
           i++
         }
 

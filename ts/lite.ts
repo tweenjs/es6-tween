@@ -1,7 +1,8 @@
 import {
   add,
   now,
-  remove
+  remove,
+  getTime
 }
   from './core'
 import Easing from './Easing'
@@ -142,7 +143,7 @@ class Lite {
     this._isPlaying = false
 
     remove(this)
-    this._pausedTime = now()
+    this._pausedTime = now() - getTime()
 
     return this
   }
@@ -159,9 +160,9 @@ class Lite {
 
     this._isPlaying = true
 
-    this._startTime += now() - this._pausedTime
+    this._startTime += (now() - getTime()) - this._pausedTime
     add(this)
-    this._pausedTime = now()
+    this._pausedTime = now() - getTime()
 
     return this
   }
@@ -200,7 +201,7 @@ class Lite {
    * @memberof Lite
    */
   public start(time?: number) {
-    this._startTime = time !== undefined ? time : now()
+    this._startTime = time !== undefined ? time : now() - getTime()
     this._startTime += this._delayTime
 
     const {
@@ -263,10 +264,11 @@ class Lite {
       _valuesStart[property] = start
       _valuesEnd[property] = end
     }
+    
+    this._isPlaying = true
+    this._onStartCallbackFired = false
 
     add(this)
-
-    this._isPlaying = true
 
     return this
   }
@@ -430,11 +432,11 @@ class Lite {
       _onCompleteCallback
     } = this
 
-    let elapsed
-    let value
-    let property
+    let elapsed: number
+    let value: number
+    let property: string
 
-    time = time !== undefined ? time : now()
+    time = time !== undefined ? time : now() - getTime()
 
     if (!_isPlaying || time < _startTime) {
       return true
@@ -455,8 +457,8 @@ class Lite {
     value = _easingFunction(elapsed)
 
     for (property in _valuesEnd) {
-      const start = _valuesStart[property]
-      const end = _valuesEnd[property]
+      const start: any = _valuesStart[property]
+      const end: any = _valuesEnd[property]
 
       if (start === undefined) {
         continue

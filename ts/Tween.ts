@@ -4,7 +4,8 @@ import {
   add,
   now,
   Plugins,
-  remove
+  remove,
+  getTime
 }
   from './core'
 import Easing from './Easing'
@@ -49,7 +50,8 @@ export interface RenderType {
 class Tween extends EventClass {
   public id: number
   public object: Object
-  public _valuesEnd: any
+  public _valuesEnd: Object
+  public _valuesFunc: Function
   public _duration: number
   public _easingFunction: Function
   public _easingReverse: Function
@@ -131,6 +133,7 @@ class Tween extends EventClass {
       }
     }
     this._valuesEnd = null
+    this._valuesFunc = null
 
     this._duration = 1000
     this._easingFunction = defaultEasing
@@ -207,7 +210,7 @@ class Tween extends EventClass {
     this._isPlaying = false
 
     remove(this)
-    this._pausedTime = now()
+    this._pausedTime = now() - getTime()
 
     return this.emit(EVENT_PAUSE, this.object)
   }
@@ -224,9 +227,9 @@ class Tween extends EventClass {
 
     this._isPlaying = true
 
-    this._startTime += now() - this._pausedTime
+    this._startTime += (now() - getTime()) - this._pausedTime
     add(this)
-    this._pausedTime = now()
+    this._pausedTime = now() - getTime()
 
     return this.emit(EVENT_PLAY, this.object)
   }
@@ -239,7 +242,7 @@ class Tween extends EventClass {
    */
   public restart(noDelay?: boolean) {
     this._repeat = this._r
-    this._startTime = now() + (noDelay ? 0 : this._delayTime)
+    this._startTime = (now() - getTime()) + (noDelay ? 0 : this._delayTime)
 
     if (!this._isPlaying) {
       add(this)
@@ -256,7 +259,7 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public seek(time: number, keepPlaying?: boolean) {
-    this._startTime = now() + Math.max(0, Math.min(
+    this._startTime = (now() - getTime()) + Math.max(0, Math.min(
       time, this._duration))
 
     this.emit(EVENT_SEEK, time, this.object)
@@ -330,7 +333,7 @@ class Tween extends EventClass {
       }
     }
 
-    this._valuesEnd = InterTween(object, _valuesEnd, null, _easingFunction)
+    this._valuesFunc = InterTween(object, _valuesEnd, null, _easingFunction)
 
     if (Renderer && this.node) {
       this.__render = new Renderer(this, object, _valuesEnd);
@@ -346,12 +349,14 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public start(time?: number) {
-    this._startTime = time !== undefined ? time : now()
+    this._startTime = time !== undefined ? time : now() - getTime()
     this._startTime += this._delayTime
 
-    add(this)
-
+    this._onStartCallbackFired = false
+    this._rendered = false
     this._isPlaying = true
+
+    add(this)
 
     return this
   }
@@ -375,8 +380,8 @@ class Tween extends EventClass {
 
     this.update(_startTime + _duration)
 
-    remove(this)
     this._isPlaying = false
+    remove(this)
 
     return this.emit(EVENT_STOP, object)
   }
@@ -389,7 +394,6 @@ class Tween extends EventClass {
    */
   public delay(amount: number) {
     this._delayTime = typeof (amount) === 'function' ? amount(this._delayTime) : amount
-    this._startTime += this._delayTime
 
     return this
   }
@@ -463,13 +467,19 @@ class Tween extends EventClass {
    * @private
    * @memberof Tween
    */
-  public reassignValues() {
+  public reassignValues(time) {
     const {
-      _valuesEnd,
-      object
+      _valuesFunc,
+      object,
+      _delayTime
     } = this
 
-    const _valuesStart: any = _valuesEnd(0)
+    this._isPlaying = true
+    this._startTime = time !== undefined ? time : now() - getTime()
+    this._startTime += _delayTime
+    add(this)
+
+    const _valuesStart: any = _valuesFunc(0)
 
     for (const property in _valuesStart) {
 
@@ -500,7 +510,7 @@ class Tween extends EventClass {
       _reversed,
       _startTime,
       _duration,
-      _valuesEnd,
+      _valuesFunc,
       object,
       _isFinite,
       _isPlaying,
@@ -510,7 +520,7 @@ class Tween extends EventClass {
     let elapsed: number
     let currentEasing: Function
 
-    time = time !== undefined ? time : now()
+    time = time !== undefined ? time : now() - getTime()
 
     if (!_isPlaying || time < _startTime) {
       return true
@@ -520,7 +530,7 @@ class Tween extends EventClass {
       if (!this._rendered) {
         this.render()
         this._rendered = true
-        _valuesEnd = this._valuesEnd
+        _valuesFunc = this._valuesFunc
       }
 
       this.emit(EVENT_START, object)
@@ -534,11 +544,11 @@ class Tween extends EventClass {
 
     currentEasing = _reversed ? _easingReverse : _easingFunction
 
-    if (typeof _valuesEnd !== 'function' || !object) {
+    if (!object) {
       return true
     }
 
-    _valuesEnd(elapsed, elapsed, currentEasing)
+    _valuesFunc(elapsed, elapsed, currentEasing)
 
     if (__render) {
       __render.update(object, elapsed)
