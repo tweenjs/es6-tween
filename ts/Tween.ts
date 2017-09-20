@@ -4,8 +4,7 @@ import {
   add,
   now,
   Plugins,
-  remove,
-  getTime
+  remove
 }
   from './core'
 import Easing from './Easing'
@@ -207,7 +206,7 @@ class Tween extends EventClass {
     this._isPlaying = false
 
     remove(this)
-    this._pausedTime = now() - getTime()
+    this._pausedTime = now()
 
     return this.emit(EVENT_PAUSE, this.object)
   }
@@ -224,9 +223,9 @@ class Tween extends EventClass {
 
     this._isPlaying = true
 
-    this._startTime += (now() - getTime()) - this._pausedTime
+    this._startTime += now() - this._pausedTime
     add(this)
-    this._pausedTime = now() - getTime()
+    this._pausedTime = now()
 
     return this.emit(EVENT_PLAY, this.object)
   }
@@ -239,7 +238,7 @@ class Tween extends EventClass {
    */
   public restart(noDelay?: boolean) {
     this._repeat = this._r
-    this._startTime = (now() - getTime()) + (noDelay ? 0 : this._delayTime)
+    this._startTime = now() + (noDelay ? 0 : this._delayTime)
 
     if (!this._isPlaying) {
       add(this)
@@ -256,7 +255,7 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public seek(time: number, keepPlaying?: boolean) {
-    this._startTime = (now() - getTime()) + Math.max(0, Math.min(
+    this._startTime = now() + Math.max(0, Math.min(
       time, this._duration))
 
     this.emit(EVENT_SEEK, time, this.object)
@@ -346,7 +345,7 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public start(time?: number) {
-    this._startTime = time !== undefined ? time : now() - getTime()
+    this._startTime = time !== undefined ? time : now()
     this._startTime += this._delayTime
 
     this._onStartCallbackFired = false
@@ -472,7 +471,7 @@ class Tween extends EventClass {
     } = this
 
     this._isPlaying = true
-    this._startTime = time !== undefined ? time : now() - getTime()
+    this._startTime = time !== undefined ? time : now()
     this._startTime += _delayTime
     add(this)
 
@@ -517,7 +516,7 @@ class Tween extends EventClass {
     let elapsed: number
     let currentEasing: Function
 
-    time = time !== undefined ? time : now() - getTime()
+    time = time !== undefined ? time : now()
 
     if (!_isPlaying || time < _startTime) {
       return true

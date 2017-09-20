@@ -23,7 +23,7 @@ class EventClass {
    */
   public on(event: string, callback: Function) {
     if (!this._events[event]) {
-      this._events[event] = []
+      this._events[event] = [] as Function[]
     }
 
     this._events[event].push(callback)
@@ -39,7 +39,7 @@ class EventClass {
    */
   public once(event: string, callback: Function) {
     if (!this._events[event]) {
-      this._events[event] = []
+      this._events[event] = [] as Function[]
     }
 
     const { _events } = this
@@ -65,7 +65,7 @@ class EventClass {
     }
 
     if (callback) {
-      this._events[event] = this._events[event].filter((cb) => cb !== callback)
+      this._events[event] = this._events[event].filter((cb: Function): boolean => cb !== callback)
     } else {
       this._events[event].length = 0
     }

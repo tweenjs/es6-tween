@@ -1,8 +1,7 @@
 import {
   add,
   now,
-  remove,
-  getTime
+  remove
 }
   from './core'
 import Easing from './Easing'
@@ -143,7 +142,7 @@ class Lite {
     this._isPlaying = false
 
     remove(this)
-    this._pausedTime = now() - getTime()
+    this._pausedTime = now()
 
     return this
   }
@@ -160,9 +159,9 @@ class Lite {
 
     this._isPlaying = true
 
-    this._startTime += (now() - getTime()) - this._pausedTime
+    this._startTime += now() - this._pausedTime
     add(this)
-    this._pausedTime = now() - getTime()
+    this._pausedTime = now()
 
     return this
   }
@@ -201,7 +200,7 @@ class Lite {
    * @memberof Lite
    */
   public start(time?: number) {
-    this._startTime = time !== undefined ? time : now() - getTime()
+    this._startTime = time !== undefined ? time : now()
     this._startTime += this._delayTime
 
     const {
@@ -436,7 +435,7 @@ class Lite {
     let value: number
     let property: string
 
-    time = time !== undefined ? time : now() - getTime()
+    time = time !== undefined ? time : now()
 
     if (!_isPlaying || time < _startTime) {
       return true

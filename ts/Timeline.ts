@@ -1,4 +1,4 @@
-import { add, now, remove, getTime } from './core'
+import { add, now, remove } from './core'
 import PlaybackPosition from './PlaybackPosition'
 import Tween, { EVENT_COMPLETE, EVENT_REPEAT, EVENT_REVERSE, EVENT_RS, EVENT_UPDATE } from './Tween'
 import Selector from './selector'
@@ -41,7 +41,7 @@ class Timeline extends Tween {
   constructor(params: Object) {
     super()
     this._duration = 0
-    this._startTime = now() - getTime()
+    this._startTime = now()
     this._tweens = []
     this._elapsed = 0
     this._id = _id++
@@ -197,7 +197,7 @@ class Timeline extends Tween {
   }
 
   public restart() {
-    this._startTime += now() - getTime()
+    this._startTime += now()
 
     add(this)
 

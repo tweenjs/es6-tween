@@ -8,7 +8,7 @@ declare let process: any
  * @return Normalised current time-stamp in milliseconds
  * @memberof TWEEN
  * @example
- * TWEEN.now()
+ * TWEEN.now
  */
 const now: any = (function () {
   if (typeof (process) !== 'undefined' && process.hrtime !== undefined) {
@@ -66,10 +66,9 @@ const add = (tween: any): void => {
   _tweens.push(tween)
 
   if (_autoPlay && !isStarted) {
+    lastTime = now()
     _tick = _ticker(update)
     isStarted = true
-    timeDiff += now() - lastTime
-    lastTime = now()
   }
 }
 
@@ -115,7 +114,7 @@ const removeAll = (): void => {
  * @example
  * TWEEN.get(tween)
  */
-const get = (tween: any): Function|null => {
+const get = (tween: any): Function | null => {
   for (let i: number = 0; i < _tweens.length; i++) {
     if (tween === _tweens[i]) {
       return _tweens[i]
@@ -162,7 +161,7 @@ const update = (time: number, preserve?: boolean): boolean => {
   time = time !== undefined ? time : now()
   delta = time - lastTime
   if (delta > 150) {
-    timeDiff += delta - frameMs
+    timeDiff = delta - frameMs
   }
   lastTime = time
   if (_autoPlay && isStarted) {
@@ -175,22 +174,22 @@ const update = (time: number, preserve?: boolean): boolean => {
     return false
   }
 
-  let i = 0
+  let i: number = 0
+  let tween: any
   while (i < _tweens.length) {
-    _tweens[i].update(time - timeDiff, preserve)
+    tween = _tweens[i]
+    if (timeDiff) {
+      tween._startTime += timeDiff
+    }
+    tween.update(time, preserve)
     i++
+  }
+  if (timeDiff) {
+    timeDiff = 0
   }
 
   return true
 }
-
-/**
- * Normalised tweens global time
- * @return {number|Time} Normalised tweens global time
- * @memberof TWEEN
- * @example TWEEN.getTime()
- */
-const getTime = (): number => timeDiff;
 
 /**
  * The state of ticker running
@@ -213,4 +212,4 @@ const isRunning = (): boolean => isStarted
  */
 const Plugins: Object = {}
 
-export { Plugins, get, getTime, has, getAll, removeAll, remove, add, now, update, autoPlay, onTick, isRunning }
+export { Plugins, get, has, getAll, removeAll, remove, add, now, update, autoPlay, onTick, isRunning }

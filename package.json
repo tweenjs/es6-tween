@@ -1,6 +1,6 @@
 {
   "name": "es6-tween",
-  "version": "3.8.14",
+  "version": "3.8.15",
   "description": "ES6 implementation of amazing tween.js",
   "browser": "full/Tween.min.js",
   "cdn": "full/Tween.min.js",

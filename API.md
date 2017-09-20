@@ -45,7 +45,6 @@ Lightweight, effecient and modular ES6 version of tween.js
     * [.has(tween)](#TWEEN.has) ⇒ <code>Boolean</code>
     * [.remove(tween)](#TWEEN.remove)
     * [.update(time, [preserve])](#TWEEN.update)
-    * [.getTime()](#TWEEN.getTime) ⇒ <code>number</code> \| <code>Time</code>
     * [.isRunning()](#TWEEN.isRunning) ⇒ <code>Boolean</code>
 
 <a name="TWEEN.Plugins"></a>
@@ -87,7 +86,7 @@ Get browser/Node.js current time-stamp
 **Returns**: Normalised current time-stamp in milliseconds  
 **Example**  
 ```js
-TWEEN.now()
+TWEEN.now
 ```
 <a name="TWEEN.add"></a>
 
@@ -202,17 +201,6 @@ Updates global tweens by given time
 **Example**  
 ```js
 TWEEN.update(500)
-```
-<a name="TWEEN.getTime"></a>
-
-### TWEEN.getTime() ⇒ <code>number</code> \| <code>Time</code>
-Normalised tweens global time
-
-**Kind**: static method of [<code>TWEEN</code>](#TWEEN)  
-**Returns**: <code>number</code> \| <code>Time</code> - Normalised tweens global time  
-**Example**  
-```js
-TWEEN.getTime()
 ```
 <a name="TWEEN.isRunning"></a>
 
