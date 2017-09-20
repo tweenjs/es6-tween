@@ -22,7 +22,7 @@
     "dev-lite": "rollup -c rollup.config.lite.js -w",
     "lint": "eslint --fix src",
     "test": "npm run lint && ava --verbose",
-    "prepublish": "npm run prepare && npm run test && npm run doc && npm run doc-md",
+    "prepublishOnly": "npm run prepare && npm run test && npm run doc && npm run doc-md",
     "doc": "jsdoc --tutorials guide_notes --readme README.md --configure jsdoc.json --verbose",
     "doc-md": "jsdoc2md src/** > API.md"
   },
