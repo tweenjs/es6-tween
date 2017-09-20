@@ -1,6 +1,7 @@
 import { add, now, remove, getTime } from './core'
 import PlaybackPosition from './PlaybackPosition'
 import Tween, { EVENT_COMPLETE, EVENT_REPEAT, EVENT_REVERSE, EVENT_RS, EVENT_UPDATE } from './Tween'
+import Selector from './selector'
 
 export const shuffle = (a) => {
   let j
@@ -94,16 +95,18 @@ class Timeline extends Tween {
    * @static
    */
   public fromTo(nodes, from, to, params) {
-    if (Array.isArray(nodes)) {
+    nodes = Selector(nodes, true)
+    if (nodes && nodes.length) {
       if (this._defaultParams) {
         params = { ...this._defaultParams, ...params }
       }
       const position = params.label
       const offset = typeof position === 'number' ? position : this.position.parseLabel(typeof position !== 'undefined' ? position : 'afterLast', null)
       const mode = this.getTiming(params.mode, nodes, params, offset)
-      nodes.map((node, i) => {
+      for (let i = 0, node, len = nodes.length; i < len; i++) {
+        node = nodes[i]
         this.add(Tween.fromTo(node, typeof from === 'function' ? from(i, nodes.length) : { ...from }, typeof to === 'function' ? to(i, nodes.length) : to, typeof params === 'function' ? params(i, nodes.length) : params), mode[i])
-      })
+      }
     }
     return this.start()
   }

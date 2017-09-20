@@ -4,6 +4,36 @@ import { cancelAnimationFrame, requestAnimationFrame, root } from './shim'
 declare let process: any
 
 /**
+ * Get browser/Node.js current time-stamp
+ * @return Normalised current time-stamp in milliseconds
+ * @memberof TWEEN
+ * @example
+ * TWEEN.now()
+ */
+const now: any = (function () {
+  if (typeof (process) !== 'undefined' && process.hrtime !== undefined) {
+    return function () {
+      const time: number = process.hrtime()
+
+      // Convert [seconds, nanoseconds] to milliseconds.
+      return time[0] * 1000 + time[1] / 1000000
+    }
+    // In a browser, use window.performance.now if it is available.
+  } else if (root.performance !== undefined &&
+    root.performance.now !== undefined) {
+    // This must be bound, because directly assigning this function
+    // leads to an invocation exception in Chrome.
+    return root.performance.now.bind(root.performance)
+    // Use Date.now if it is available.
+  } else {
+    const offset: number = root.performance && root.performance.timing && root.performance.timing.navigationStart ? root.performance.timing.navigationStart : Date.now()
+    return function () {
+      return Date.now() - offset
+    }
+  }
+}())
+
+/**
  * Lightweight, effecient and modular ES6 version of tween.js
  * @copyright 2017 @dalisoft and es6-tween contributors
  * @license MIT
@@ -18,6 +48,10 @@ let _autoPlay: boolean = false
 let _tick: Function
 const _ticker: Function = requestAnimationFrame
 const _stopTicker: Function = cancelAnimationFrame
+let lastTime: number = now()
+let delta: number = 0
+let timeDiff: number = 0
+let frameMs: number = 50 / 3
 
 /**
  * Adds tween to list
@@ -34,6 +68,8 @@ const add = (tween: any): void => {
   if (_autoPlay && !isStarted) {
     _tick = _ticker(update)
     isStarted = true
+    timeDiff += now() - lastTime
+    lastTime = now()
   }
 }
 
@@ -113,29 +149,6 @@ const remove = (tween: any): void => {
   }
 }
 
-const now: any = (function () {
-  if (typeof (process) !== 'undefined' && process.hrtime !== undefined) {
-    return function () {
-      const time: number = process.hrtime()
-
-      // Convert [seconds, nanoseconds] to milliseconds.
-      return time[0] * 1000 + time[1] / 1000000
-    }
-    // In a browser, use window.performance.now if it is available.
-  } else if (root.performance !== undefined &&
-    root.performance.now !== undefined) {
-    // This must be bound, because directly assigning this function
-    // leads to an invocation exception in Chrome.
-    return root.performance.now.bind(root.performance)
-    // Use Date.now if it is available.
-  } else {
-    const offset: number = root.performance && root.performance.timing && root.performance.timing.navigationStart ? root.performance.timing.navigationStart : Date.now()
-    return function () {
-      return Date.now() - offset
-    }
-  }
-}())
-
 /**
  * Updates global tweens by given time
  * @param {number|Time} time Timestamp
@@ -145,10 +158,6 @@ const now: any = (function () {
  * TWEEN.update(500)
  */
 
-let lastTime: number = now()
-let delta: number = 0
-let timeDiff: number = 0
-let frameMs: number = 50 / 3
 const update = (time: number, preserve?: boolean): boolean => {
   time = time !== undefined ? time : now()
   delta = time - lastTime

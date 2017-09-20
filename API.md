@@ -33,10 +33,10 @@ Lightweight, effecient and modular ES6 version of tween.js
 ```
 
 * [TWEEN](#TWEEN) : <code>object</code>
-    * [.lastTime](#TWEEN.lastTime)
     * [.Plugins](#TWEEN.Plugins) : <code>object</code>
     * [.Easing](#TWEEN.Easing) : <code>object</code>
     * [.Interpolation](#TWEEN.Interpolation) : <code>object</code>
+    * [.now](#TWEEN.now) ⇒
     * [.add(tween)](#TWEEN.add)
     * [.onTick(fn)](#TWEEN.onTick)
     * [.autoPlay(state)](#TWEEN.autoPlay)
@@ -44,25 +44,10 @@ Lightweight, effecient and modular ES6 version of tween.js
     * [.get(tween)](#TWEEN.get) ⇒ [<code>Tween</code>](#Tween)
     * [.has(tween)](#TWEEN.has) ⇒ <code>Boolean</code>
     * [.remove(tween)](#TWEEN.remove)
+    * [.update(time, [preserve])](#TWEEN.update)
     * [.getTime()](#TWEEN.getTime) ⇒ <code>number</code> \| <code>Time</code>
     * [.isRunning()](#TWEEN.isRunning) ⇒ <code>Boolean</code>
 
-<a name="TWEEN.lastTime"></a>
-
-### TWEEN.lastTime
-Updates global tweens by given time
-
-**Kind**: static property of [<code>TWEEN</code>](#TWEEN)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| time | <code>number</code> \| <code>Time</code> | Timestamp |
-| [preserve] | <code>Boolean</code> | Prevents tween to be removed after finish |
-
-**Example**  
-```js
-TWEEN.update(500)
-```
 <a name="TWEEN.Plugins"></a>
 
 ### TWEEN.Plugins : <code>object</code>
@@ -92,6 +77,17 @@ List of full Interpolation
 **Example**  
 ```js
 import {Interpolation, Tween} from 'es6-tween'let bezier = Interpolation.Beziernew Tween({x:0}).to({x:[0, 4, 8, 12, 15, 20, 30, 40, 20, 40, 10, 50]}, 1000).interpolation(bezier).start()
+```
+<a name="TWEEN.now"></a>
+
+### TWEEN.now ⇒
+Get browser/Node.js current time-stamp
+
+**Kind**: static constant of [<code>TWEEN</code>](#TWEEN)  
+**Returns**: Normalised current time-stamp in milliseconds  
+**Example**  
+```js
+TWEEN.now()
 ```
 <a name="TWEEN.add"></a>
 
@@ -190,6 +186,22 @@ Removes tween from list
 **Example**  
 ```js
 TWEEN.remove(tween)
+```
+<a name="TWEEN.update"></a>
+
+### TWEEN.update(time, [preserve])
+Updates global tweens by given time
+
+**Kind**: static method of [<code>TWEEN</code>](#TWEEN)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| time | <code>number</code> \| <code>Time</code> | Timestamp |
+| [preserve] | <code>Boolean</code> | Prevents tween to be removed after finish |
+
+**Example**  
+```js
+TWEEN.update(500)
 ```
 <a name="TWEEN.getTime"></a>
 

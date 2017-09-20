@@ -11,6 +11,7 @@ import {
 import Easing from './Easing'
 import EventClass from './Event'
 import NodeCache from './NodeCache'
+import Selector from './selector'
 
 Object.create = create
 
@@ -121,16 +122,12 @@ class Tween extends EventClass {
     super()
 
     this.id = _id++
-    if (typeof node !== 'undefined' && !object && !node.nodeType) {
+    if (!!node && typeof node === 'object' && !object && !node.nodeType) {
       object = this.object = node
       node = null
-    } else if (typeof node !== 'undefined') {
-      this.node = node
-      if (typeof object === 'object') {
-        object = this.object = NodeCache(node, object)
-      } else {
-        this.object = object
-      }
+    } else if (!!node && (node.nodeType || node.length || typeof node === 'string')) {
+      node = this.node = Selector(node)
+      object = this.object = NodeCache(node, object)
     }
     this._valuesEnd = null
     this._valuesFunc = null
