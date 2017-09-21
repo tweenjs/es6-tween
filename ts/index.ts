@@ -5,4 +5,4 @@ import Timeline from './Timeline'
 import Tween from './Tween'
 import Selector from './selector'
 import './shim'
-export { Plugins, Interpolator, onTick, has, get, getAll, removeAll, remove, add, now, update, autoPlay, isRunning, Tween, Easing, Timeline }
+export { Plugins, Selector, Interpolator, onTick, has, get, getAll, removeAll, remove, add, now, update, autoPlay, isRunning, Tween, Easing, Timeline }
