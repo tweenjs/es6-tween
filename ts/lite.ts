@@ -280,11 +280,12 @@ class Lite {
   public stop() {
     const {
       _isPlaying,
+      _isFinite,
       _startTime,
       _duration
     } = this
 
-    if (!_isPlaying) {
+    if (!_isPlaying || !_isFinite) {
       return this
     }
 
@@ -381,22 +382,6 @@ class Lite {
   public interpolation(_interpolationFunction: Function) {
     if (typeof _interpolationFunction === 'function') {
       this._interpolationFunction = _interpolationFunction
-    }
-
-    return this
-  }
-
-  public reassignValues() {
-    const {
-      _valuesStart,
-      _valuesEnd,
-      object
-    } = this
-
-    for (const property in _valuesEnd) {
-      const start = _valuesStart[property]
-
-      object[property] = start
     }
 
     return this
@@ -500,9 +485,9 @@ class Lite {
         return true
       } else {
         if (!preserve) {
+          this._isPlaying = false
           remove(this)
         }
-        this._isPlaying = false
         if (_onCompleteCallback) {
           _onCompleteCallback()
         }

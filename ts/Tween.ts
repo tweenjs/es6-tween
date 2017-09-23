@@ -238,11 +238,9 @@ class Tween extends EventClass {
    */
   public restart(noDelay?: boolean) {
     this._repeat = this._r
-    this._startTime = now() + (noDelay ? 0 : this._delayTime)
+    this.reassignValues()
 
-    if (!this._isPlaying) {
-      add(this)
-    }
+    add(this)
 
     return this.emit(EVENT_RS, this.object)
   }
@@ -257,6 +255,9 @@ class Tween extends EventClass {
   public seek(time: number, keepPlaying?: boolean) {
     this._startTime = now() + Math.max(0, Math.min(
       time, this._duration))
+    this._isPlaying = true
+
+    add(this)
 
     this.emit(EVENT_SEEK, time, this.object)
 
@@ -365,12 +366,13 @@ class Tween extends EventClass {
   public stop() {
     const {
       _isPlaying,
+      _isFinite,
       object,
       _startTime,
       _duration
     } = this
 
-    if (!_isPlaying) {
+    if (!_isPlaying || !_isFinite) {
       return this
     }
 
@@ -463,7 +465,7 @@ class Tween extends EventClass {
    * @private
    * @memberof Tween
    */
-  public reassignValues(time) {
+  public reassignValues(time?: number) {
     const {
       _valuesFunc,
       object,
@@ -473,6 +475,7 @@ class Tween extends EventClass {
     this._isPlaying = true
     this._startTime = time !== undefined ? time : now()
     this._startTime += _delayTime
+    this._reversed = false
     add(this)
 
     const _valuesStart: any = _valuesFunc(0)

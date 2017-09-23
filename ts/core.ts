@@ -63,6 +63,12 @@ let frameMs: number = 50 / 3
  * TWEEN.add(tween)
  */
 const add = (tween: any): void => {
+  let i: number = _tweens.indexOf(tween)
+
+  if (i > -1) {
+    _tweens.splice(i, 1)
+  }
+
   _tweens.push(tween)
 
   if (_autoPlay && !isStarted) {

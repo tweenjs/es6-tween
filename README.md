@@ -51,7 +51,7 @@ Differences when using `Lite`:
 * No `Plugins` support
 * No `DOM Get/Set`, `Renderer` instance/plugin/add-on support
 * No full-Event system, just 3 event support (`onStart`, `onUpdate`, `onComplete`)
-* No `seek`, `reverse` support
+* No `seek`, `reverse`, `restart` support
 * No event fire when `stop`, `pause`, `etc`
 * No `*`, `/`, `%` relatives support
 

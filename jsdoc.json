@@ -16,7 +16,7 @@
         "monospaceLinks": true
     },
     "opts": {
-        "destination": "../es6-tween-gh/",
+        "destination": "../es6-tween-gh/docs/",
         "encoding": "utf8",
         "private": true,
         "recurse": true,
