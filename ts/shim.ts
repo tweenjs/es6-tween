@@ -1,9 +1,5 @@
 declare let global: any
 /* global global */
-
-export let create = Object.create || ((source: object): Object => {
-  return Object.assign({}, source || {})
-})
 export let assign = Object.assign || ((source: object, ...args): Object => {
   for (let i = 0, len = args.length; i < len; i++) {
     const arg = args[i]
@@ -13,6 +9,7 @@ export let assign = Object.assign || ((source: object, ...args): Object => {
   }
   return source
 })
+export let create = Object.create || ((source: object = {}): Object => ({...source}))
 export let root:any = typeof (window) !== 'undefined' ? window : typeof (global) !== 'undefined' ? global : this
 export let requestAnimationFrame: Function = root.requestAnimationFrame || ((fn: Function): number => root.setTimeout(fn, 16))
 export let cancelAnimationFrame: Function = root.cancelAnimationFrame || ((id: Function): boolean => root.clearTimeout(id))

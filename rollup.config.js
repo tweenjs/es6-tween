@@ -1,26 +1,8 @@
-import buble from 'rollup-plugin-buble'
-import uglify from 'rollup-plugin-uglify'
-import commonjs from 'rollup-plugin-commonjs';
-import nodeResolve from 'rollup-plugin-node-resolve';
-import { minify } from 'uglify-es'
+var rollup = require('rollup')
+var commonjs = require('rollup-plugin-commonjs');
+var nodeResolve = require('rollup-plugin-node-resolve');
 
-const { min } = process.env
-const isMinify = min === 'true'
-const minSuffix = isMinify ? '.min' : ''
-
-let mode = (isMinify ? '' : 'un') + 'compressed'
-
-const plugins = [
-	// ES6->ES5 syntax/code transpiler
-	buble({
-		// Spread to Object merge/assign
-		objectAssign: `Object.assign`,
-		// Features
-		transforms: {
-			// For of feature
-			dangerousForOf: true
-		}
-	}),
+var plugins = [
 	nodeResolve({
       main: true,
 	  jsnext: true
@@ -30,26 +12,15 @@ const plugins = [
     })
 ]
 
-if ( isMinify ) {
-	plugins.push(
-	// Minify
-	uglify({
-		sourceMap: {
-			filename: `src/index.js`,
-			url: `full/Tween${minSuffix}.js.map`
-		}
-	}, minify)
-	);
-}
-
 export default {
-  input: 'src/index.js',
-  output: {
+  entry: 'src/index.js',
   format: 'umd',
-  file: `full/Tween${minSuffix}.js`
+  dest: 'full/Tween.js',
+  globals: {
+	'intertween': 'InterTween'
   },
-  sourcemap: true,
+  sourceMap: true,
   context: 'this',
-  name: 'TWEEN',
+  moduleName: 'TWEEN',
   plugins: plugins
 }

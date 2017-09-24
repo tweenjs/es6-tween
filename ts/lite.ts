@@ -1,13 +1,8 @@
-import {
-  add,
-  now,
-  remove
-}
-  from './core'
-import Easing from './Easing'
-import Interpolation from './Interpolation'
+import { add, now, remove } from './core';
+import Easing from './Easing';
+import Interpolation from './Interpolation';
 
-let _id = 0 // Unique ID
+let _id = 0; // Unique ID
 
 /**
  * Tween Lite main constructor
@@ -21,58 +16,58 @@ let _id = 0 // Unique ID
  * let tween = new Tween({x:0}).to({x:100}, 2000).start()
  */
 class Lite {
-  public id: number
-  public object: Object
-  public _valuesStart: Object
-  public _valuesStartRepeat: Object
-  public _valuesEnd: Object
-  public _duration: number
-  public _easingFunction: Function
-  public _interpolationFunction: Function
-  public _startTime: number
-  public _delayTime: number
-  public _repeatDelayTime: number
-  public _reverseDelayTime: number
-  public _repeat: number
-  public _yoyo: boolean
-  public _onStartCallback: Function
-  public _onUpdateCallback: Function
-  public _onCompleteCallback: Function
-  public _pausedTime: number
-  private _r: number
-  private _reversed: boolean
-  private _onStartCallbackFired: boolean
-  private _isFinite: boolean
-  private _isPlaying: boolean
+  public id: number;
+  public object: Object;
+  public _valuesStart: Object;
+  public _valuesStartRepeat: Object;
+  public _valuesEnd: Object;
+  public _duration: number;
+  public _easingFunction: Function;
+  public _interpolationFunction: Function;
+  public _startTime: number;
+  public _delayTime: number;
+  public _repeatDelayTime: number;
+  public _reverseDelayTime: number;
+  public _repeat: number;
+  public _yoyo: boolean;
+  public _onStartCallback: Function;
+  public _onUpdateCallback: Function;
+  public _onCompleteCallback: Function;
+  public _pausedTime: number;
+  private _r: number;
+  private _reversed: boolean;
+  private _onStartCallbackFired: boolean;
+  private _isFinite: boolean;
+  private _isPlaying: boolean;
   constructor(object: Object) {
-    this.id = _id++
-    this.object = object
-    this._valuesStart = {}
-    this._valuesEnd = null
-    this._valuesStartRepeat = {}
+    this.id = _id++;
+    this.object = object;
+    this._valuesStart = {};
+    this._valuesEnd = null;
+    this._valuesStartRepeat = {};
 
-    this._duration = 1000
-    this._easingFunction = Easing.Linear.None
-    this._interpolationFunction = Interpolation.Linear
+    this._duration = 1000;
+    this._easingFunction = Easing.Linear.None;
+    this._interpolationFunction = Interpolation.Linear;
 
-    this._startTime = 0
-    this._delayTime = 0
-    this._repeat = 0
-    this._r = 0
-    this._isPlaying = false
-    this._yoyo = false
-    this._reversed = false
+    this._startTime = 0;
+    this._delayTime = 0;
+    this._repeat = 0;
+    this._r = 0;
+    this._isPlaying = false;
+    this._yoyo = false;
+    this._reversed = false;
 
-    this._onStartCallbackFired = false
-    this._pausedTime = null
-    this._isFinite = true
+    this._onStartCallbackFired = false;
+    this._pausedTime = null;
+    this._isFinite = true;
 
     /* Callbacks */
-    this._onStartCallback = null
-    this._onUpdateCallback = null
-    this._onCompleteCallback = null
+    this._onStartCallback = null;
+    this._onUpdateCallback = null;
+    this._onCompleteCallback = null;
 
-    return this
+    return this;
   }
 
   /**
@@ -82,9 +77,9 @@ class Lite {
    * @memberof Lite
    */
   public onStart(callback: Function) {
-    this._onStartCallback = callback
+    this._onStartCallback = callback;
 
-    return this
+    return this;
   }
 
   /**
@@ -94,9 +89,9 @@ class Lite {
    * @memberof Lite
    */
   public onUpdate(callback: Function) {
-    this._onUpdateCallback = callback
+    this._onUpdateCallback = callback;
 
-    return this
+    return this;
   }
 
   /**
@@ -106,9 +101,9 @@ class Lite {
    * @memberof Lite
    */
   public onComplete(callback: Function) {
-    this._onCompleteCallback = callback
+    this._onCompleteCallback = callback;
 
-    return this
+    return this;
   }
 
   /**
@@ -117,7 +112,7 @@ class Lite {
    * @memberof Lite
    */
   public isPlaying(): boolean {
-    return this._isPlaying
+    return this._isPlaying;
   }
 
   /**
@@ -126,7 +121,7 @@ class Lite {
    * @memberof Lite
    */
   public isStarted(): boolean {
-    return this._onStartCallbackFired
+    return this._onStartCallbackFired;
   }
 
   /**
@@ -136,15 +131,15 @@ class Lite {
    */
   public pause() {
     if (!this._isPlaying) {
-      return this
+      return this;
     }
 
-    this._isPlaying = false
+    this._isPlaying = false;
 
-    remove(this)
-    this._pausedTime = now()
+    remove(this);
+    this._pausedTime = now();
 
-    return this
+    return this;
   }
 
   /**
@@ -154,16 +149,16 @@ class Lite {
    */
   public play() {
     if (this._isPlaying) {
-      return this
+      return this;
     }
 
-    this._isPlaying = true
+    this._isPlaying = true;
 
-    this._startTime += now() - this._pausedTime
-    add(this)
-    this._pausedTime = now()
+    this._startTime += now() - this._pausedTime;
+    add(this);
+    this._pausedTime = now();
 
-    return this
+    return this;
   }
 
   /**
@@ -173,9 +168,10 @@ class Lite {
    * @memberof Lite
    */
   public duration(amount: number) {
-    this._duration = typeof (amount) === 'function' ? amount(this._duration) : amount
+    this._duration =
+      typeof amount === 'function' ? amount(this._duration) : amount;
 
-    return this
+    return this;
   }
 
   /**
@@ -186,11 +182,11 @@ class Lite {
    * @memberof Lite
    */
   public to(properties: Object, duration: number = 1000) {
-    this._valuesEnd = properties
+    this._valuesEnd = properties;
 
-    this._duration = duration
+    this._duration = duration;
 
-    return this
+    return this;
   }
 
   /**
@@ -200,76 +196,83 @@ class Lite {
    * @memberof Lite
    */
   public start(time?: number) {
-    this._startTime = time !== undefined ? time : now()
-    this._startTime += this._delayTime
+    this._startTime = time !== undefined ? time : now();
+    this._startTime += this._delayTime;
 
     const {
       _valuesEnd,
       _valuesStartRepeat,
       _valuesStart,
       _interpolationFunction,
-      object
-    } = this
+      object,
+    } = this;
 
     for (const property in _valuesEnd) {
-      const start = object[property]
-      let end = _valuesEnd[property]
+      const start = object[property];
+      let end = _valuesEnd[property];
 
       if (!object || object[property] === undefined) {
-        continue
+        continue;
       }
 
-      const obj = object[property]
+      const obj = object[property];
 
       if (typeof start === 'number') {
         if (typeof end === 'string') {
-          _valuesStartRepeat[property] = end
-          end = start + parseFloat(end)
+          _valuesStartRepeat[property] = end;
+          end = start + parseFloat(end);
         } else if (Array.isArray(end)) {
-          end.unshift(start)
-          const _endArr = end
-          end = (t) => {
-            return _interpolationFunction(_endArr, t)
-          }
+          end.unshift(start);
+          const _endArr = end;
+          end = t => {
+            return _interpolationFunction(_endArr, t);
+          };
         }
       } else if (typeof end === 'object') {
         if (Array.isArray(end)) {
-          const _endArr = end
-          const _start = start.map((item) => item)
-          let i
-          const len = end.length
-          end = (t) => {
-            i = 0
+          const _endArr = end;
+          const _start = start.map(item => item);
+          let i;
+          const len = end.length;
+          end = t => {
+            i = 0;
             for (; i < len; i++) {
-              obj[i] = typeof _start[i] === 'number' ? _start[i] + (_endArr[i] - _start[i]) * t : _endArr[i]
+              obj[i] =
+                typeof _start[i] === 'number'
+                  ? _start[i] + (_endArr[i] - _start[i]) * t
+                  : _endArr[i];
             }
-            return obj
-          }
+            return obj;
+          };
         } else {
-          const _endObj = end
-          const _start = {}
+          const _endObj = end;
+          const _start = {};
           for (const p in start) {
-            _start[p] = start[p]
+            _start[p] = start[p];
           }
-          end = (t) => {
+          end = t => {
             for (const i in end) {
-              obj[i] = typeof _start[i] === 'number' ? _start[i] + (_endObj[i] - _start[i]) * t : _endObj[i]
+              obj[i] =
+                typeof _start[i] === 'number'
+                  ? _start[i] + (_endObj[i] - _start[i]) * t
+                  : _endObj[i];
             }
-            return obj
-          }
+            return obj;
+          };
         }
       }
 
-      _valuesStart[property] = start
-      _valuesEnd[property] = end
+      _valuesStart[property] = start;
+      _valuesEnd[property] = end;
     }
-    
-    this._isPlaying = true
-    this._onStartCallbackFired = false
 
-    add(this)
+    this._isPlaying = true;
+    this._reversed = false;
+    this._onStartCallbackFired = false;
 
-    return this
+    add(this);
+
+    return this;
   }
 
   /**
@@ -278,23 +281,30 @@ class Lite {
    * @memberof Lite
    */
   public stop() {
-    const {
+    let {
       _isPlaying,
       _isFinite,
+      object,
       _startTime,
-      _duration
-    } = this
+      _delayTime,
+      _duration,
+      _r,
+    } = this;
 
     if (!_isPlaying || !_isFinite) {
-      return this
+      return this;
     }
 
-    this.update(_startTime + _duration)
+    let atEnd = (_r + 1) % 2 === 1;
 
-    remove(this)
-    this._isPlaying = false
+    if (atEnd) {
+      this.update(_startTime + _duration);
+    } else {
+      this.update(_startTime);
+    }
+    remove(this);
 
-    return this
+    return this;
   }
 
   /**
@@ -304,9 +314,10 @@ class Lite {
    * @memberof Lite
    */
   public delay(amount: number) {
-    this._delayTime = typeof (amount) === 'function' ? amount(this._delayTime) : amount
+    this._delayTime =
+      typeof amount === 'function' ? amount(this._delayTime) : amount;
 
-    return this
+    return this;
   }
 
   /**
@@ -316,11 +327,11 @@ class Lite {
    * @memberof Lite
    */
   public repeat(amount: number) {
-    this._repeat = typeof (amount) === 'function' ? amount(this._repeat) : amount
-    this._r = this._repeat
-    this._isFinite = isFinite(amount)
+    this._repeat = typeof amount === 'function' ? amount(this._repeat) : amount;
+    this._r = this._repeat;
+    this._isFinite = isFinite(amount);
 
-    return this
+    return this;
   }
 
   /**
@@ -330,9 +341,10 @@ class Lite {
    * @memberof Lite
    */
   public repeatDelay(amount: number) {
-    this._repeatDelayTime = typeof (amount) === 'function' ? amount(this._repeatDelayTime) : amount
+    this._repeatDelayTime =
+      typeof amount === 'function' ? amount(this._repeatDelayTime) : amount;
 
-    return this
+    return this;
   }
 
   /**
@@ -342,9 +354,10 @@ class Lite {
    * @memberof Lite
    */
   public reverseDelay(amount: number) {
-    this._reverseDelayTime = typeof (amount) === 'function' ? amount(this._reverseDelayTime) : amount
+    this._reverseDelayTime =
+      typeof amount === 'function' ? amount(this._reverseDelayTime) : amount;
 
-    return this
+    return this;
   }
 
   /**
@@ -354,9 +367,12 @@ class Lite {
    * @memberof Lite
    */
   public yoyo(state: boolean) {
-    this._yoyo = typeof (state) === 'function' ? state(this._yoyo) : state
+    this._yoyo = typeof state === 'function' ? state(this._yoyo) : state;
+    if (!state) {
+      this._reversed = false;
+    }
 
-    return this
+    return this;
   }
 
   /**
@@ -367,10 +383,10 @@ class Lite {
    */
   public easing(fn: Function) {
     if (typeof fn === 'function') {
-      this._easingFunction = fn
+      this._easingFunction = fn;
     }
 
-    return this
+    return this;
   }
 
   /**
@@ -381,10 +397,10 @@ class Lite {
    */
   public interpolation(_interpolationFunction: Function) {
     if (typeof _interpolationFunction === 'function') {
-      this._interpolationFunction = _interpolationFunction
+      this._interpolationFunction = _interpolationFunction;
     }
 
-    return this
+    return this;
   }
 
   /**
@@ -413,93 +429,93 @@ class Lite {
       _isPlaying,
       _onStartCallback,
       _onUpdateCallback,
-      _onCompleteCallback
-    } = this
+      _onCompleteCallback,
+    } = this;
 
-    let elapsed: number
-    let value: number
-    let property: string
+    let elapsed: number;
+    let value: number;
+    let property: string;
 
-    time = time !== undefined ? time : now()
+    time = time !== undefined ? time : now();
 
     if (!_isPlaying || time < _startTime) {
-      return true
+      return true;
     }
 
     if (!_onStartCallbackFired) {
       if (_onStartCallback) {
-        _onStartCallback(object)
+        _onStartCallback(object);
       }
 
-      this._onStartCallbackFired = true
+      this._onStartCallbackFired = true;
     }
 
-    elapsed = (time - _startTime) / _duration
-    elapsed = elapsed > 1 ? 1 : elapsed
-    elapsed = _reversed ? 1 - elapsed : elapsed
+    elapsed = (time - _startTime) / _duration;
+    elapsed = elapsed > 1 ? 1 : elapsed;
+    elapsed = _reversed ? 1 - elapsed : elapsed;
 
-    value = _easingFunction(elapsed)
+    value = _easingFunction(elapsed);
 
     for (property in _valuesEnd) {
-      const start: any = _valuesStart[property]
-      const end: any = _valuesEnd[property]
+      const start: any = _valuesStart[property];
+      const end: any = _valuesEnd[property];
 
       if (start === undefined) {
-        continue
+        continue;
       } else if (typeof end === 'function') {
-        object[property] = end(value)
+        object[property] = end(value);
       } else if (typeof end === 'number') {
-        object[property] = start + (end - start) * value
+        object[property] = start + (end - start) * value;
       }
     }
 
     if (_onUpdateCallback) {
-      _onUpdateCallback(object, elapsed)
+      _onUpdateCallback(object, elapsed);
     }
 
     if (elapsed === 1 || (_reversed && elapsed === 0)) {
       if (_repeat) {
         if (_isFinite) {
-          this._repeat--
+          this._repeat--;
         }
 
         if (!_reversed) {
           for (property in _valuesStartRepeat) {
-            _valuesStart[property] = _valuesEnd[property]
-            _valuesEnd[property] += parseFloat(_valuesStartRepeat[property])
+            _valuesStart[property] = _valuesEnd[property];
+            _valuesEnd[property] += parseFloat(_valuesStartRepeat[property]);
           }
         }
 
         if (_yoyo) {
-          this._reversed = !_reversed
+          this._reversed = !_reversed;
         }
 
         if (!_reversed && _repeatDelayTime) {
-          this._startTime = time + _repeatDelayTime
+          this._startTime = time + _repeatDelayTime;
         } else if (_reversed && _reverseDelayTime) {
-          this._startTime = time + _reverseDelayTime
+          this._startTime = time + _reverseDelayTime;
         } else {
-          this._startTime = time
+          this._startTime = time;
         }
 
-        return true
+        return true;
       } else {
         if (!preserve) {
-          this._isPlaying = false
-          remove(this)
+          this._isPlaying = false;
+          remove(this);
         }
         if (_onCompleteCallback) {
-          _onCompleteCallback()
+          _onCompleteCallback();
         }
-        this._repeat = this._r
-        _id--
+        this._repeat = this._r;
+        _id--;
 
-        return false
+        return false;
       }
     }
 
-    return true
+    return true;
   }
 }
 
-export default Lite
+export default Lite;

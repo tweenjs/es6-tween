@@ -1,6 +1,6 @@
 {
   "name": "es6-tween",
-  "version": "3.8.18",
+  "version": "3.8.22",
   "description": "ES6 implementation of amazing tween.js",
   "browser": "full/Tween.min.js",
   "cdn": "full/Tween.min.js",
@@ -11,18 +11,17 @@
   },
   "types": "typings/Tween.d.ts",
   "scripts": {
-    "source": "rollup -c --environment min:false",
-    "minify": "rollup -c --environment min:true",
+    "source": "rollup -c",
+    "minify": "uglifyjs full/Tween.js -c -m -o full/Tween.min.js --source-map \"filename='full/Tween.min.js.map'\"",
     "build": "npm run source && npm run minify",
-    "source-lite": "rollup -c rollup.config.lite.js --environment min:false",
-    "minify-lite": "rollup -c rollup.config.lite.js --environment min:true",
+    "source-lite": "rollup -c rollup.config.lite.js",
+    "minify-lite": "uglifyjs lite/Tween.js -c -m -o lite/Tween.min.js --source-map \"filename='lite/Tween.min.js.map'\"",
     "build-lite": "npm run source-lite && npm run minify-lite",
     "prepare": "tsc && npm run build && npm run build-lite",
     "dev": "rollup -c -w",
     "dev-lite": "rollup -c rollup.config.lite.js -w",
-    "lint": "eslint --fix src",
-    "test": "npm run lint && ava --verbose",
-    "prepublishOnly": "npm run prepare && npm run test && npm run doc && npm run doc-md",
+    "test": "ava --verbose",
+    "prepublishOnly": "npm run prepare && ava --verbose && npm run doc && npm run doc-md",
     "doc": "jsdoc --tutorials guide_notes --readme README.md --configure jsdoc.json --verbose",
     "doc-md": "jsdoc2md src/** > API.md"
   },
@@ -48,18 +47,14 @@
   "devDependencies": {
     "ava": "^0.22.0",
     "docdash": "^0.4.0",
-    "eslint": "latest",
-    "eslint-plugin-import": "latest",
     "jsdoc": "^3.5.5",
     "jsdoc-to-markdown": "next",
     "rollup": "^0.50.0",
-    "rollup-plugin-buble": "latest",
-    "rollup-plugin-commonjs": "latest",
-    "rollup-plugin-node-resolve": "latest",
-    "rollup-plugin-uglify": "latest",
-    "rollup-watch": "latest",
+    "rollup-plugin-commonjs": "^8.2.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-watch": "^4.3.1",
     "typescript": "^2.5.2",
-    "uglify-es": "latest"
+    "uglify-js": "^3.1.1"
   },
   "dependencies": {
     "intertween": "0.0.25"

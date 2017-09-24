@@ -6,7 +6,6 @@
     "paths": {
       "ts/*": ["./ts/*"]
     },
-	"typeRoots" : ["./typings"],
     "sourceMap": false,
     "declaration": true,
 	"removeComments": false,
@@ -17,7 +16,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
 	"allowSyntheticDefaultImports": true,
-    "target": "es6",
+    "target": "es3",
 	"module": "es6",
     "typeRoots": ["node_modules/@types"],
 	"lib": ["es2015", "es2016", "dom", "es2017.object"]

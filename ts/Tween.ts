@@ -1,40 +1,34 @@
-import InterTween from 'intertween'
-import { create } from './shim'
-import {
-  add,
-  now,
-  Plugins,
-  remove
-}
-  from './core'
-import Easing from './Easing'
-import EventClass from './Event'
-import NodeCache from './NodeCache'
-import Selector from './selector'
+import InterTween from 'intertween';
+import { create } from './shim';
+import { add, now, Plugins, remove } from './core';
+import Easing from './Easing';
+import EventClass from './Event';
+import NodeCache from './NodeCache';
+import Selector from './selector';
 
-Object.create = create
+Object.create = create;
 
 // Events list
-export const EVENT_UPDATE = 'update'
-export const EVENT_COMPLETE = 'complete'
-export const EVENT_START = 'start'
-export const EVENT_REPEAT = 'repeat'
-export const EVENT_REVERSE = 'reverse'
-export const EVENT_PAUSE = 'pause'
-export const EVENT_PLAY = 'play'
-export const EVENT_RS = 'restart'
-export const EVENT_STOP = 'stop'
-export const EVENT_SEEK = 'seek'
+export const EVENT_UPDATE = 'update';
+export const EVENT_COMPLETE = 'complete';
+export const EVENT_START = 'start';
+export const EVENT_REPEAT = 'repeat';
+export const EVENT_REVERSE = 'reverse';
+export const EVENT_PAUSE = 'pause';
+export const EVENT_PLAY = 'play';
+export const EVENT_RS = 'restart';
+export const EVENT_STOP = 'stop';
+export const EVENT_SEEK = 'seek';
 
-let _id = 0 // Unique ID
-const defaultEasing = Easing.Linear.None
+let _id = 0; // Unique ID
+const defaultEasing = Easing.Linear.None;
 
 export interface Params {
-  quickRender?: boolean
+  quickRender?: boolean;
 }
 
 export interface RenderType {
-  update?: Function
+  update?: Function;
 }
 
 /**
@@ -48,31 +42,32 @@ export interface RenderType {
  * @example let tween = new Tween(myNode, {width:'100px'}).to({width:'300px'}, 2000).start()
  */
 class Tween extends EventClass {
-  public id: number
-  public object: Object
-  public _valuesEnd: Object
-  public _valuesFunc: Function
-  public _duration: number
-  public _easingFunction: Function
-  public _easingReverse: Function
-  public _startTime: number
-  public _delayTime: number
-  public _repeatDelayTime: number
-  public _reverseDelayTime: number
-  public _repeat: number
-  public _yoyo: boolean
-  public _pausedTime: number
-  public node: any
-  public Renderer: any
-  public _r: number
-  public _reversed: boolean
-  public _isFinite: boolean
-  public _isPlaying: boolean
-  public _elapsed: number
-  private _onStartCallbackFired: boolean
-  private _rendered: boolean
-  private __render: RenderType
-  private InitialValues: any
+  public id: number;
+  public object: Object;
+  public _valuesEnd: Object;
+  public _valuesFunc: Function;
+  public _duration: number;
+  public _easingFunction: Function;
+  public _easingReverse: Function;
+  public _startTime: number;
+  public _initTime: number;
+  public _delayTime: number;
+  public _repeatDelayTime: number;
+  public _reverseDelayTime: number;
+  public _repeat: number;
+  public _yoyo: boolean;
+  public _pausedTime: number;
+  public node: any;
+  public Renderer: any;
+  public _r: number;
+  public _reversed: boolean;
+  public _isFinite: boolean;
+  public _isPlaying: boolean;
+  public elapsed: number;
+  private _onStartCallbackFired: boolean;
+  private _rendered: boolean;
+  private __render: RenderType;
+  private InitialValues: any;
   /**
    * Easier way to call the Tween
    * @param {Element} node DOM Element
@@ -84,14 +79,14 @@ class Tween extends EventClass {
    * @static
    */
   public static fromTo(node, object, to, params: Params = {}) {
-    params.quickRender = params.quickRender ? params.quickRender : !to
-    const tween = new Tween(node, object).to(to, params)
+    params.quickRender = params.quickRender ? params.quickRender : !to;
+    const tween = new Tween(node, object).to(to, params);
     if (params.quickRender) {
-      tween.render().update(tween._startTime)
-      tween._rendered = false
-      tween._onStartCallbackFired = false
+      tween.render().update(tween._startTime);
+      tween._rendered = false;
+      tween._onStartCallbackFired = false;
     }
-    return tween
+    return tween;
   }
   /**
    * Easier way calling constructor only applies the `to` value, useful for CSS Animation
@@ -103,7 +98,7 @@ class Tween extends EventClass {
    * @static
    */
   public static to(node, to, params) {
-    return Tween.fromTo(node, null, to, params)
+    return Tween.fromTo(node, null, to, params);
   }
   /**
    * Easier way calling constructor only applies the `from` value, useful for CSS Animation
@@ -115,40 +110,43 @@ class Tween extends EventClass {
    * @static
    */
   public static from(node, from, params) {
-    return Tween.fromTo(node, from, null, params)
+    return Tween.fromTo(node, from, null, params);
   }
   constructor(node?: any, object?: Object) {
-    super()
+    super();
 
-    this.id = _id++
+    this.id = _id++;
     if (!!node && typeof node === 'object' && !object && !node.nodeType) {
-      object = this.object = node
-      node = null
-    } else if (!!node && (node.nodeType || node.length || typeof node === 'string')) {
-      node = this.node = Selector(node)
-      object = this.object = NodeCache(node, object)
+      object = this.object = node;
+      node = null;
+    } else if (
+      !!node &&
+      (node.nodeType || node.length || typeof node === 'string')
+    ) {
+      node = this.node = Selector(node);
+      object = this.object = NodeCache(node, object);
     }
-    this._valuesEnd = null
-    this._valuesFunc = null
+    this._valuesEnd = null;
+    this._valuesFunc = null;
 
-    this._duration = 1000
-    this._easingFunction = defaultEasing
-    this._easingReverse = defaultEasing
+    this._duration = 1000;
+    this._easingFunction = defaultEasing;
+    this._easingReverse = defaultEasing;
 
-    this._startTime = 0
-    this._delayTime = 0
-    this._repeat = 0
-    this._r = 0
-    this._isPlaying = false
-    this._yoyo = false
-    this._reversed = false
+    this._startTime = 0;
+    this._initTime = 0;
+    this._delayTime = 0;
+    this._repeat = 0;
+    this._r = 0;
+    this._isPlaying = false;
+    this._yoyo = false;
+    this._reversed = false;
 
-    this._onStartCallbackFired = false
-    this._pausedTime = null
-    this._isFinite = true
-    this._elapsed = 0
+    this._onStartCallbackFired = false;
+    this._pausedTime = null;
+    this._isFinite = true;
 
-    return this
+    return this;
   }
 
   /**
@@ -157,7 +155,7 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public isPlaying(): boolean {
-    return this._isPlaying
+    return this._isPlaying;
   }
 
   /**
@@ -166,22 +164,21 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public isStarted(): boolean {
-    return this._onStartCallbackFired
+    return this._onStartCallbackFired;
   }
 
   /**
    * Reverses the tween state/direction
    * @example tween.reverse()
+   * @param {boolean=} state Set state of current reverse
    * @memberof Tween
    */
-  public reverse() {
-    const {
-      _reversed
-    } = this
+  public reverse(state?: boolean) {
+    const { _reversed } = this;
 
-    this._reversed = !_reversed
+    this._reversed = state !== undefined ? state : !_reversed;
 
-    return this
+    return this;
   }
 
   /**
@@ -190,7 +187,7 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public reversed(): boolean {
-    return this._reversed
+    return this._reversed;
   }
 
   /**
@@ -200,15 +197,15 @@ class Tween extends EventClass {
    */
   public pause() {
     if (!this._isPlaying) {
-      return this
+      return this;
     }
 
-    this._isPlaying = false
+    this._isPlaying = false;
 
-    remove(this)
-    this._pausedTime = now()
+    remove(this);
+    this._pausedTime = now();
 
-    return this.emit(EVENT_PAUSE, this.object)
+    return this.emit(EVENT_PAUSE, this.object);
   }
 
   /**
@@ -218,16 +215,17 @@ class Tween extends EventClass {
    */
   public play() {
     if (this._isPlaying) {
-      return this
+      return this;
     }
 
-    this._isPlaying = true
+    this._isPlaying = true;
 
-    this._startTime += now() - this._pausedTime
-    add(this)
-    this._pausedTime = now()
+    this._startTime += now() - this._pausedTime;
+    this._initTime = this._startTime;
+    add(this);
+    this._pausedTime = now();
 
-    return this.emit(EVENT_PLAY, this.object)
+    return this.emit(EVENT_PLAY, this.object);
   }
 
   /**
@@ -237,12 +235,12 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public restart(noDelay?: boolean) {
-    this._repeat = this._r
-    this.reassignValues()
+    this._repeat = this._r;
+    this.reassignValues();
 
-    add(this)
+    add(this);
 
-    return this.emit(EVENT_RS, this.object)
+    return this.emit(EVENT_RS, this.object);
   }
 
   /**
@@ -253,15 +251,20 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public seek(time: number, keepPlaying?: boolean) {
-    this._startTime = now() + Math.max(0, Math.min(
-      time, this._duration))
-    this._isPlaying = true
+    const { _duration, _repeat, _initTime } = this;
 
-    add(this)
+    let updateTime: number = _initTime + time;
+    this._isPlaying = true;
 
-    this.emit(EVENT_SEEK, time, this.object)
+    if (keepPlaying) {
+      add(this);
+    }
 
-    return keepPlaying ? this : this.pause()
+    this.update(updateTime, false, true);
+
+    this.emit(EVENT_SEEK, time, this.object);
+
+    return keepPlaying ? this : this.pause();
   }
 
   /**
@@ -271,9 +274,10 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public duration(amount: number) {
-    this._duration = typeof (amount) === 'function' ? amount(this._duration) : amount
+    this._duration =
+      typeof amount === 'function' ? amount(this._duration) : amount;
 
-    return this
+    return this;
   }
 
   /**
@@ -284,20 +288,26 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public to(properties: Object, duration: any = 1000, maybeUsed?: any) {
-    this._valuesEnd = properties
+    this._valuesEnd = properties;
 
-    if (typeof duration === 'number' || typeof (duration) === 'function') {
-      this._duration = typeof (duration) === 'function' ? duration(this._duration) : duration
+    if (typeof duration === 'number' || typeof duration === 'function') {
+      this._duration =
+        typeof duration === 'function' ? duration(this._duration) : duration;
     } else if (typeof duration === 'object') {
       for (const prop in duration) {
         if (typeof this[prop] === 'function') {
-          const [arg1 = null, arg2 = null, arg3 = null, arg4 = null] = Array.isArray(duration[prop]) ? duration[prop] : [duration[prop]]
-          this[prop](arg1, arg2, arg3, arg4)
+          const [
+            arg1 = null,
+            arg2 = null,
+            arg3 = null,
+            arg4 = null,
+          ] = Array.isArray(duration[prop]) ? duration[prop] : [duration[prop]];
+          this[prop](arg1, arg2, arg3, arg4);
         }
       }
     }
 
-    return this
+    return this;
   }
 
   /**
@@ -309,12 +319,18 @@ class Tween extends EventClass {
     if (this._rendered) {
       return this;
     }
-    let { _valuesEnd, object, Renderer, node, InitialValues, _easingFunction } = this;
+    let {
+      _valuesEnd,
+      object,
+      Renderer,
+      node,
+      InitialValues,
+      _easingFunction,
+    } = this;
     if (node && InitialValues) {
       if (!object) {
         object = this.object = NodeCache(node, InitialValues(node, _valuesEnd));
-      }
-      else if (!_valuesEnd) {
+      } else if (!_valuesEnd) {
         _valuesEnd = this._valuesEnd = InitialValues(node, object);
       }
     }
@@ -322,7 +338,9 @@ class Tween extends EventClass {
       const start = object && object[property];
       const end = _valuesEnd[property];
       if (Plugins[property]) {
-        const plugin = Plugins[property].prototype.update ? new Plugins[property](this, start, end, property, object) : Plugins[property](this, start, end, property, object);
+        const plugin = Plugins[property].prototype.update
+          ? new Plugins[property](this, start, end, property, object)
+          : Plugins[property](this, start, end, property, object);
         if (plugin) {
           _valuesEnd[property] = plugin;
         }
@@ -330,32 +348,36 @@ class Tween extends EventClass {
       }
     }
 
-    this._valuesFunc = InterTween(object, _valuesEnd, null, _easingFunction)
+    this._valuesFunc = InterTween(object, _valuesEnd, null, _easingFunction);
 
     if (Renderer && this.node) {
       this.__render = new Renderer(this, object, _valuesEnd);
     }
 
-    return this
+    return this;
   }
 
   /**
    * Start the tweening
-   * @param {number} time setting manual time instead of Current browser timestamp
+   * @param {number|string} time setting manual time instead of Current browser timestamp or like `+1000` relative to current timestamp
    * @example tween.start()
    * @memberof Tween
    */
-  public start(time?: number) {
-    this._startTime = time !== undefined ? time : now()
-    this._startTime += this._delayTime
+  public start(time?: number | string) {
+    this._startTime =
+      time !== undefined
+        ? typeof time === 'string' ? now() + parseFloat(time) : time
+        : now();
+    this._startTime += this._delayTime;
+    this._initTime = this._startTime;
 
-    this._onStartCallbackFired = false
-    this._rendered = false
-    this._isPlaying = true
+    this._onStartCallbackFired = false;
+    this._rendered = false;
+    this._isPlaying = true;
 
-    add(this)
+    add(this);
 
-    return this
+    return this;
   }
 
   /**
@@ -364,24 +386,30 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public stop() {
-    const {
+    let {
       _isPlaying,
       _isFinite,
       object,
       _startTime,
-      _duration
-    } = this
+      _delayTime,
+      _duration,
+      _r,
+    } = this;
 
     if (!_isPlaying || !_isFinite) {
-      return this
+      return this;
     }
 
-    this.update(_startTime + _duration)
+    let atEnd = (_r + 1) % 2 === 1;
 
-    this._isPlaying = false
-    remove(this)
+    if (atEnd) {
+      this.update(_startTime + _duration);
+    } else {
+      this.update(_startTime);
+    }
+    remove(this);
 
-    return this.emit(EVENT_STOP, object)
+    return this.emit(EVENT_STOP, object);
   }
 
   /**
@@ -391,9 +419,10 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public delay(amount: number) {
-    this._delayTime = typeof (amount) === 'function' ? amount(this._delayTime) : amount
+    this._delayTime =
+      typeof amount === 'function' ? amount(this._delayTime) : amount;
 
-    return this
+    return this;
   }
 
   /**
@@ -403,11 +432,11 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public repeat(amount: number) {
-    this._repeat = typeof (amount) === 'function' ? amount(this._repeat) : amount
-    this._r = this._repeat
-    this._isFinite = isFinite(amount)
+    this._repeat = typeof amount === 'function' ? amount(this._repeat) : amount;
+    this._r = this._repeat;
+    this._isFinite = isFinite(amount);
 
-    return this
+    return this;
   }
 
   /**
@@ -417,9 +446,10 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public repeatDelay(amount: number) {
-    this._repeatDelayTime = typeof (amount) === 'function' ? amount(this._repeatDelayTime) : amount
+    this._repeatDelayTime =
+      typeof amount === 'function' ? amount(this._repeatDelayTime) : amount;
 
-    return this
+    return this;
   }
 
   /**
@@ -429,9 +459,10 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public reverseDelay(amount: number) {
-    this._reverseDelayTime = typeof (amount) === 'function' ? amount(this._reverseDelayTime) : amount
+    this._reverseDelayTime =
+      typeof amount === 'function' ? amount(this._reverseDelayTime) : amount;
 
-    return this
+    return this;
   }
 
   /**
@@ -442,10 +473,16 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public yoyo(state: boolean, _easingReverse?: Function) {
-    this._yoyo = typeof (state) === 'function' ? state(this._yoyo) : state === null ? this._yoyo : state
-    this._easingReverse = _easingReverse || this._easingFunction
+    this._yoyo =
+      typeof state === 'function'
+        ? state(this._yoyo)
+        : state === null ? this._yoyo : state;
+    if (!state) {
+      this._reversed = false;
+    }
+    this._easingReverse = _easingReverse || null;
 
-    return this
+    return this;
   }
 
   /**
@@ -455,9 +492,9 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public easing(_easingFunction: Function) {
-    this._easingFunction = _easingFunction
+    this._easingFunction = _easingFunction;
 
-    return this
+    return this;
   }
 
   /**
@@ -466,38 +503,34 @@ class Tween extends EventClass {
    * @memberof Tween
    */
   public reassignValues(time?: number) {
-    const {
-      _valuesFunc,
-      object,
-      _delayTime
-    } = this
+    const { _valuesFunc, object, _delayTime } = this;
 
-    this._isPlaying = true
-    this._startTime = time !== undefined ? time : now()
-    this._startTime += _delayTime
-    this._reversed = false
-    add(this)
+    this._isPlaying = true;
+    this._startTime = time !== undefined ? time : now();
+    this._startTime += _delayTime;
+    this._reversed = false;
+    add(this);
 
-    const _valuesStart: any = _valuesFunc(0)
+    const _valuesStart: any = _valuesFunc(0);
 
     for (const property in _valuesStart) {
+      const start = _valuesStart[property];
 
-      const start = _valuesStart[property]
-
-      object[property] = start
+      object[property] = start;
     }
 
-    return this
+    return this;
   }
 
   /**
    * Updates initial object to target value by given `time`
    * @param {Time} time Current time
    * @param {boolean=} preserve Prevents from removing tween from store
+   * @param {boolean=} forceTime Forces to be frame rendered, even mismatching time
    * @example tween.update(100)
    * @memberof Tween
    */
-  public update(time: number, preserve?: boolean) {
+  public update(time?: number, preserve?: boolean, forceTime?: boolean) {
     let {
       _onStartCallbackFired,
       _easingFunction,
@@ -513,84 +546,84 @@ class Tween extends EventClass {
       object,
       _isFinite,
       _isPlaying,
-      __render
-    } = this
+      __render,
+    } = this;
 
-    let elapsed: number
-    let currentEasing: Function
+    let elapsed: number;
+    let currentEasing: Function;
 
-    time = time !== undefined ? time : now()
+    time = time !== undefined ? time : now();
 
-    if (!_isPlaying || time < _startTime) {
-      return true
+    if (!_isPlaying || (time < _startTime && !forceTime)) {
+      return true;
     }
 
     if (!_onStartCallbackFired) {
       if (!this._rendered) {
-        this.render()
-        this._rendered = true
-        _valuesFunc = this._valuesFunc
+        this.render();
+        this._rendered = true;
+        _valuesFunc = this._valuesFunc;
       }
 
-      this.emit(EVENT_START, object)
+      this.emit(EVENT_START, object);
 
-      this._onStartCallbackFired = true
+      this._onStartCallbackFired = true;
     }
 
-    elapsed = (time - _startTime) / _duration
-    elapsed = elapsed > 1 ? 1 : elapsed
-    elapsed = _reversed ? 1 - elapsed : elapsed
+    elapsed = (time - _startTime) / _duration;
+    elapsed = elapsed > 1 ? 1 : elapsed;
+    elapsed = _reversed ? 1 - elapsed : elapsed;
 
-    currentEasing = _reversed ? _easingReverse : _easingFunction
+    currentEasing = _reversed
+      ? _easingReverse || _easingFunction
+      : _easingFunction;
 
     if (!object) {
-      return true
+      return true;
     }
 
-    _valuesFunc(elapsed, elapsed, currentEasing)
+    _valuesFunc(elapsed, elapsed, currentEasing);
 
     if (__render) {
-      __render.update(object, elapsed)
+      __render.update(object, elapsed);
     }
 
-    this.emit(EVENT_UPDATE, object, elapsed)
+    this.emit(EVENT_UPDATE, object, elapsed);
 
     if (elapsed === 1 || (_reversed && elapsed === 0)) {
       if (_repeat) {
         if (_isFinite) {
-          this._repeat--
+          this._repeat--;
         }
 
         if (_yoyo) {
-          this._reversed = !_reversed
+          this._reversed = !_reversed;
         }
 
-        this.emit(_yoyo && !_reversed ? EVENT_REVERSE : EVENT_REPEAT, object)
+        this.emit(_yoyo && !_reversed ? EVENT_REVERSE : EVENT_REPEAT, object);
 
-        if (!_reversed && _repeatDelayTime) {
-          this._startTime = time + _repeatDelayTime
-        } else if (_reversed && _reverseDelayTime) {
-          this._startTime = time + _reverseDelayTime
+        if (_reversed && _reverseDelayTime) {
+          this._startTime += _duration - _reverseDelayTime;
         } else {
-          this._startTime = time
+          this._startTime += _duration;
         }
 
-        return true
+        return true;
       } else {
         if (!preserve) {
-          this._isPlaying = false
-          remove(this)
-          _id--
+          this._isPlaying = false;
+          remove(this);
+          _id--;
         }
-        this.emit(EVENT_COMPLETE, object)
-        this._repeat = this._r
+        this.emit(EVENT_COMPLETE, object);
+        this._repeat = this._r;
 
-        return false
+        return false;
       }
     }
 
-    return true
+    return true;
   }
 }
 
-export default Tween
+export default Tween;

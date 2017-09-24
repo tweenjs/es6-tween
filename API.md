@@ -33,10 +33,10 @@ Lightweight, effecient and modular ES6 version of tween.js
 ```
 
 * [TWEEN](#TWEEN) : <code>object</code>
+    * [.now](#TWEEN.now) ⇒
     * [.Plugins](#TWEEN.Plugins) : <code>object</code>
     * [.Easing](#TWEEN.Easing) : <code>object</code>
     * [.Interpolation](#TWEEN.Interpolation) : <code>object</code>
-    * [.now](#TWEEN.now) ⇒
     * [.add(tween)](#TWEEN.add)
     * [.onTick(fn)](#TWEEN.onTick)
     * [.autoPlay(state)](#TWEEN.autoPlay)
@@ -47,6 +47,17 @@ Lightweight, effecient and modular ES6 version of tween.js
     * [.update(time, [preserve])](#TWEEN.update)
     * [.isRunning()](#TWEEN.isRunning) ⇒ <code>Boolean</code>
 
+<a name="TWEEN.now"></a>
+
+### TWEEN.now ⇒
+Get browser/Node.js current time-stamp
+
+**Kind**: static property of [<code>TWEEN</code>](#TWEEN)  
+**Returns**: Normalised current time-stamp in milliseconds  
+**Example**  
+```js
+TWEEN.now
+```
 <a name="TWEEN.Plugins"></a>
 
 ### TWEEN.Plugins : <code>object</code>
@@ -76,17 +87,6 @@ List of full Interpolation
 **Example**  
 ```js
 import {Interpolation, Tween} from 'es6-tween'let bezier = Interpolation.Beziernew Tween({x:0}).to({x:[0, 4, 8, 12, 15, 20, 30, 40, 20, 40, 10, 50]}, 1000).interpolation(bezier).start()
-```
-<a name="TWEEN.now"></a>
-
-### TWEEN.now ⇒
-Get browser/Node.js current time-stamp
-
-**Kind**: static constant of [<code>TWEEN</code>](#TWEEN)  
-**Returns**: Normalised current time-stamp in milliseconds  
-**Example**  
-```js
-TWEEN.now
 ```
 <a name="TWEEN.add"></a>
 
@@ -698,7 +698,7 @@ let tween = new Tween(myNode, {width:'100px'}).to({width:'300px'}, 2000).start()
     * _instance_
         * [.isPlaying()](#Tween+isPlaying) ⇒ <code>boolean</code>
         * [.isStarted()](#Tween+isStarted) ⇒ <code>boolean</code>
-        * [.reverse()](#Tween+reverse)
+        * [.reverse([state])](#Tween+reverse)
         * [.reversed()](#Tween+reversed) ⇒ <code>boolean</code>
         * [.pause()](#Tween+pause)
         * [.play()](#Tween+play)
@@ -714,7 +714,7 @@ let tween = new Tween(myNode, {width:'100px'}).to({width:'300px'}, 2000).start()
         * [.reverseDelay(amount)](#Tween+reverseDelay)
         * [.yoyo(state, [_easingReverse])](#Tween+yoyo)
         * [.easing(_easingFunction)](#Tween+easing)
-        * [.update(time, [preserve])](#Tween+update)
+        * [.update(time, [preserve], [forceTime])](#Tween+update)
     * _static_
         * [.fromTo(node, object, to, params)](#Tween.fromTo)
         * [.to(node, to, params)](#Tween.to)
@@ -740,10 +740,15 @@ tween.isStarted() // returns `true` if tween in started
 ```
 <a name="Tween+reverse"></a>
 
-### tween.reverse()
+### tween.reverse([state])
 Reverses the tween state/direction
 
 **Kind**: instance method of [<code>Tween</code>](#Tween)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [state] | <code>boolean</code> | Set state of current reverse |
+
 **Example**  
 ```js
 tween.reverse()
@@ -848,7 +853,7 @@ Start the tweening
 
 | Param | Type | Description |
 | --- | --- | --- |
-| time | <code>number</code> | setting manual time instead of Current browser timestamp |
+| time | <code>number</code> \| <code>string</code> | setting manual time instead of Current browser timestamp or like `+1000` relative to current timestamp |
 
 **Example**  
 ```js
@@ -957,7 +962,7 @@ tween.easing(Easing.Elastic.InOut)
 ```
 <a name="Tween+update"></a>
 
-### tween.update(time, [preserve])
+### tween.update(time, [preserve], [forceTime])
 Updates initial object to target value by given `time`
 
 **Kind**: instance method of [<code>Tween</code>](#Tween)  
@@ -966,6 +971,7 @@ Updates initial object to target value by given `time`
 | --- | --- | --- |
 | time | <code>Time</code> | Current time |
 | [preserve] | <code>boolean</code> | Prevents from removing tween from store |
+| [forceTime] | <code>boolean</code> | Forces to be frame rendered, even mismatching time |
 
 **Example**  
 ```js
