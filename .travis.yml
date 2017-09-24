@@ -12,5 +12,6 @@ before_install:
 before_script:
   - npm prune
 script:
-  - npm install typescript
   - tsc
+  - rollup -c
+  - npm test
