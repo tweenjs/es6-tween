@@ -12,6 +12,4 @@ before_install:
 before_script:
   - npm prune
 script:
-  - tsc
-  - rollup -c
   - npm test
