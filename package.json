@@ -17,11 +17,11 @@
     "source-lite": "rollup -c rollup.config.lite.js",
     "minify-lite": "uglifyjs lite/Tween.js -c -m -o lite/Tween.min.js --source-map \"filename='lite/Tween.min.js.map'\"",
     "build-lite": "npm run source-lite && npm run minify-lite",
-    "prepare": "tsc && npm run build && npm run build-lite",
+    "buildAll": "tsc && npm run build && npm run build-lite",
     "dev": "rollup -c -w",
     "dev-lite": "rollup -c rollup.config.lite.js -w",
     "test": "ava --verbose",
-    "prepublishOnly": "npm run prepare && ava --verbose && npm run doc && npm run doc-md",
+    "prepublishOnly": "npm run buildAll && ava --verbose && npm run doc && npm run doc-md",
     "doc": "jsdoc --tutorials guide_notes --readme README.md --configure jsdoc.json --verbose",
     "doc-md": "jsdoc2md src/** > API.md"
   },
