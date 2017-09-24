@@ -12,5 +12,5 @@ before_install:
 before_script:
   - npm prune
 script:
-  - npm install -g ava
+  - npm install ava
   - npm test
