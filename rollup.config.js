@@ -13,14 +13,16 @@ var plugins = [
 ]
 
 export default {
-  entry: 'src/index.js',
+  input: 'src/index.js',
+  output: {
   format: 'umd',
-  dest: 'full/Tween.js',
+  file: 'full/Tween.js'
+  },
   globals: {
 	'intertween': 'InterTween'
   },
-  sourceMap: true,
+  sourcemap: true,
   context: 'this',
-  moduleName: 'TWEEN',
+  name: 'TWEEN',
   plugins: plugins
 }

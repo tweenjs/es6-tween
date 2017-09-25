@@ -26,7 +26,6 @@ class Lite {
   public _interpolationFunction: Function;
   public _startTime: number;
   public _delayTime: number;
-  public _repeatDelayTime: number;
   public _reverseDelayTime: number;
   public _repeat: number;
   public _yoyo: boolean;
@@ -196,7 +195,10 @@ class Lite {
    * @memberof Lite
    */
   public start(time?: number) {
-    this._startTime = time !== undefined ? time : now();
+    this._startTime = 
+      time !== undefined
+        ? typeof time === 'string' ? now() + parseFloat(time) : time
+        : now();
     this._startTime += this._delayTime;
 
     const {
@@ -335,19 +337,6 @@ class Lite {
   }
 
   /**
-   * Set delay of each repeat of tween
-   * @param {number} amount Sets tween repeat delay / repeat wait duration
-   * @example tween.repeatDelay(500)
-   * @memberof Lite
-   */
-  public repeatDelay(amount: number) {
-    this._repeatDelayTime =
-      typeof amount === 'function' ? amount(this._repeatDelayTime) : amount;
-
-    return this;
-  }
-
-  /**
    * Set delay of each repeat alternate of tween
    * @param {number} amount Sets tween repeat alternate delay / repeat alternate wait duration
    * @example tween.reverseDelay(500)
@@ -415,7 +404,7 @@ class Lite {
       _onStartCallbackFired,
       _easingFunction,
       _repeat,
-      _repeatDelayTime,
+      _delayTime,
       _reverseDelayTime,
       _yoyo,
       _reversed,
@@ -490,12 +479,10 @@ class Lite {
           this._reversed = !_reversed;
         }
 
-        if (!_reversed && _repeatDelayTime) {
-          this._startTime = time + _repeatDelayTime;
-        } else if (_reversed && _reverseDelayTime) {
+        if (_reversed && _reverseDelayTime) {
           this._startTime = time + _reverseDelayTime;
         } else {
-          this._startTime = time;
+          this._startTime = time + _delayTime;
         }
 
         return true;

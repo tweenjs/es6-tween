@@ -246,7 +246,6 @@ class Timeline extends Tween {
     const {
       _tweens,
       _duration,
-      _repeatDelayTime,
       _reverseDelayTime,
       _startTime,
       _reversed,
@@ -290,9 +289,7 @@ class Timeline extends Tween {
           this.timingOrder(timing => timing.reverse());
         }
 
-        if (!_reversed && _repeatDelayTime) {
-          this._startTime = time + _repeatDelayTime;
-        } else if (_reversed && _reverseDelayTime) {
+        if (_reversed && _reverseDelayTime) {
           this._startTime = time + _reverseDelayTime;
         } else {
           this._startTime = time;

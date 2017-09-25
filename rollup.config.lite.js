@@ -1,8 +1,10 @@
 export default {
-  entry: 'src/index.lite.js',
-  dest: 'lite/Tween.js',
-  format: 'umd',
-  sourceMap: true,
+  input: 'src/index.lite.js',
+  output: {
+  file: 'lite/Tween.js',
+  format: 'umd'
+  },
+  sourcemap: true,
   context: 'this',
-  moduleName: 'TWEEN'
+  name: 'TWEEN'
 }

@@ -52,7 +52,6 @@ class Tween extends EventClass {
   public _startTime: number;
   public _initTime: number;
   public _delayTime: number;
-  public _repeatDelayTime: number;
   public _reverseDelayTime: number;
   public _repeat: number;
   public _yoyo: boolean;
@@ -244,23 +243,20 @@ class Tween extends EventClass {
   }
 
   /**
-   * Seek tween value by `time`
+   * Seek tween value by `time`. Note: Not works as excepted. PR are welcome
    * @param {Time} time Tween update time
    * @param {boolean=} keepPlaying When this param is set to `false`, tween pausing after seek
    * @example tween.seek(500)
    * @memberof Tween
+   * @deprecated
    */
   public seek(time: number, keepPlaying?: boolean) {
-    const { _duration, _repeat, _initTime } = this;
+    const { _duration, _repeat, _initTime, _startTime } = this;
 
-    let updateTime: number = _initTime + time;
+    let updateTime: number = _startTime + time;
     this._isPlaying = true;
 
-    if (keepPlaying) {
-      add(this);
-    }
-
-    this.update(updateTime, false, true);
+    this.update(time, false);
 
     this.emit(EVENT_SEEK, time, this.object);
 
@@ -440,19 +436,6 @@ class Tween extends EventClass {
   }
 
   /**
-   * Set delay of each repeat of tween
-   * @param {number} amount Sets tween repeat delay / repeat wait duration
-   * @example tween.repeatDelay(400)
-   * @memberof Tween
-   */
-  public repeatDelay(amount: number) {
-    this._repeatDelayTime =
-      typeof amount === 'function' ? amount(this._repeatDelayTime) : amount;
-
-    return this;
-  }
-
-  /**
    * Set delay of each repeat alternate of tween
    * @param {number} amount Sets tween repeat alternate delay / repeat alternate wait duration
    * @example tween.reverseDelay(500)
@@ -536,7 +519,7 @@ class Tween extends EventClass {
       _easingFunction,
       _easingReverse,
       _repeat,
-      _repeatDelayTime,
+      _delayTime,
       _reverseDelayTime,
       _yoyo,
       _reversed,
@@ -603,9 +586,9 @@ class Tween extends EventClass {
         this.emit(_yoyo && !_reversed ? EVENT_REVERSE : EVENT_REPEAT, object);
 
         if (_reversed && _reverseDelayTime) {
-          this._startTime += _duration - _reverseDelayTime;
+          this._startTime = time - _reverseDelayTime;
         } else {
-          this._startTime += _duration;
+          this._startTime = time + _delayTime;
         }
 
         return true;

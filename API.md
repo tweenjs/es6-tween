@@ -307,7 +307,6 @@ import {Tween} from 'es6-tween/src/Tween.Lite'let tween = new Tween({x:0}).to(
     * [.stop()](#Lite+stop)
     * [.delay(amount)](#Lite+delay)
     * [.repeat(amount)](#Lite+repeat)
-    * [.repeatDelay(amount)](#Lite+repeatDelay)
     * [.reverseDelay(amount)](#Lite+reverseDelay)
     * [.yoyo(state)](#Lite+yoyo)
     * [.easing(_easingFunction)](#Lite+easing)
@@ -482,21 +481,6 @@ Sets how times tween is repeating
 **Example**  
 ```js
 tween.repeat(2)
-```
-<a name="Lite+repeatDelay"></a>
-
-### lite.repeatDelay(amount)
-Set delay of each repeat of tween
-
-**Kind**: instance method of [<code>Lite</code>](#Lite)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| amount | <code>number</code> | Sets tween repeat delay / repeat wait duration |
-
-**Example**  
-```js
-tween.repeatDelay(500)
 ```
 <a name="Lite+reverseDelay"></a>
 
@@ -703,14 +687,13 @@ let tween = new Tween(myNode, {width:'100px'}).to({width:'300px'}, 2000).start()
         * [.pause()](#Tween+pause)
         * [.play()](#Tween+play)
         * [.restart([noDelay])](#Tween+restart)
-        * [.seek(time, [keepPlaying])](#Tween+seek)
+        * ~~[.seek(time, [keepPlaying])](#Tween+seek)~~
         * [.duration(amount)](#Tween+duration)
         * [.to(properties, [duration])](#Tween+to)
         * [.start(time)](#Tween+start)
         * [.stop()](#Tween+stop)
         * [.delay(amount)](#Tween+delay)
         * [.repeat(amount)](#Tween+repeat)
-        * [.repeatDelay(amount)](#Tween+repeatDelay)
         * [.reverseDelay(amount)](#Tween+reverseDelay)
         * [.yoyo(state, [_easingReverse])](#Tween+yoyo)
         * [.easing(_easingFunction)](#Tween+easing)
@@ -799,8 +782,10 @@ tween.restart()
 ```
 <a name="Tween+seek"></a>
 
-### tween.seek(time, [keepPlaying])
-Seek tween value by `time`
+### ~~tween.seek(time, [keepPlaying])~~
+***Deprecated***
+
+Seek tween value by `time`. Note: Not works as excepted. PR are welcome
 
 **Kind**: instance method of [<code>Tween</code>](#Tween)  
 
@@ -898,21 +883,6 @@ Sets how times tween is repeating
 **Example**  
 ```js
 tween.repeat(5)
-```
-<a name="Tween+repeatDelay"></a>
-
-### tween.repeatDelay(amount)
-Set delay of each repeat of tween
-
-**Kind**: instance method of [<code>Tween</code>](#Tween)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| amount | <code>number</code> | Sets tween repeat delay / repeat wait duration |
-
-**Example**  
-```js
-tween.repeatDelay(400)
 ```
 <a name="Tween+reverseDelay"></a>
 
