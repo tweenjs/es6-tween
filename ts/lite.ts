@@ -190,12 +190,12 @@ class Lite {
 
   /**
    * Start the tweening
-   * @param {number} time setting manual time instead of Current browser timestamp
+   * @param {number|string} time setting manual time instead of Current browser timestamp or like `+1000` relative to current timestamp
    * @example tween.start()
-   * @memberof Lite
+   * @memberof Tween
    */
   public start(time?: number) {
-    this._startTime = 
+    this._startTime =
       time !== undefined
         ? typeof time === 'string' ? now() + parseFloat(time) : time
         : now();
