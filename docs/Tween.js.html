@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tween.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="EventClass.html">EventClass</a><ul class='methods'><li data-type='method'><a href="EventClass.html#emit">emit</a></li><li data-type='method'><a href="EventClass.html#off">off</a></li><li data-type='method'><a href="EventClass.html#on">on</a></li><li data-type='method'><a href="EventClass.html#once">once</a></li></ul></li><li><a href="Lite.html">Lite</a><ul class='methods'><li data-type='method'><a href="Lite.html#delay">delay</a></li><li data-type='method'><a href="Lite.html#duration">duration</a></li><li data-type='method'><a href="Lite.html#easing">easing</a></li><li data-type='method'><a href="Lite.html#interpolation">interpolation</a></li><li data-type='method'><a href="Lite.html#isPlaying">isPlaying</a></li><li data-type='method'><a href="Lite.html#isStarted">isStarted</a></li><li data-type='method'><a href="Lite.html#onComplete">onComplete</a></li><li data-type='method'><a href="Lite.html#onStart">onStart</a></li><li data-type='method'><a href="Lite.html#onUpdate">onUpdate</a></li><li data-type='method'><a href="Lite.html#pause">pause</a></li><li data-type='method'><a href="Lite.html#play">play</a></li><li data-type='method'><a href="Lite.html#repeat">repeat</a></li><li data-type='method'><a href="Lite.html#reverseDelay">reverseDelay</a></li><li data-type='method'><a href="Lite.html#stop">stop</a></li><li data-type='method'><a href="Lite.html#to">to</a></li><li data-type='method'><a href="Lite.html#update">update</a></li><li data-type='method'><a href="Lite.html#yoyo">yoyo</a></li></ul></li><li><a href="Timeline.html">Timeline</a><ul class='methods'><li data-type='method'><a href="Timeline.html#add">add</a></li><li data-type='method'><a href="Timeline.html#addLabel">addLabel</a></li><li data-type='method'><a href="Timeline.html#from">from</a></li><li data-type='method'><a href="Timeline.html#fromTo">fromTo</a></li><li data-type='method'><a href="Timeline.html#to">to</a></li></ul></li><li><a href="Tween.html">Tween</a><ul class='methods'><li data-type='method'><a href="Tween.html#.from">from</a></li><li data-type='method'><a href="Tween.html#.fromTo">fromTo</a></li><li data-type='method'><a href="Tween.html#.Lite#start">Lite#start</a></li><li data-type='method'><a href="Tween.html#.to">to</a></li><li data-type='method'><a href="Tween.html#delay">delay</a></li><li data-type='method'><a href="Tween.html#duration">duration</a></li><li data-type='method'><a href="Tween.html#easing">easing</a></li><li data-type='method'><a href="Tween.html#isPlaying">isPlaying</a></li><li data-type='method'><a href="Tween.html#isStarted">isStarted</a></li><li data-type='method'><a href="Tween.html#pause">pause</a></li><li data-type='method'><a href="Tween.html#play">play</a></li><li data-type='method'><a href="Tween.html#reassignValues">reassignValues</a></li><li data-type='method'><a href="Tween.html#render">render</a></li><li data-type='method'><a href="Tween.html#repeat">repeat</a></li><li data-type='method'><a href="Tween.html#restart">restart</a></li><li data-type='method'><a href="Tween.html#reverse">reverse</a></li><li data-type='method'><a href="Tween.html#reversed">reversed</a></li><li data-type='method'><a href="Tween.html#reverseDelay">reverseDelay</a></li><li data-type='method'><a href="Tween.html#seek">seek</a></li><li data-type='method'><a href="Tween.html#start">start</a></li><li data-type='method'><a href="Tween.html#stop">stop</a></li><li data-type='method'><a href="Tween.html#to">to</a></li><li data-type='method'><a href="Tween.html#update">update</a></li><li data-type='method'><a href="Tween.html#yoyo">yoyo</a></li></ul></li><li><a href="TWEEN_.html">TWEEN</a><ul class='methods'><li data-type='method'><a href="TWEEN_.html#.add">add</a></li><li data-type='method'><a href="TWEEN_.html#.autoPlay">autoPlay</a></li><li data-type='method'><a href="TWEEN_.html#.get">get</a></li><li data-type='method'><a href="TWEEN_.html#.has">has</a></li><li data-type='method'><a href="TWEEN_.html#.isRunning">isRunning</a></li><li data-type='method'><a href="TWEEN_.html#.onTick">onTick</a></li><li data-type='method'><a href="TWEEN_.html#.remove">remove</a></li><li data-type='method'><a href="TWEEN_.html#.removeAll">removeAll</a></li><li data-type='method'><a href="TWEEN_.html#.update">update</a></li></ul></li><li><a href="TWEEN.Easing.html">Easing</a></li><li><a href="TWEEN.Interpolation.html">Interpolation</a></li><li><a href="TWEEN.Plugins.html">Plugins</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-Basics.html">Basics</a></li><li><a href="tutorial-Compatibility.html">Compatibility</a></li><li><a href="tutorial-Simple Demos.html">Simple Demos</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Tween.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>var __extends = (this &amp;&amp; this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array &amp;&amp; function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+import InterTween from 'intertween';
+import { create } from './shim';
+import { add, now, Plugins, remove } from './core';
+import Easing from './Easing';
+import EventClass from './Event';
+import NodeCache from './NodeCache';
+import Selector from './selector';
+Object.create = create;
+// Events list
+export var EVENT_UPDATE = 'update';
+export var EVENT_COMPLETE = 'complete';
+export var EVENT_START = 'start';
+export var EVENT_REPEAT = 'repeat';
+export var EVENT_REVERSE = 'reverse';
+export var EVENT_PAUSE = 'pause';
+export var EVENT_PLAY = 'play';
+export var EVENT_RS = 'restart';
+export var EVENT_STOP = 'stop';
+export var EVENT_SEEK = 'seek';
+var _id = 0; // Unique ID
+var defaultEasing = Easing.Linear.None;
+/**
+ * Tween main constructor
+ * @constructor
+ * @class
+ * @namespace Tween
+ * @extends EventClass
+ * @param {Object|Element} node Node Element or Tween initial object
+ * @param {Object=} object If Node Element is using, second argument is used for Tween initial object
+ * @example let tween = new Tween(myNode, {width:'100px'}).to({width:'300px'}, 2000).start()
+ */
+var Tween = /** @class */ (function (_super) {
+    __extends(Tween, _super);
+    function Tween(node, object) {
+        var _this = _super.call(this) || this;
+        _this.id = _id++;
+        if (!!node &amp;&amp; typeof node === 'object' &amp;&amp; !object &amp;&amp; !node.nodeType) {
+            object = _this.object = node;
+            node = null;
+        }
+        else if (!!node &amp;&amp;
+            (node.nodeType || node.length || typeof node === 'string')) {
+            node = _this.node = Selector(node);
+            object = _this.object = NodeCache(node, object);
+        }
+        _this._valuesEnd = null;
+        _this._valuesFunc = null;
+        _this._duration = 1000;
+        _this._easingFunction = defaultEasing;
+        _this._easingReverse = defaultEasing;
+        _this._startTime = 0;
+        _this._initTime = 0;
+        _this._delayTime = 0;
+        _this._repeat = 0;
+        _this._r = 0;
+        _this._isPlaying = false;
+        _this._yoyo = false;
+        _this._reversed = false;
+        _this._onStartCallbackFired = false;
+        _this._pausedTime = null;
+        _this._isFinite = true;
+        return _this;
+    }
+    /**
+     * Easier way to call the Tween
+     * @param {Element} node DOM Element
+     * @param {object} object - Initial value
+     * @param {object} to - Target value
+     * @param {object} params - Options of tweens
+     * @example Tween.fromTo(node, {x:0}, {x:200}, {duration:1000})
+     * @memberof Tween
+     * @static
+     */
+    Tween.fromTo = function (node, object, to, params) {
+        if (params === void 0) { params = {}; }
+        params.quickRender = params.quickRender ? params.quickRender : !to;
+        var tween = new Tween(node, object).to(to, params);
+        if (params.quickRender) {
+            tween.render().update(tween._startTime);
+            tween._rendered = false;
+            tween._onStartCallbackFired = false;
+        }
+        return tween;
+    };
+    /**
+     * Easier way calling constructor only applies the `to` value, useful for CSS Animation
+     * @param {Element} node DOM Element
+     * @param {object} to - Target value
+     * @param {object} params - Options of tweens
+     * @example Tween.to(node, {x:200}, {duration:1000})
+     * @memberof Tween
+     * @static
+     */
+    Tween.to = function (node, to, params) {
+        return Tween.fromTo(node, null, to, params);
+    };
+    /**
+     * Easier way calling constructor only applies the `from` value, useful for CSS Animation
+     * @param {Element} node DOM Element
+     * @param {object} from - Initial value
+     * @param {object} params - Options of tweens
+     * @example Tween.from(node, {x:200}, {duration:1000})
+     * @memberof Tween
+     * @static
+     */
+    Tween.from = function (node, from, params) {
+        return Tween.fromTo(node, from, null, params);
+    };
+    /**
+     * @return {boolean} State of playing of tween
+     * @example tween.isPlaying() // returns `true` if tween in progress
+     * @memberof Tween
+     */
+    Tween.prototype.isPlaying = function () {
+        return this._isPlaying;
+    };
+    /**
+     * @return {boolean} State of started of tween
+     * @example tween.isStarted() // returns `true` if tween in started
+     * @memberof Tween
+     */
+    Tween.prototype.isStarted = function () {
+        return this._onStartCallbackFired;
+    };
+    /**
+     * Reverses the tween state/direction
+     * @example tween.reverse()
+     * @param {boolean=} state Set state of current reverse
+     * @memberof Tween
+     */
+    Tween.prototype.reverse = function (state) {
+        var _reversed = this._reversed;
+        this._reversed = state !== undefined ? state : !_reversed;
+        return this;
+    };
+    /**
+     * @return {boolean} State of reversed
+     * @example tween.reversed() // returns `true` if tween in reversed state
+     * @memberof Tween
+     */
+    Tween.prototype.reversed = function () {
+        return this._reversed;
+    };
+    /**
+     * Pauses tween
+     * @example tween.pause()
+     * @memberof Tween
+     */
+    Tween.prototype.pause = function () {
+        if (!this._isPlaying) {
+            return this;
+        }
+        this._isPlaying = false;
+        remove(this);
+        this._pausedTime = now();
+        return this.emit(EVENT_PAUSE, this.object);
+    };
+    /**
+     * Play/Resume the tween
+     * @example tween.play()
+     * @memberof Tween
+     */
+    Tween.prototype.play = function () {
+        if (this._isPlaying) {
+            return this;
+        }
+        this._isPlaying = true;
+        this._startTime += now() - this._pausedTime;
+        this._initTime = this._startTime;
+        add(this);
+        this._pausedTime = now();
+        return this.emit(EVENT_PLAY, this.object);
+    };
+    /**
+     * Restarts tween from initial value
+     * @param {boolean=} noDelay If this param is set to `true`, restarts tween without `delay`
+     * @example tween.restart()
+     * @memberof Tween
+     */
+    Tween.prototype.restart = function (noDelay) {
+        this._repeat = this._r;
+        this.reassignValues();
+        add(this);
+        return this.emit(EVENT_RS, this.object);
+    };
+    /**
+     * Seek tween value by `time`. Note: Not works as excepted. PR are welcome
+     * @param {Time} time Tween update time
+     * @param {boolean=} keepPlaying When this param is set to `false`, tween pausing after seek
+     * @example tween.seek(500)
+     * @memberof Tween
+     * @deprecated
+     */
+    Tween.prototype.seek = function (time, keepPlaying) {
+        var _a = this, _duration = _a._duration, _repeat = _a._repeat, _initTime = _a._initTime, _startTime = _a._startTime, _delayTime = _a._delayTime, _reversed = _a._reversed;
+        var updateTime = _initTime + time;
+        this._isPlaying = true;
+        if (updateTime &lt; _startTime &amp;&amp; (_startTime >= _initTime)) {
+            this._startTime -= _duration;
+            this._reversed = !_reversed;
+        }
+        this.update(time, false);
+        this.emit(EVENT_SEEK, time, this.object);
+        return keepPlaying ? this : this.pause();
+    };
+    /**
+     * Sets tween duration
+     * @param {number} amount Duration is milliseconds
+     * @example tween.duration(2000)
+     * @memberof Tween
+     */
+    Tween.prototype.duration = function (amount) {
+        this._duration =
+            typeof amount === 'function' ? amount(this._duration) : amount;
+        return this;
+    };
+    /**
+     * Sets target value and duration
+     * @param {object} properties Target value (to value)
+     * @param {number|Object=} [duration=1000] Duration of tween
+     * @example let tween = new Tween({x:0}).to({x:100}, 2000)
+     * @memberof Tween
+     */
+    Tween.prototype.to = function (properties, duration, maybeUsed) {
+        if (duration === void 0) { duration = 1000; }
+        this._valuesEnd = properties;
+        if (typeof duration === 'number' || typeof duration === 'function') {
+            this._duration =
+                typeof duration === 'function' ? duration(this._duration) : duration;
+        }
+        else if (typeof duration === 'object') {
+            for (var prop in duration) {
+                if (typeof this[prop] === 'function') {
+                    var _a = Array.isArray(duration[prop]) ? duration[prop] : [duration[prop]], _b = _a[0], arg1 = _b === void 0 ? null : _b, _c = _a[1], arg2 = _c === void 0 ? null : _c, _d = _a[2], arg3 = _d === void 0 ? null : _d, _e = _a[3], arg4 = _e === void 0 ? null : _e;
+                    this[prop](arg1, arg2, arg3, arg4);
+                }
+            }
+        }
+        return this;
+    };
+    /**
+     * Renders and computes value at first render
+     * @private
+     * @memberof Tween
+     */
+    Tween.prototype.render = function () {
+        if (this._rendered) {
+            return this;
+        }
+        var _a = this, _valuesEnd = _a._valuesEnd, object = _a.object, Renderer = _a.Renderer, node = _a.node, InitialValues = _a.InitialValues, _easingFunction = _a._easingFunction;
+        if (node &amp;&amp; InitialValues) {
+            if (!object) {
+                object = this.object = NodeCache(node, InitialValues(node, _valuesEnd));
+            }
+            else if (!_valuesEnd) {
+                _valuesEnd = this._valuesEnd = InitialValues(node, object);
+            }
+        }
+        for (var property in _valuesEnd) {
+            var start = object &amp;&amp; object[property];
+            var end = _valuesEnd[property];
+            if (Plugins[property]) {
+                var plugin = Plugins[property].prototype.update
+                    ? new Plugins[property](this, start, end, property, object)
+                    : Plugins[property](this, start, end, property, object);
+                if (plugin) {
+                    _valuesEnd[property] = plugin;
+                }
+                continue;
+            }
+        }
+        this._valuesFunc = InterTween(object, _valuesEnd, null, _easingFunction);
+        if (Renderer &amp;&amp; this.node) {
+            this.__render = new Renderer(this, object, _valuesEnd);
+        }
+        return this;
+    };
+    /**
+     * Start the tweening
+     * @param {number|string} time setting manual time instead of Current browser timestamp or like `+1000` relative to current timestamp
+     * @example tween.start()
+     * @memberof Tween
+     */
+    Tween.prototype.start = function (time) {
+        this._startTime =
+            time !== undefined
+                ? typeof time === 'string' ? now() + parseFloat(time) : time
+                : now();
+        this._startTime += this._delayTime;
+        this._initTime = this._startTime;
+        this._onStartCallbackFired = false;
+        this._rendered = false;
+        this._isPlaying = true;
+        add(this);
+        return this;
+    };
+    /**
+     * Stops the tween
+     * @example tween.stop()
+     * @memberof Tween
+     */
+    Tween.prototype.stop = function () {
+        var _a = this, _isPlaying = _a._isPlaying, _isFinite = _a._isFinite, object = _a.object, _startTime = _a._startTime, _delayTime = _a._delayTime, _duration = _a._duration, _r = _a._r;
+        if (!_isPlaying || !_isFinite) {
+            return this;
+        }
+        var atEnd = (_r + 1) % 2 === 1;
+        this._reversed = false;
+        if (atEnd) {
+            this.update(_startTime + _duration);
+        }
+        else {
+            this.update(_startTime);
+        }
+        remove(this);
+        return this.emit(EVENT_STOP, object);
+    };
+    /**
+     * Set delay of tween
+     * @param {number} amount Sets tween delay / wait duration
+     * @example tween.delay(500)
+     * @memberof Tween
+     */
+    Tween.prototype.delay = function (amount) {
+        this._delayTime =
+            typeof amount === 'function' ? amount(this._delayTime) : amount;
+        return this;
+    };
+    /**
+     * Sets how times tween is repeating
+     * @param {amount} amount the times of repeat
+     * @example tween.repeat(5)
+     * @memberof Tween
+     */
+    Tween.prototype.repeat = function (amount) {
+        this._repeat = typeof amount === 'function' ? amount(this._repeat) : amount;
+        this._r = this._repeat;
+        this._isFinite = isFinite(amount);
+        return this;
+    };
+    /**
+     * Set delay of each repeat alternate of tween
+     * @param {number} amount Sets tween repeat alternate delay / repeat alternate wait duration
+     * @example tween.reverseDelay(500)
+     * @memberof Tween
+     */
+    Tween.prototype.reverseDelay = function (amount) {
+        this._reverseDelayTime =
+            typeof amount === 'function' ? amount(this._reverseDelayTime) : amount;
+        return this;
+    };
+    /**
+     * Set `yoyo` state (enables reverse in repeat)
+     * @param {boolean} state Enables alternate direction for repeat
+     * @param {Function=} _easingReverse Easing function in reverse direction
+     * @example tween.yoyo(true)
+     * @memberof Tween
+     */
+    Tween.prototype.yoyo = function (state, _easingReverse) {
+        this._yoyo =
+            typeof state === 'function'
+                ? state(this._yoyo)
+                : state === null ? this._yoyo : state;
+        if (!state) {
+            this._reversed = false;
+        }
+        this._easingReverse = _easingReverse || null;
+        return this;
+    };
+    /**
+     * Set easing
+     * @param {Function} _easingFunction Easing function, applies in non-reverse direction if Tween#yoyo second argument is applied
+     * @example tween.easing(Easing.Elastic.InOut)
+     * @memberof Tween
+     */
+    Tween.prototype.easing = function (_easingFunction) {
+        this._easingFunction = _easingFunction;
+        return this;
+    };
+    /**
+     * Reassigns value for rare-case like Tween#restart or for Timeline
+     * @private
+     * @memberof Tween
+     */
+    Tween.prototype.reassignValues = function (time) {
+        var _a = this, _valuesFunc = _a._valuesFunc, object = _a.object, _delayTime = _a._delayTime;
+        this._isPlaying = true;
+        this._startTime = time !== undefined ? time : now();
+        this._startTime += _delayTime;
+        this._reversed = false;
+        add(this);
+        var _valuesStart = _valuesFunc(0);
+        for (var property in _valuesStart) {
+            var start = _valuesStart[property];
+            object[property] = start;
+        }
+        return this;
+    };
+    /**
+     * Updates initial object to target value by given `time`
+     * @param {Time} time Current time
+     * @param {boolean=} preserve Prevents from removing tween from store
+     * @param {boolean=} forceTime Forces to be frame rendered, even mismatching time
+     * @example tween.update(100)
+     * @memberof Tween
+     */
+    Tween.prototype.update = function (time, preserve, forceTime) {
+        var _a = this, _onStartCallbackFired = _a._onStartCallbackFired, _easingFunction = _a._easingFunction, _easingReverse = _a._easingReverse, _repeat = _a._repeat, _delayTime = _a._delayTime, _reverseDelayTime = _a._reverseDelayTime, _yoyo = _a._yoyo, _reversed = _a._reversed, _startTime = _a._startTime, _duration = _a._duration, _valuesFunc = _a._valuesFunc, object = _a.object, _isFinite = _a._isFinite, _isPlaying = _a._isPlaying, __render = _a.__render;
+        var elapsed;
+        var currentEasing;
+        time = time !== undefined ? time : now();
+        if (!_isPlaying || (time &lt; _startTime &amp;&amp; !forceTime)) {
+            return true;
+        }
+        if (!_onStartCallbackFired) {
+            if (!this._rendered) {
+                this.render();
+                this._rendered = true;
+                _valuesFunc = this._valuesFunc;
+            }
+            this.emit(EVENT_START, object);
+            this._onStartCallbackFired = true;
+        }
+        elapsed = (time - _startTime) / _duration;
+        elapsed = elapsed > 1 ? 1 : elapsed;
+        elapsed = _reversed ? 1 - elapsed : elapsed;
+        currentEasing = _reversed
+            ? _easingReverse || _easingFunction
+            : _easingFunction;
+        if (!object) {
+            return true;
+        }
+        _valuesFunc(elapsed, elapsed, currentEasing);
+        if (__render) {
+            __render.update(object, elapsed);
+        }
+        this.emit(EVENT_UPDATE, object, elapsed);
+        if (elapsed === 1 || (_reversed &amp;&amp; elapsed === 0)) {
+            if (_repeat) {
+                if (_isFinite) {
+                    this._repeat--;
+                }
+                if (_yoyo) {
+                    this._reversed = !_reversed;
+                }
+                this.emit(_yoyo &amp;&amp; !_reversed ? EVENT_REVERSE : EVENT_REPEAT, object);
+                if (_reversed &amp;&amp; _reverseDelayTime) {
+                    this._startTime = time - _reverseDelayTime;
+                }
+                else {
+                    this._startTime = time + _delayTime;
+                }
+                return true;
+            }
+            else {
+                if (!preserve) {
+                    this._isPlaying = false;
+                    remove(this);
+                    _id--;
+                }
+                this.emit(EVENT_COMPLETE, object);
+                this._repeat = this._r;
+                return false;
+            }
+        }
+        return true;
+    };
+    return Tween;
+}(EventClass));
+export default Tween;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Sep 26 2017 08:52:52 GMT+0500 (Западная Азия (зима)) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
