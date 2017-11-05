@@ -25,18 +25,13 @@
 
 	<div id="container"></div>
 
-	<script src="../full/Tween.js"></script>
-	<script src="../../es6-tween-plugins/renderer/render.js"></script>
-	<script !src="../../es6-tween-plugins/transform/transform.js"></script>
+	<script src="../dist/Tween.js"></script>
+	<script src="../../es6-tween-plugins/renderer/index.js"></script>
 	<script>
 		TWEEN.autoPlay(true);
 
 		function random(min, max) {
 			return Math.random() * (max - min) + min;
-		}
-
-		function update (v) {
-			v.el.style.transform = 'translate3d(' + v.x + 'px, 0px, 0px)';
 		}
 
 		var nodes = [],
@@ -50,6 +45,7 @@
 
 		function createTest(count) {
 			var i;
+			c.innerHTML = '';
 			for (i = 0; i < count; i++) {
 				var div = document.createElement("div"),
 					bg = (Math.random() * 0xffffff) >> 0,
@@ -62,17 +58,21 @@
 					tl = Math.floor(random(-200, 200));
 				div.setAttribute("class", "line");
 				div.style.top = [(Math.random() * wIh), "px"].join("");
-				div.style.left = l + 'px';
-				//div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
+				//div.style.left = l + 'px';
+				div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
 				div.style.backgroundColor = bgC;
-				var a = new TWEEN.Tween(div, { left : l }).to({ left: tl }, 1000).easing(TWEEN.Easing.Quadratic.InOut).repeat(Infinity).yoyo(true).start();
+				var a = new TWEEN.Tween(div, { x : l }).to({ x: tl }, 1000).easing(TWEEN.Easing.Quadratic.InOut).repeat(Infinity).yoyo(true).start();
 
 				frag.appendChild(div);
 
 			}
 			c.appendChild(frag);
 		}
-		createTest(200);
+		function initTest () {
+		createTest(+window.location.hash.substr(1) || 200);
+		}
+		window.addEventListener('hashchange', initTest)
+		window.addEventListener('load', initTest)
 	</script>
 
 </body>

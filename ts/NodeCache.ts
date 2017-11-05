@@ -1,21 +1,32 @@
 import { assign } from './shim'
+import { remove } from './core'
 
 const Store = {}
-export default function (node, tween) {
+export default function (node, object, tween) {
   if (!node || !node.nodeType) {
-    return tween
+    return object
   }
   const ID = node.queueID || 'q_' + Date.now()
   if (!node.queueID) {
     node.queueID = ID
   }
-  if (Store[ID]) {
-    if (tween) {
-      Store[ID] = tween//assign(Store[ID], tween)
+  const storeID = Store[ID]
+  if (storeID) {
+    if (storeID.object === object && node === storeID.tween.node) {
+		remove(storeID.tween)
+	} else {
+		for (let prop in object) {
+			if (prop in storeID.object) {
+				if (tween.startTime === storeID.tween.startTime) {
+					delete storeID.object[prop]
+				}
+			}
+		}
+		return object
     }
-    return Store[ID]
+    return storeID.object
   }
 
-  Store[ID] = tween
+  Store[ID] = { tween, object }
   return Store[ID]
 }

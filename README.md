@@ -4,8 +4,6 @@ ES6 implementation of <a href="https://github.com/tweenjs/tween.js">tween.js</a>
 
 [![size](http://img.badgesize.io/http://unpkg.com/es6-tween?cache=false)](http://unpkg.com/es6-tween)
 [![gzipsize](http://img.badgesize.io/http://unpkg.com/es6-tween?compression=gzip&cache=false)](http://unpkg.com/es6-tween)
-[![size-lite](http://img.badgesize.io/http://unpkg.com/es6-tween/lite/Tween.min.js?label=lite%20size&cache=false)](http://unpkg.com/es6-tween/lite/Tween.min.js)
-[![gzipsize-lite](http://img.badgesize.io/http://unpkg.com/es6-tween/lite/Tween.min.js?compression=gzip&cache=false&label=lite%20gzip%20size)](http://unpkg.com/es6-tween/lite/Tween.min.js)
 [![CDNJS](https://img.shields.io/cdnjs/v/es6-tween.svg)](https://cdnjs.com/libraries/es6-tween)
 [![jsdelivr](https://img.shields.io/badge/cdn-jsdelivr-brightgreen.svg)](https://cdn.jsdelivr.net/npm/es6-tween)  [![unpkg](https://img.shields.io/badge/cdn-unpkg-brightgreen.svg)](https://unpkg.com/es6-tween)  [![npmcdn](https://img.shields.io/badge/cdn-npmcdn-brightgreen.svg)](https://npmcdn.com/es6-tween)
 [![NPM Version][npm-image]][npm-url]
@@ -28,33 +26,6 @@ let tween = new TWEEN.Tween(coords)
 	.start();
 
 ```
-
-# Adversiting
-* Backers will be show there
-* The user @dalisoft is looking for job, you can contact to me via [e-mail](mailto:dalisoft@mail.ru), or at [Twitter](https://twitter.com/dalisoft)
-
-
-# `Lite` version
-
-You can use the `Lite` version of ES6 which lighter (~9Kb minified, ~3Kb min&gzip), faster (~10% faster execution speed), simpler (like the original one), memory effecient and better (can tween second-level Objects/Array). Optimized for runtime performance, no-lag anymore.
-When you want building mobile apps that loading files from server, use `Lite` for better performance.
-Differences when using `Lite`:
-
-* 2-times lighter size
-* No `Timeline` instance
-* No `String` tween support
-* No `Deep tween` support (does 2-level)
-* Uses original `Interpolation` instances for `Bezier` interpolation
-* Faster performance and execution speed
-* Memory effecient
-* No more shims required
-* No `Plugins` support
-* No `DOM Get/Set`, `Renderer` instance/plugin/add-on support
-* No full-Event system, just 3 event support (`onStart`, `onUpdate`, `onComplete`)
-* No `seek`, `reverse`, `restart` support
-* No event fire when `stop`, `pause`, `etc`
-* No `*`, `/`, `%` relatives support
-
 
 ## Plugins
 
@@ -80,32 +51,19 @@ Download the [library](https://raw.githubusercontent.com/tweenjs/es6-tween/maste
 * See [cdnjs-hosted version](https://cdnjs.com/libraries/es6-tween) for get which result you want
 * NOTE: `@latest` suffix sometimes saves life by loading latest, because sometimes CDN services will not load the latest
 
-* Now you can load from CDN both version `Full` and `Lite`
+* Now you can load from CDN
 
 ```html
 <!-- jsDelivr -->
-<!-- Full -->
 <script src="https://cdn.jsdelivr.net/npm/es6-tween"></script>
-
-<!-- Lite -->
-<script src="https://cdn.jsdelivr.net/npm/es6-tween/lite/Tween.min.js"></script>
-
 
 
 <!-- unpkg -->
-<!-- Full -->
 <script src="https://unpkg.com/es6-tween"></script>
-
-<!-- Lite -->
-<script src="https://unpkg.com/es6-tween/lite/Tween.min.js"></script>
 
 
 <!-- npmcdn -->
-<!-- Full -->
 <script src="https://npmcdn.com/es6-tween"></script>
-
-<!-- Lite -->
-<script src="https://npmcdn.com/es6-tween/lite/Tween.min.js"></script>
 ```
 
 
@@ -135,19 +93,11 @@ import { Easing, Interpolation, Tween, autoPlay } from 'es6-tween/src/index.lite
 <script src="https://unpkg.com/getlibs"></script>
 <script type="x-module">
 // ES6
-// Full
 import { Easing, Tween, autoPlay } from 'es6-tween'
-
-// Lite
-import { Easing, Interpolation, Tween, autoPlay } from 'es6-tween/src/index.lite'
 
 
 // CommonJS
-// Full
 const { Tween, Easing, autoPlay } = require('es6-tween')
-
-// Lite
-const { Easing, Interpolation, Tween, autoPlay } = require('es6-tween/lite/Tween')
 </script>
 ```
 
@@ -164,11 +114,7 @@ $ bower install es6-tween
 Then include the Tween.js module with the standard node.js `require`:
 
 ```javascript
-// Full
 const { Tween, Easing, autoPlay } = require('es6-tween');
-
-// Lite
-const { Tween, Interpolation, Easing, autoPlay } = require('es6-tween/lite/Tween');
 ```
 
 And you can use Tween.js as in all other examples--for example:

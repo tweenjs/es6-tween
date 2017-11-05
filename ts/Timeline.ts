@@ -1,12 +1,13 @@
 import { add, now, remove } from './core';
 import PlaybackPosition from './PlaybackPosition';
-import Tween, {
+import Tween from './Tween'
+import {
   EVENT_COMPLETE,
   EVENT_REPEAT,
   EVENT_REVERSE,
-  EVENT_RS,
+  EVENT_RESTART,
   EVENT_UPDATE,
-} from './Tween';
+} from './constants';
 import Selector from './selector';
 
 export const shuffle = a => {
@@ -231,7 +232,7 @@ class Timeline extends Tween {
 
     add(this);
 
-    return this.emit(EVENT_RS);
+    return this.emit(EVENT_RESTART);
   }
 
   public easing(easing) {

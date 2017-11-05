@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0">
-	<title>es6-tween</title>
+	<title>GSAP - TweenMax</title>
 	<style>
 		#container {
 			width: 200px;
@@ -25,18 +25,11 @@
 
 	<div id="container"></div>
 
-	<script src="../full/Tween.js"></script>
-	<script src="../../es6-tween-plugins/renderer/render.js"></script>
-	<script !src="../../es6-tween-plugins/transform/transform.js"></script>
+	<script src="TweenMax.js"></script>
 	<script>
-		TWEEN.autoPlay(true);
 
 		function random(min, max) {
 			return Math.random() * (max - min) + min;
-		}
-
-		function update (v) {
-			v.el.style.transform = 'translate3d(' + v.x + 'px, 0px, 0px)';
 		}
 
 		var nodes = [],
@@ -62,10 +55,10 @@
 					tl = Math.floor(random(-200, 200));
 				div.setAttribute("class", "line");
 				div.style.top = [(Math.random() * wIh), "px"].join("");
-				div.style.left = l + 'px';
-				//div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
+				//div.style.left = l + 'px';
+				div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
 				div.style.backgroundColor = bgC;
-				var a = new TWEEN.Tween(div, { left : l }).to({ left: tl }, 1000).easing(TWEEN.Easing.Quadratic.InOut).repeat(Infinity).yoyo(true).start();
+				var a = TweenMax.fromTo(div, 1, {x:l}, {x:tl,ease:Quad.InOut,repeat:-1,yoyo:true})
 
 				frag.appendChild(div);
 

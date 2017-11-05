@@ -54,7 +54,7 @@ test('Value Interpolation', t => {
     })
 
     let tween = new Tween(obj)
-        .to({ a: 1, b: 'B value 2', c: { x: 3 }, d: [4], _e: 5, g: '+=1' }, 100)
+        .to({ a: 1, b: 'B value 2', c: { x: 3 }, d: [4], _e: 5, g: '+1' }, 100)
         .start(0)
 
     update(0)
@@ -100,9 +100,9 @@ test('Value Interpolation', t => {
 
 test('Value Array-based Interpolation', t => {
 
-    let obj = { x: 0, y: [2, 4, 6] }
+    let obj = { x: 0 }
     let tween = new Tween(obj)
-        .to({ x: [1, 3, 5], y: 10 }, 100)
+        .to({ x: [1, 3, 5] }, 100)
         .start(0)
 
     t.is(obj.x, 0)
@@ -112,7 +112,6 @@ test('Value Array-based Interpolation', t => {
     t.is(obj.x, 2, 'Interpolation failed')
     t.log('End-value interpolation was done')
 
-	t.deepEqual(obj.y, [6, 7, 8], 'Tween-them failed')
 	t.log('Start-value interpolation was done')
 
     tween.update(100)

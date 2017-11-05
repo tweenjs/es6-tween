@@ -48,10 +48,6 @@ let _autoPlay: boolean = false
 let _tick: Function
 const _ticker: Function = requestAnimationFrame
 const _stopTicker: Function = cancelAnimationFrame
-let lastTime: number = now()
-let delta: number = 0
-let timeDiff: number = 0
-let frameMs: number = 50 / 3
 
 /**
  * Adds tween to list
@@ -69,10 +65,16 @@ const add = (tween: any): void => {
     _tweens.splice(i, 1)
   }
 
+  if (_tweens.length > 0) {
+	i = _tweens.length - 1
+	let tweenPrev = _tweens[i]
+	tween.prev = tweenPrev
+	tweenPrev.next = tween
+  }
+
   _tweens.push(tween)
 
   if (_autoPlay && !isStarted) {
-    lastTime = now()
     _tick = _ticker(update)
     isStarted = true
   }
@@ -165,16 +167,11 @@ const remove = (tween: any): void => {
 
 const update = (time: number, preserve?: boolean): boolean => {
   time = time !== undefined ? time : now()
-  delta = time - lastTime
-  if (delta > 150) {
-    timeDiff = delta - frameMs
-  }
-  lastTime = time
   if (_autoPlay && isStarted) {
     _tick = _ticker(update)
   }
 
-  if (_tweens.length === 0) {
+  if (!_tweens.length) {
     _stopTicker(_tick)
     isStarted = false
     return false
@@ -183,15 +180,7 @@ const update = (time: number, preserve?: boolean): boolean => {
   let i: number = 0
   let tween: any
   while (i < _tweens.length) {
-    tween = _tweens[i]
-    if (timeDiff) {
-      tween._startTime += timeDiff
-    }
-    tween.update(time, preserve)
-    i++
-  }
-  if (timeDiff) {
-    timeDiff = 0
+	_tweens[i++].update(time, preserve)
   }
 
   return true

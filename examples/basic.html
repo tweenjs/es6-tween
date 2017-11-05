@@ -22,26 +22,28 @@ html, body {
 </head>
 <body>
 <div class="box box1"></div>
-<div class="box box2"></div>
-<div class="box box3"></div>
-<div class="box box4"></div>
-<div class="box box5"></div>
-<script src="../dist/Tween.js"></script>
-<script src="../../es6-tween-plugins/renderer/index.js"></script>
+<svg id="svg" width="200" height="200" viewBox="-50 -50 200 200">
+<path id="pp" d="M0 50 C0 50 5 64 10 56 C16 47 15 16 20 25 C26 34 21 93 29 87 C38 81 42 0 51 2 C59 5 52 92 61 98 C69 104 72 36 81 24 C89 13 87 47 92 56 C97 64 100 50 100 50" stroke-width="2" fill="none" stroke="#fc0"/>
+<circle id="p0" cx="0" cy="100" r="5" fill="#0cf"/> <!-- [['M'], [0, 100]] -->
+</svg>
+<script src="../full/Tween.js"></script>
+<script src="../../es6-tween-plugins/renderer/render.js"></script>
+<script src="../../es6-tween-plugins/owneasing/owneasing.umd.js"></script>
 <script>
-const { autoPlay, Tween, Easing, Timeline } = TWEEN;
+const { autoPlay, Tween, Easing, Timeline, OwnProps, OwnInterpolation } = TWEEN;
 
 autoPlay(true);
 
-var box = [].slice.call(document.querySelectorAll('.box'));
+var box = [].slice.call(document.querySelectorAll('.box'))[0];
+var p0 = document.getElementById('p0')
+var pp = document.getElementById('pp')
 
-console.log(box);
+var _cease = OwnEasing(pp.getAttribute('d'))
 
-var tl = new Timeline();
-
-tl.fromTo(box, {x:'0px'}, {x:'300px'}, {duration:2000,stagger:100,easing:Easing.Elastic.InOut});
-
-tl.yoyo(true).repeat(Infinity)
+var t = new Tween(p0, {x:0,y:0}).to({x:100,y:-100}, 20000).easing({y:_cease}).on('update', (obj, t) => {
+//const r = _cease([0, 45], t)
+//box.style.transform = 'rotate(' + r + 'deg)'
+}).start()
 </script>
 </body>
 </html>
