@@ -50,7 +50,5 @@
     "typescript": "^2.5.2",
     "uglify-js": "^3.1.1"
   },
-  "dependencies": {
-    "intertween": "0.0.25"
-  }
+  "dependencies": {}
 }
