@@ -66,10 +66,10 @@ const add = (tween: any): void => {
   }
 
   if (_tweens.length > 0) {
-	i = _tweens.length - 1
-	let tweenPrev = _tweens[i]
-	tween.prev = tweenPrev
-	tweenPrev.next = tween
+    i = _tweens.length - 1
+    let tweenPrev = _tweens[i]
+    tween.prev = tweenPrev
+    tweenPrev.next = tween
   }
 
   _tweens.push(tween)
@@ -180,7 +180,7 @@ const update = (time: number, preserve?: boolean): boolean => {
   let i: number = 0
   let tween: any
   while (i < _tweens.length) {
-	_tweens[i++].update(time, preserve)
+    _tweens[i++].update(time, preserve)
   }
 
   return true

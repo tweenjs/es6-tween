@@ -1,9 +1,29 @@
 import { add, now, Plugins, remove } from './core';
 import Easing from './Easing';
 import Interpolation from './Interpolation';
-import NodeCache from './NodeCache';
+import NodeCache, { Store } from './NodeCache';
 import Selector from './selector';
-import { decompose, recompose, deepCopy, SET_NESTED, EVENT_CALLBACK, CHAINED_TWEENS, EVENT_UPDATE, EVENT_COMPLETE, EVENT_START, EVENT_REPEAT, EVENT_REVERSE, EVENT_PAUSE, EVENT_PLAY, EVENT_RESTART, EVENT_STOP, EVENT_SEEK, FRAME_MS, TOO_LONG_FRAME_MS, DECIMAL } from './constants';
+import {
+  decompose,
+  recompose,
+  deepCopy,
+  SET_NESTED,
+  EVENT_CALLBACK,
+  CHAINED_TWEENS,
+  EVENT_UPDATE,
+  EVENT_COMPLETE,
+  EVENT_START,
+  EVENT_REPEAT,
+  EVENT_REVERSE,
+  EVENT_PAUSE,
+  EVENT_PLAY,
+  EVENT_RESTART,
+  EVENT_STOP,
+  EVENT_SEEK,
+  FRAME_MS,
+  TOO_LONG_FRAME_MS,
+  DECIMAL,
+} from './constants';
 
 let _id = 0; // Unique ID
 const defaultEasing = Easing.Linear.None;
@@ -101,7 +121,6 @@ class Tween {
     return Tween.fromTo(node, from, null, params);
   }
   constructor(node?: any, object?: Object) {
-
     this.id = _id++;
     if (!!node && typeof node === 'object' && !object && !node.nodeType) {
       object = this.object = node;
@@ -133,8 +152,8 @@ class Tween {
     this._onStartCallbackFired = false;
     this._pausedTime = null;
     this._isFinite = true;
-	this._maxListener = 5;
-	this._prevTime = null;
+    this._maxListener = 15;
+    this._prevTime = null;
 
     return this;
   }
@@ -144,9 +163,9 @@ class Tween {
    * @param {number} count - Event listener's count
    * @memberof Tween
    */
-  setMaxListener (count: number = 5) {
-	  this._maxListener = count;
-	  return this;
+  setMaxListener(count: number = 15) {
+    this._maxListener = count;
+    return this;
   }
 
   /**
@@ -156,16 +175,16 @@ class Tween {
    * @memberof Tween
    */
   public on(event: string, callback: Function) {
-	const { _maxListener } = this;
-	const callbackName = event + EVENT_CALLBACK;
+    const { _maxListener } = this;
+    const callbackName = event + EVENT_CALLBACK;
     for (let i = 0; i < _maxListener; i++) {
-		const callbackId = callbackName + i;
-		if (!this[callbackId]) {
-			this[callbackId] = callback;
-		}
-			break;
-	}
-    return this
+      const callbackId = callbackName + i;
+      if (!this[callbackId]) {
+        this[callbackId] = callback;
+        break;
+      }
+    }
+    return this;
   }
 
   /**
@@ -176,19 +195,19 @@ class Tween {
    * @memberof Tween
    */
   public once(event: string, callback: Function) {
-	const { _maxListener } = this;
-	const callbackName = event + EVENT_CALLBACK;
+    const { _maxListener } = this;
+    const callbackName = event + EVENT_CALLBACK;
     for (let i = 0; i < _maxListener; i++) {
-		const callbackId = callbackName + i;
-		if (!this[callbackId]) {
-			this[callbackId] = (...args) => {
-				callback.apply(this, args);
-				this[callbackId] = null;
-			};
-			break;
-		}
-	}
-    return this
+      const callbackId = callbackName + i;
+      if (!this[callbackId]) {
+        this[callbackId] = (...args) => {
+          callback.apply(this, args);
+          this[callbackId] = null;
+        };
+        break;
+      }
+    }
+    return this;
   }
 
   /**
@@ -199,14 +218,14 @@ class Tween {
    */
   public off(event: string, callback: Function) {
     const { _maxListener } = this;
-	const callbackName = event + EVENT_CALLBACK;
+    const callbackName = event + EVENT_CALLBACK;
     for (let i = 0; i < _maxListener; i++) {
-		const callbackId = callbackName + i;
-		if (this[callbackId] === callback) {
-			this[callbackId] = null;
-		}
-	}
-    return this
+      const callbackId = callbackName + i;
+      if (this[callbackId] === callback) {
+        this[callbackId] = null;
+      }
+    }
+    return this;
   }
 
   /**
@@ -216,18 +235,18 @@ class Tween {
    */
   public emit(event: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any) {
     const { _maxListener } = this;
-	const callbackName = event + EVENT_CALLBACK;
+    const callbackName = event + EVENT_CALLBACK;
 
-	if (!this[callbackName + 0]) {
-		return this;
-	}
+    if (!this[callbackName + 0]) {
+      return this;
+    }
     for (let i = 0; i < _maxListener; i++) {
-		const callbackId = callbackName + i;
-		if (this[callbackId]) {
-			this[callbackId](arg1, arg2, arg3, arg4)
-		}
-	}
-    return this
+      const callbackId = callbackName + i;
+      if (this[callbackId]) {
+        this[callbackId](arg1, arg2, arg3, arg4);
+      }
+    }
+    return this;
   }
 
   /**
@@ -333,15 +352,22 @@ class Tween {
    * @deprecated Not works as excepted, so we deprecated this method
    */
   public seek(time: number, keepPlaying?: boolean) {
-    const { _duration, _repeat, _initTime, _startTime, _delayTime, _reversed } = this;
+    const {
+      _duration,
+      _repeat,
+      _initTime,
+      _startTime,
+      _delayTime,
+      _reversed,
+    } = this;
 
     let updateTime: number = _initTime + time;
     this._isPlaying = true;
 
-	if (updateTime < _startTime && (_startTime >= _initTime)) {
-			this._startTime -= _duration;
-			this._reversed = !_reversed;
-		}
+    if (updateTime < _startTime && _startTime >= _initTime) {
+      this._startTime -= _duration;
+      this._reversed = !_reversed;
+    }
 
     this.update(time, false);
 
@@ -403,7 +429,7 @@ class Tween {
       return this;
     }
     let {
-	  _valuesStart,
+      _valuesStart,
       _valuesEnd,
       object,
       Renderer,
@@ -412,12 +438,32 @@ class Tween {
       _easingFunction,
     } = this;
 
-	SET_NESTED(object)
-	SET_NESTED(_valuesEnd)
+    if (node && node.queueID && Store[node.queueID]) {
+      const prevTweenByNode = Store[node.queueID];
+      if (
+        prevTweenByNode.propNormaliseRequired &&
+        prevTweenByNode.tween !== this
+      ) {
+        for (const property in _valuesEnd) {
+          if (prevTweenByNode.tween._valuesEnd[property] !== undefined) {
+            delete prevTweenByNode.tween._valuesEnd[property];
+          }
+        }
+        prevTweenByNode.normalisedProp = true;
+        prevTweenByNode.propNormaliseRequired = false;
+      }
+    }
+
+    SET_NESTED(object);
+    SET_NESTED(_valuesEnd);
 
     if (node && InitialValues) {
       if (!object) {
-        object = this.object = NodeCache(node, InitialValues(node, _valuesEnd), this);
+        object = this.object = NodeCache(
+          node,
+          InitialValues(node, _valuesEnd),
+          this
+        );
       } else if (!_valuesEnd) {
         _valuesEnd = this._valuesEnd = InitialValues(node, object);
       }
@@ -434,14 +480,21 @@ class Tween {
         }
         continue;
       }
-	  if ((typeof start === 'number' && isNaN(start)) || start === null || end === null || start === undefined || end === undefined || start === end) {
-		continue
-	  }
-	  if (Array.isArray(end) && typeof start === 'number') {
-		end.unshift(start);
-	  }
-	  _valuesStart[property] = deepCopy(start);
-	  decompose(property, object, _valuesStart, _valuesEnd);
+      if (
+        (typeof start === 'number' && isNaN(start)) ||
+        start === null ||
+        end === null ||
+        start === undefined ||
+        end === undefined ||
+        start === end
+      ) {
+        continue;
+      }
+      if (Array.isArray(end) && typeof start === 'number') {
+        end.unshift(start);
+      }
+      _valuesStart[property] = deepCopy(start);
+      decompose(property, object, _valuesStart, _valuesEnd);
     }
 
     if (Renderer && this.node) {
@@ -488,22 +541,22 @@ class Tween {
       _delayTime,
       _duration,
       _r,
-	  _yoyo,
-	  _reversed
+      _yoyo,
+      _reversed,
     } = this;
 
     if (!_isPlaying) {
       return this;
     }
 
-    let atEnd = _isFinite ? ((_r + 1) % 2 === 1) && _yoyo : _reversed;
+    let atStart = _isFinite ? (_r + 1) % 2 === 1 : !_reversed;
 
-	this._reversed = false;
+    this._reversed = false;
 
-    if (atEnd) {
-      this.update(_startTime + _duration);
-    } else {
+    if (_yoyo && atStart) {
       this.update(_startTime);
+    } else {
+      this.update(_startTime + _duration);
     }
     remove(this);
 
@@ -530,14 +583,13 @@ class Tween {
    * @memberof Tween
    */
   public chainedTweens() {
-
-	this._chainedTweensCount = arguments.length;
-	if (!this._chainedTweensCount) {
-		return this;
-	}
+    this._chainedTweensCount = arguments.length;
+    if (!this._chainedTweensCount) {
+      return this;
+    }
     for (let i = 0, len = this._chainedTweensCount; i < len; i++) {
-		this[CHAINED_TWEENS + i] = arguments[i];
-	}
+      this[CHAINED_TWEENS + i] = arguments[i];
+    }
 
     return this;
   }
@@ -549,7 +601,9 @@ class Tween {
    * @memberof Tween
    */
   public repeat(amount: number) {
-    this._repeat = !this._duration ? 0 : typeof amount === 'function' ? amount(this._repeat) : amount;
+    this._repeat = !this._duration
+      ? 0
+      : typeof amount === 'function' ? amount(this._repeat) : amount;
     this._r = this._repeat;
     this._isFinite = isFinite(amount);
 
@@ -650,7 +704,7 @@ class Tween {
     let {
       _onStartCallbackFired,
       _easingFunction,
-	  _interpolationFunction,
+      _interpolationFunction,
       _easingReverse,
       _repeat,
       _delayTime,
@@ -658,41 +712,41 @@ class Tween {
       _yoyo,
       _reversed,
       _startTime,
-	  _prevTime,
+      _prevTime,
       _duration,
-	  _valuesStart,
+      _valuesStart,
       _valuesEnd,
       object,
       _isFinite,
       _isPlaying,
       __render,
-	  _chainedTweensCount
+      _chainedTweensCount,
     } = this;
 
     let elapsed: number;
     let currentEasing: Function;
-	let property: string;
+    let property: string;
+    let propCount: number = 0;
 
-	if (!_duration) {
-		elapsed = 1;
-	} else {
-    time = time !== undefined ? time : now();
+    if (!_duration) {
+      elapsed = 1;
+    } else {
+      time = time !== undefined ? time : now();
 
-	let delta: number = _startTime - _prevTime;
-	if (delta > TOO_LONG_FRAME_MS) {
-		_startTime -= delta - FRAME_MS;
-		this._startTime = _startTime;
-	}
-	this._prevTime = time;
+      let delta: number = time - _prevTime;
+      if (delta > TOO_LONG_FRAME_MS) {
+        time += delta - FRAME_MS;
+      }
+      this._prevTime = time;
 
-    if (!_isPlaying || (time < _startTime && !forceTime)) {
-      return true;
+      if (!_isPlaying || (time < _startTime && !forceTime)) {
+        return true;
+      }
+
+      elapsed = (time - _startTime) / _duration;
+      elapsed = elapsed > 1 ? 1 : elapsed;
+      elapsed = _reversed ? 1 - elapsed : elapsed;
     }
-
-    elapsed = (time - _startTime) / _duration;
-    elapsed = elapsed > 1 ? 1 : elapsed;
-	elapsed = _reversed ? 1 - elapsed : elapsed;
-	}
 
     if (!_onStartCallbackFired) {
       if (!this._rendered) {
@@ -714,36 +768,47 @@ class Tween {
     }
 
     for (property in _valuesEnd) {
-		const start = _valuesStart[property]
-		if (start === undefined || start === null) {
-			continue
-		}
-		const end = _valuesEnd[property]
-		const value = currentEasing[property] ? currentEasing[property](elapsed) : typeof currentEasing === 'function' ? currentEasing(elapsed) : defaultEasing(elapsed)
+      const start = _valuesStart[property];
+      if (start === undefined || start === null) {
+        continue;
+      }
+      const end = _valuesEnd[property];
+      const value = currentEasing[property]
+        ? currentEasing[property](elapsed)
+        : typeof currentEasing === 'function'
+          ? currentEasing(elapsed)
+          : defaultEasing(elapsed);
 
-		if (typeof end === 'number') {
-			object[property] = (((start + (end - start) * value) * DECIMAL) | 0) / DECIMAL;
-		} else if (Array.isArray(end) && typeof start === 'number') {
-			object[property] = _interpolationFunction(end, value);
-		} else if (end && end.update) {
-			end.update(value);
-		} else if (typeof end === 'function') {
-			object[property] = end(value);
-		} else {
-			recompose(property, object, _valuesStart, _valuesEnd, value, elapsed)
-		}
-	}
+      if (typeof end === 'number') {
+        object[property] =
+          (((start + (end - start) * value) * DECIMAL) | 0) / DECIMAL;
+      } else if (Array.isArray(end) && typeof start === 'number') {
+        object[property] = _interpolationFunction(end, value);
+      } else if (end && end.update) {
+        end.update(value);
+      } else if (typeof end === 'function') {
+        object[property] = end(value);
+      } else {
+        recompose(property, object, _valuesStart, _valuesEnd, value, elapsed);
+      }
+      propCount++;
+    }
+
+    if (!propCount) {
+      remove(this);
+      return false;
+    }
 
     if (__render) {
       __render.update(object, elapsed);
     }
 
-    this.emit(EVENT_UPDATE, object, elapsed);
+    this.emit(EVENT_UPDATE, object, elapsed, time);
 
     if (elapsed === 1 || (_reversed && !elapsed)) {
       if (_repeat > 0 && _duration > 0) {
         if (_isFinite) {
-          this._repeat--
+          this._repeat--;
         }
 
         if (_yoyo) {
@@ -768,11 +833,11 @@ class Tween {
         this.emit(EVENT_COMPLETE, object);
         this._repeat = this._r;
 
-		if (_chainedTweensCount) {
-			for (let i = 0; i < _chainedTweensCount; i++) {
-				this[CHAINED_TWEENS + i].start(time + _duration)
-			}
-		}
+        if (_chainedTweensCount) {
+          for (let i = 0; i < _chainedTweensCount; i++) {
+            this[CHAINED_TWEENS + i].start(time + _duration);
+          }
+        }
 
         return false;
       }

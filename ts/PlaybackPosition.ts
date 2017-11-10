@@ -2,12 +2,12 @@ export default class PlaybackPosition {
   private totalTime: number
   private labels: string[]
   private offsets: number[]
-  constructor() {
+  constructor () {
     this.totalTime = 0
     this.labels = []
     this.offsets = []
   }
-  public parseLabel(name, offset) {
+  public parseLabel (name, offset) {
     const { offsets, labels } = this
     let i = labels.indexOf(name)
     if (typeof name === 'string' && name.indexOf('=') !== -1 && !offset && i === -1) {
@@ -40,19 +40,19 @@ export default class PlaybackPosition {
     }
     return typeof offset === 'number' ? offset : 0
   }
-  public addLabel(name, offset) {
+  public addLabel (name, offset) {
     this.labels.push(name)
     this.offsets.push(this.parseLabel(name, offset))
     return this
   }
-  public setLabel(name, offset) {
+  public setLabel (name, offset) {
     const i = this.labels.indexOf(name)
     if (i !== -1) {
       this.offsets.splice(i, 1, this.parseLabel(name, offset))
     }
     return this
   }
-  public eraseLabel(name) {
+  public eraseLabel (name) {
     const i = this.labels.indexOf(name)
     if (i !== -1) {
       this.labels.splice(i, 1)
