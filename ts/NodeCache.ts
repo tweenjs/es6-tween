@@ -1,11 +1,11 @@
 import { remove } from './core';
 
-export const Store = {};
+export const Store: Object = {};
 export default function(node, object, tween) {
   if (!node || !node.nodeType) {
     return object;
   }
-  const ID = node.queueID || 'q_' + Date.now();
+  const ID: string = node.queueID || 'q_' + Date.now();
   if (!node.queueID) {
     node.queueID = ID;
   }

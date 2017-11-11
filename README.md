@@ -82,9 +82,6 @@ PR are welcome...
 ```javascript
 // Full
 import { Easing, Tween, autoPlay } from 'es6-tween'
-
-// Lite
-import { Easing, Interpolation, Tween, autoPlay } from 'es6-tween/src/index.lite'
 ```
 
 #### Using [getlibs](https://github.com/activewidgets/getlibs)

@@ -490,7 +490,7 @@ class Tween {
       ) {
         continue;
       }
-      if (Array.isArray(end) && typeof start === 'number') {
+      if (Array.isArray(end) && !Array.isArray(start)) {
         end.unshift(start);
       }
       _valuesStart[property] = deepCopy(start);
@@ -782,8 +782,8 @@ class Tween {
       if (typeof end === 'number') {
         object[property] =
           (((start + (end - start) * value) * DECIMAL) | 0) / DECIMAL;
-      } else if (Array.isArray(end) && typeof start === 'number') {
-        object[property] = _interpolationFunction(end, value);
+      } else if (Array.isArray(end) && !Array.isArray(start)) {
+        object[property] = _interpolationFunction(end, value, object[property]);
       } else if (end && end.update) {
         end.update(value);
       } else if (typeof end === 'function') {

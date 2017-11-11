@@ -33,6 +33,7 @@ Lightweight, effecient and modular ES6 version of tween.js
     * [.Interpolation](#TWEEN.Interpolation) : <code>object</code>
     * [.add(tween)](#TWEEN.add)
     * [.onTick(fn)](#TWEEN.onTick)
+    * [.FrameThrottle([frameCount])](#TWEEN.FrameThrottle)
     * [.autoPlay(state)](#TWEEN.autoPlay)
     * [.removeAll()](#TWEEN.removeAll)
     * [.get(tween)](#TWEEN.get) ⇒ [<code>Tween</code>](#Tween)
@@ -111,6 +112,21 @@ Adds ticker like event
 **Example**  
 ```js
 TWEEN.onTick(time => console.log(time))
+```
+<a name="TWEEN.FrameThrottle"></a>
+
+### TWEEN.FrameThrottle([frameCount])
+Sets after how much frames empty updating should stop
+
+**Kind**: static method of [<code>TWEEN</code>](#TWEEN)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [frameCount] | <code>number</code> | <code>120</code> | count of frames that should stop after all tweens removed |
+
+**Example**  
+```js
+TWEEN.FrameThrottle(60)
 ```
 <a name="TWEEN.autoPlay"></a>
 

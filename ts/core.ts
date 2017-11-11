@@ -1,7 +1,7 @@
 /* global process */
-import { cancelAnimationFrame, requestAnimationFrame, root } from './shim'
+import { cancelAnimationFrame, requestAnimationFrame, root } from './shim';
 
-declare let process: any
+declare let process: any;
 
 /**
  * Get browser/Node.js current time-stamp
@@ -10,28 +10,35 @@ declare let process: any
  * @example
  * TWEEN.now
  */
-const now: any = (function () {
-  if (typeof (process) !== 'undefined' && process.hrtime !== undefined) {
-    return function () {
-      const time: number = process.hrtime()
+const now: any = (function() {
+  if (typeof process !== 'undefined' && process.hrtime !== undefined) {
+    return function() {
+      const time: number = process.hrtime();
 
       // Convert [seconds, nanoseconds] to milliseconds.
-      return time[0] * 1000 + time[1] / 1000000
-    }
+      return time[0] * 1000 + time[1] / 1000000;
+    };
     // In a browser, use window.performance.now if it is available.
-  } else if (root.performance !== undefined &&
-    root.performance.now !== undefined) {
+  } else if (
+    root.performance !== undefined &&
+    root.performance.now !== undefined
+  ) {
     // This must be bound, because directly assigning this function
     // leads to an invocation exception in Chrome.
-    return root.performance.now.bind(root.performance)
+    return root.performance.now.bind(root.performance);
     // Use Date.now if it is available.
   } else {
-    const offset: number = root.performance && root.performance.timing && root.performance.timing.navigationStart ? root.performance.timing.navigationStart : Date.now()
-    return function () {
-      return Date.now() - offset
-    }
+    const offset: number =
+      root.performance &&
+      root.performance.timing &&
+      root.performance.timing.navigationStart
+        ? root.performance.timing.navigationStart
+        : Date.now();
+    return function() {
+      return Date.now() - offset;
+    };
   }
-}())
+})();
 
 /**
  * Lightweight, effecient and modular ES6 version of tween.js
@@ -42,12 +49,14 @@ const now: any = (function () {
  * // ES6
  * const {add, remove, isRunning, autoPlay} = TWEEN
  */
-const _tweens: any[] = []
-let isStarted: boolean = false
-let _autoPlay: boolean = false
-let _tick: Function
-const _ticker: Function = requestAnimationFrame
-const _stopTicker: Function = cancelAnimationFrame
+const _tweens: any[] = [];
+let isStarted: boolean = false;
+let _autoPlay: boolean = false;
+let _tick: Function;
+const _ticker: Function = requestAnimationFrame;
+const _stopTicker: Function = cancelAnimationFrame;
+let emptyFrame: number = 0;
+let powerModeThrottle: number = 120;
 
 /**
  * Adds tween to list
@@ -59,26 +68,28 @@ const _stopTicker: Function = cancelAnimationFrame
  * TWEEN.add(tween)
  */
 const add = (tween: any): void => {
-  let i: number = _tweens.indexOf(tween)
+  let i: number = _tweens.indexOf(tween);
 
   if (i > -1) {
-    _tweens.splice(i, 1)
+    _tweens.splice(i, 1);
   }
 
   if (_tweens.length > 0) {
-    i = _tweens.length - 1
-    let tweenPrev = _tweens[i]
-    tween.prev = tweenPrev
-    tweenPrev.next = tween
+    i = _tweens.length - 1;
+    let tweenPrev = _tweens[i];
+    tween.prev = tweenPrev;
+    tweenPrev.next = tween;
   }
 
-  _tweens.push(tween)
+  _tweens.push(tween);
+
+  emptyFrame = 0;
 
   if (_autoPlay && !isStarted) {
-    _tick = _ticker(update)
-    isStarted = true
+    _tick = _ticker(update);
+    isStarted = true;
   }
-}
+};
 
 /**
  * Adds ticker like event
@@ -87,14 +98,25 @@ const add = (tween: any): void => {
  * @example
  * TWEEN.onTick(time => console.log(time))
  */
-const onTick = (fn: Function) => _tweens.push({ update: fn })
+const onTick = (fn: Function) => _tweens.push({ update: fn });
+
+/**
+ * Sets after how much frames empty updating should stop
+ * @param {number} [frameCount=120] count of frames that should stop after all tweens removed
+ * @memberof TWEEN
+ * @example
+ * TWEEN.FrameThrottle(60)
+ */
+const FrameThrottle = (frameCount: number = 120) => {
+  powerModeThrottle = frameCount;
+};
 
 /**
  * @returns {Array<Tween>} List of tweens in Array
  * @memberof TWEEN
  * TWEEN.getAll() // list of tweens
  */
-const getAll = (): any[] => _tweens
+const getAll = (): any[] => _tweens;
 
 /**
  * Runs update loop automaticlly
@@ -103,8 +125,8 @@ const getAll = (): any[] => _tweens
  * @memberof TWEEN
  */
 const autoPlay = (state: boolean): void => {
-  _autoPlay = state
-}
+  _autoPlay = state;
+};
 
 /**
  * Removes all tweens from list
@@ -112,8 +134,8 @@ const autoPlay = (state: boolean): void => {
  * @memberof TWEEN
  */
 const removeAll = (): void => {
-  _tweens.length = 0
-}
+  _tweens.length = 0;
+};
 
 /**
  * @param {Tween} tween Tween Instance to be matched
@@ -125,12 +147,12 @@ const removeAll = (): void => {
 const get = (tween: any): Function | null => {
   for (let i: number = 0; i < _tweens.length; i++) {
     if (tween === _tweens[i]) {
-      return _tweens[i]
+      return _tweens[i];
     }
   }
 
-  return null
-}
+  return null;
+};
 
 /**
  * @param {Tween} tween Tween Instance to be matched
@@ -140,8 +162,8 @@ const get = (tween: any): Function | null => {
  * TWEEN.has(tween)
  */
 const has = (tween: any): boolean => {
-  return get(tween) !== null
-}
+  return get(tween) !== null;
+};
 /**
  * Removes tween from list
  * @param {Tween} tween Tween instance
@@ -150,11 +172,11 @@ const has = (tween: any): boolean => {
  * TWEEN.remove(tween)
  */
 const remove = (tween: any): void => {
-  const i = _tweens.indexOf(tween)
+  const i = _tweens.indexOf(tween);
   if (i !== -1) {
-    _tweens.splice(i, 1)
+    _tweens.splice(i, 1);
   }
-}
+};
 
 /**
  * Updates global tweens by given time
@@ -166,25 +188,30 @@ const remove = (tween: any): void => {
  */
 
 const update = (time: number, preserve?: boolean): boolean => {
-  time = time !== undefined ? time : now()
+  time = time !== undefined ? time : now();
   if (_autoPlay && isStarted) {
-    _tick = _ticker(update)
+    _tick = _ticker(update);
   }
 
   if (!_tweens.length) {
-    _stopTicker(_tick)
-    isStarted = false
-    return false
+    emptyFrame++;
   }
 
-  let i: number = 0
-  let tween: any
+  if (emptyFrame > powerModeThrottle) {
+    _stopTicker(_tick);
+    isStarted = false;
+    emptyFrame = 0;
+    return false;
+  }
+
+  let i: number = 0;
+  let tween: any;
   while (i < _tweens.length) {
-    _tweens[i++].update(time, preserve)
+    _tweens[i++].update(time, preserve);
   }
 
-  return true
-}
+  return true;
+};
 
 /**
  * The state of ticker running
@@ -192,7 +219,7 @@ const update = (time: number, preserve?: boolean): boolean => {
  * @memberof TWEEN
  * @example TWEEN.isRunning()
  */
-const isRunning = (): boolean => isStarted
+const isRunning = (): boolean => isStarted;
 
 /**
  * The plugins store object
@@ -205,6 +232,19 @@ const isRunning = (): boolean => isStarted
  *
  * @static
  */
-const Plugins: Object = {}
+const Plugins: Object = {};
 
-export { Plugins, get, has, getAll, removeAll, remove, add, now, update, autoPlay, onTick, isRunning }
+export {
+  Plugins,
+  get,
+  has,
+  getAll,
+  removeAll,
+  remove,
+  add,
+  now,
+  update,
+  autoPlay,
+  onTick,
+  isRunning,
+};
