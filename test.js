@@ -54,7 +54,7 @@ test('Value Interpolation', t => {
     })
 
     let tween = new Tween(obj)
-        .to({ a: 1, b: 'B value 2', c: { x: 3 }, d: [4], _e: 5, g: '+1' }, 100)
+        .to({ a: 1, b: 'B value 2', c: { x: 3 }, d: [4], _e: 5, g: '+=1' }, 100)
         .start(0)
 
     update(0)
@@ -114,7 +114,7 @@ test('Value Array-based Interpolation', t => {
 
 	t.log('Start-value interpolation was done')
 
-    tween.update(100)
+    update(100)
 
 })
 

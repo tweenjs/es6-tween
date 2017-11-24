@@ -498,6 +498,9 @@ class Tween {
         }
       }
       _valuesStart[property] = start;
+	  if (typeof start === 'number' && typeof end === 'string' && end[1] === '=') {
+		  continue
+	  }
       decompose(property, object, _valuesStart, _valuesEnd);
     }
 
@@ -805,7 +808,9 @@ class Tween {
         end.update(value);
       } else if (typeof end === 'function') {
         object[property] = end(value);
-      } else {
+      } else if (typeof end === 'string' && typeof start === 'number') {
+		object[property] = start + parseFloat(end[0] + end.substr(2)) * value
+	  } else {
         recompose(property, object, _valuesStart, _valuesEnd, value, elapsed);
       }
       if (Plugins[property] && Plugins[property].update) {
@@ -832,7 +837,7 @@ class Tween {
 
     this.emit(EVENT_UPDATE, object, elapsed, time);
 
-    if (elapsed === 1 || (_reversed && !elapsed)) {
+    if (elapsed === 1 || (_reversed && elapsed === 0)) {
       if (_repeat > 0 && _duration > 0) {
         if (_isFinite) {
           this._repeat--;
@@ -840,7 +845,14 @@ class Tween {
 
         if (_yoyo) {
           this._reversed = !_reversed;
-        }
+        } else {
+		for (property in _valuesEnd) {
+			let end = _valuesEnd[property]
+			if (typeof end === 'string' && typeof _valuesStart[property] === 'number') {
+			_valuesStart[property] += parseFloat(end[0] + end.substr(2))
+			}
+		}
+		}
 
         this.emit(_yoyo && !_reversed ? EVENT_REVERSE : EVENT_REPEAT, object);
 

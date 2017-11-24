@@ -74,13 +74,6 @@ const add = (tween: any): void => {
     _tweens.splice(i, 1);
   }
 
-  if (_tweens.length > 0) {
-    i = _tweens.length - 1;
-    let tweenPrev = _tweens[i];
-    tween.prev = tweenPrev;
-    tweenPrev.next = tween;
-  }
-
   _tweens.push(tween);
 
   emptyFrame = 0;

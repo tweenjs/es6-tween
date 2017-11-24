@@ -61,7 +61,7 @@ const hex2rgb = (all, hex) => {
 };
 
 export function decomposeString(fromValue: string): any[] {
-  return fromValue.replace(hexColor, hex2rgb).match(NUM_REGEX).map(v => (isNaNForST(v) ? v : +v));
+  return typeof fromValue !== 'string' ? fromValue : fromValue.replace(hexColor, hex2rgb).match(NUM_REGEX).map(v => (isNaNForST(v) ? v : +v));
 }
 
 // Decompose value, now for only `string` that required
@@ -83,7 +83,7 @@ export function decompose(prop, obj, from, to, stringBuffer?) {
 		}
 	}
 
-	if (fromValue1[0] !== STRING_PROP) {
+	if (fromValue1[0] !== STRING_PROP && Array.isArray(fromValue1)) {
     fromValue1.unshift(STRING_PROP);
 	}
 	if (toValue1[0] !== STRING_PROP) {
