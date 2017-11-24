@@ -238,7 +238,7 @@ const Easing = {
       }
 
       return Easing.Bounce.Out(k * 2 - 1) * 0.5 + 0.5;
-    },
+    }
   },
 
   Stepped: {

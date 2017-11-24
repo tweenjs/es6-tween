@@ -20,12 +20,12 @@ export const EVENT_SEEK = 'seek';
 // For String tweening stuffs
 export const STRING_PROP = 'STRING_PROP';
 // Also RegExp's for string tweening
-export const NUM_REGEX = /\s+|([A-Za-z?().,{}:""[\]#\%]+)|([-+]+)?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/g;
+export const NUM_REGEX = /\s+|([A-Za-z?().,{}:""[\]#\%]+)|([-+]=+)?([-+]+)?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]=?\d+)?/g;
 export const HEXC_REGEX = /^#([0-9a-f]{6}|[0-9a-f]{3})$/i;
 
 // Copies everything, duplicates, no shallow-copy
 export function deepCopy(source) {
-  if (source === undefined || typeof source !== 'object') {
+  if ((source && source.nodeType) || source === undefined || typeof source !== 'object') {
     return source;
   } else if (Array.isArray(source)) {
     return [].concat(source);
@@ -40,20 +40,56 @@ export function deepCopy(source) {
 }
 
 const isNaNForST = v =>
-  isNaN(+v) || v[0] === '+' || v[0] === '-' || v === '' || v === ' ';
+  isNaN(+v) || ((v[0] === '+' || v[0] === '-') && v[1] === '=') || v === '' || v === ' ';
+
+const hexColor = /^#([0-9a-f]{6}|[0-9a-f]{3})$/i;
+const hex2rgb = (all, hex) => {
+	let r;
+	let g;
+	let b;
+	if (hex.length === 3) {
+		r = hex[0];
+		g = hex[1];
+		b = hex[2];
+		hex = r + r + g + g + b + b;
+	}
+	let color = parseInt(hex, 16);
+	r = color >> 16 & 255;
+	g = color >> 8 & 255;
+	b = color & 255;
+	return "rgb(" + r + "," + g + "," + b + ")";
+};
+
+export function decomposeString(fromValue: string): any[] {
+  return fromValue.replace(hexColor, hex2rgb).match(NUM_REGEX).map(v => (isNaNForST(v) ? v : +v));
+}
 
 // Decompose value, now for only `string` that required
-export function decompose(prop, obj, from, to) {
+export function decompose(prop, obj, from, to, stringBuffer?) {
   const fromValue = from[prop];
   const toValue = to[prop];
-  if (typeof fromValue === 'string' && typeof toValue === 'string') {
-    let fromValue1 = fromValue
-      .match(NUM_REGEX)
-      .map(v => (isNaNForST(v) ? v : +v));
-    let toValue1 = toValue
-      .match(NUM_REGEX)
-      .map((v, i) => (isNaNForST(v) ? v : +v));
+
+  if (typeof fromValue === 'string' || typeof toValue === 'string') {
+    let fromValue1 = Array.isArray(fromValue) && fromValue[0] === STRING_PROP ? fromValue : decomposeString(fromValue);
+    let toValue1 = Array.isArray(toValue) && toValue[0] === STRING_PROP ? toValue : decomposeString(toValue);
+
+	let i = 1;
+	while (i < fromValue1.length) {
+		if (fromValue1[i] === toValue1[i] && typeof fromValue1[i - 1] === 'string') {
+			fromValue1.splice(i - 1, 2, fromValue1[i - 1] + fromValue1[i])
+			toValue1.splice(i - 1, 2, toValue1[i - 1] + toValue1[i])
+		} else {
+			i++
+		}
+	}
+
+	if (fromValue1[0] !== STRING_PROP) {
     fromValue1.unshift(STRING_PROP);
+	}
+	if (toValue1[0] !== STRING_PROP) {
+    toValue1.unshift(STRING_PROP);
+	}
+
     from[prop] = fromValue1;
     to[prop] = toValue1;
     return true;
@@ -74,9 +110,15 @@ export function decompose(prop, obj, from, to) {
 
 // Recompose value
 export const DECIMAL = Math.pow(10, 4);
-export function recompose(prop, obj, from, to, t, originalT?) {
-  const fromValue = from[prop];
-  const toValue = to[prop];
+export const RGB = 'rgb(';
+export const RGBA = 'rgba(';
+
+export const isRGBColor = (v, i, r = RGB) =>
+  typeof v[i] === 'number' &&
+  (v[i - 1] === r || v[i - 3] === r || v[i - 5] === r);
+export function recompose(prop, obj, from, to, t, originalT?, stringBuffer?) {
+  const fromValue = stringBuffer ? from : from[prop];
+  const toValue = stringBuffer ? to : to[prop];
   if (toValue === undefined) {
     return fromValue;
   }
@@ -90,33 +132,42 @@ export function recompose(prop, obj, from, to, t, originalT?) {
     if (!fromValue || !toValue) {
       return obj[prop];
     }
-    if (fromValue[0] === STRING_PROP) {
+    if (fromValue[0] === STRING_PROP || toValue[0] === STRING_PROP) {
       let STRING_BUFFER = '';
       for (let i = 1, len = fromValue.length; i < len; i++) {
-        const isRelative = typeof toValue[i - 1] === 'string';
-        STRING_BUFFER +=
-          typeof toValue[i - 1] !== 'number'
+        const isRelative = typeof fromValue[i] === 'number' && typeof toValue[i] === 'string' && toValue[i][1] === '=';
+        let currentValue =
+          typeof fromValue[i] !== 'number'
             ? fromValue[i]
             : (((isRelative
-                ? fromValue[i] + +toValue[i - 1]
-                : fromValue[i] + (toValue[i - 1] - fromValue[i]) * t) *
+                ? fromValue[i] +
+                  parseFloat(toValue[i][0] + toValue[i].substr(2)) * t
+                : fromValue[i] + (toValue[i] - fromValue[i]) * t) *
                 DECIMAL) |
                 0) /
               DECIMAL;
-        if (originalT === 1) {
-          fromValue[i] = fromValue[i] + +toValue[i - 1];
+        if (isRGBColor(fromValue, i) || isRGBColor(fromValue, i, RGBA)) {
+          currentValue |= 0;
+        }
+        STRING_BUFFER += currentValue;
+        if (isRelative && originalT === 1) {
+          fromValue[i] =
+            fromValue[i] +
+            parseFloat(toValue[i][0] + toValue[i].substr(2));
         }
       }
+	  if (!stringBuffer) {
       obj[prop] = STRING_BUFFER;
+	  }
       return STRING_BUFFER;
-    } else if (Array.isArray(fromValue)) {
+    } else if (Array.isArray(fromValue) && fromValue[0] !== STRING_PROP) {
       for (let i = 0, len = fromValue.length; i < len; i++) {
         if (fromValue[i] === toValue[i]) {
           continue;
         }
         recompose(i, obj[prop], fromValue, toValue, t, originalT);
       }
-    } else {
+    } else if (typeof fromValue === 'object' && !!fromValue) {
       for (let i in fromValue) {
         if (fromValue[i] === toValue[i]) {
           continue;
@@ -128,7 +179,7 @@ export function recompose(prop, obj, from, to, t, originalT?) {
     const isRelative = typeof toValue === 'string';
     obj[prop] =
       (((isRelative
-        ? fromValue + +toValue * t
+        ? fromValue + parseFloat(toValue[0] + toValue.substr(2)) * t
         : fromValue + (toValue - fromValue) * t) *
         DECIMAL) |
         0) /

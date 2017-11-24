@@ -13,37 +13,37 @@ html, body {
 	text-align: center;
 	line-height: 5em;
 }
-.box {
-	width: 50px;
-	height: 50px;
-	background: #fc0;
-}
 </style>
 </head>
 <body>
-<div class="box box1"></div>
-<svg id="svg" width="200" height="200" viewBox="-50 -50 200 200">
-<path id="pp" d="M0 50 C0 50 5 64 10 56 C16 47 15 16 20 25 C26 34 21 93 29 87 C38 81 42 0 51 2 C59 5 52 92 61 98 C69 104 72 36 81 24 C89 13 87 47 92 56 C97 64 100 50 100 50" stroke-width="2" fill="none" stroke="#fc0"/>
-<circle id="p0" cx="0" cy="100" r="5" fill="#0cf"/> <!-- [['M'], [0, 100]] -->
-</svg>
+<div class="container">
+</div>
 <script src="../full/Tween.js"></script>
-<script src="../../es6-tween-plugins/renderer/render.js"></script>
-<script src="../../es6-tween-plugins/owneasing/owneasing.umd.js"></script>
 <script>
-const { autoPlay, Tween, Easing, Timeline, OwnProps, OwnInterpolation } = TWEEN;
 
-autoPlay(true);
+var body = document.body;
 
-var box = [].slice.call(document.querySelectorAll('.box'))[0];
-var p0 = document.getElementById('p0')
-var pp = document.getElementById('pp')
+TWEEN.autoPlay(true);
 
-var _cease = OwnEasing(pp.getAttribute('d'))
+var round = function round(o) {
+for ( var p in o ) {
+	if ( typeof o[p] === "number" ) {
+		o[p] = o[p] | 0;
+	} else if (typeof o[p] === "object") {
+		round(o[p]);
+	}
+	}
+}
+				
+var tween = new TWEEN.Tween([0, 200, {x:300}]).to([200, 400, {x:500}], 2000).on('update', function (object) {
+	round(object);
+	body.textContent = JSON.stringify(object);
+}).start();
 
-var t = new Tween(p0, {x:0,y:0}).to({x:100,y:-100}, 20000).easing({y:_cease}).on('update', (obj, t) => {
-//const r = _cease([0, 45], t)
-//box.style.transform = 'rotate(' + r + 'deg)'
-}).start()
+var tween = new TWEEN.Tween({x:'i am here 600 year'}).to({x:'i am here 200 year'}, 2000).delay(3000).on('update', function (object) {
+	//round(object);
+	body.textContent = JSON.stringify(object);
+}).start();
 </script>
 </body>
 </html>

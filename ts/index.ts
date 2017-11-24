@@ -17,10 +17,12 @@ import Interpolation from './Interpolation';
 import Timeline from './Timeline';
 import Tween from './Tween';
 import Selector from './selector';
+import Interpolator from './Interpolator';
 import './shim';
 export {
   Plugins,
   Selector,
+  Interpolator,
   onTick,
   has,
   get,

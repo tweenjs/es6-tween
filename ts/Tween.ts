@@ -5,9 +5,11 @@ import NodeCache, { Store } from './NodeCache';
 import Selector from './selector';
 import {
   decompose,
+  decomposeString,
   recompose,
   deepCopy,
   SET_NESTED,
+  STRING_PROP,
   EVENT_CALLBACK,
   CHAINED_TWEENS,
   EVENT_UPDATE,
@@ -32,16 +34,11 @@ export interface Params {
   quickRender?: boolean;
 }
 
-export interface RenderType {
-  update?: Function;
-}
-
 /**
  * Tween main constructor
  * @constructor
  * @class
  * @namespace Tween
- * @extends Tween
  * @param {Object|Element} node Node Element or Tween initial object
  * @param {Object=} object If Node Element is using, second argument is used for Tween initial object
  * @example let tween = new Tween(myNode, {width:'100px'}).to({width:'300px'}, 2000).start()
@@ -63,7 +60,6 @@ class Tween {
   public _yoyo: boolean;
   public _pausedTime: number;
   public node: any;
-  public Renderer: any;
   public _r: number;
   public _reversed: boolean;
   public _isFinite: boolean;
@@ -71,7 +67,8 @@ class Tween {
   public elapsed: number;
   private _onStartCallbackFired: boolean;
   private _rendered: boolean;
-  private __render: RenderType;
+  private __render: boolean;
+  public static Renderer: any;
   private InitialValues: any;
   private _maxListener: number;
   private _chainedTweensCount: number = 0;
@@ -432,7 +429,6 @@ class Tween {
       _valuesStart,
       _valuesEnd,
       object,
-      Renderer,
       node,
       InitialValues,
       _easingFunction,
@@ -469,21 +465,23 @@ class Tween {
       }
     }
     for (const property in _valuesEnd) {
-      const start = object && object[property];
-      const end = _valuesEnd[property];
-      if (Plugins[property]) {
-        const plugin = Plugins[property].prototype.update
-          ? new Plugins[property](this, start, end, property, object)
-          : Plugins[property](this, start, end, property, object);
-        if (plugin) {
-          _valuesEnd[property] = plugin;
+      let start = object && object[property] && deepCopy(object[property]);
+      let end = _valuesEnd[property];
+      if (Plugins[property] && Plugins[property].init) {
+        Plugins[property].init.call(this, start, end, property, object);
+        if (start === undefined && _valuesStart[property]) {
+          start = _valuesStart[property];
         }
-        continue;
+        if (Plugins[property].skipProcess) {
+          continue;
+        }
       }
       if (
         (typeof start === 'number' && isNaN(start)) ||
         start === null ||
         end === null ||
+        start === false ||
+        end === false ||
         start === undefined ||
         end === undefined ||
         start === end
@@ -492,13 +490,20 @@ class Tween {
       }
       if (Array.isArray(end) && !Array.isArray(start)) {
         end.unshift(start);
+        for (let i = 0, len = end.length; i < len; i++) {
+          if (typeof end[i] === 'string') {
+            end[i] = decomposeString(end[i]);
+            end[i].unshift(STRING_PROP);
+          }
+        }
       }
-      _valuesStart[property] = deepCopy(start);
+      _valuesStart[property] = start;
       decompose(property, object, _valuesStart, _valuesEnd);
     }
 
-    if (Renderer && this.node) {
-      this.__render = new Renderer(this, object, _valuesEnd);
+    if (Tween.Renderer && this.node && Tween.Renderer.init) {
+      Tween.Renderer.init.call(this, object, _valuesStart, _valuesEnd);
+      this.__render = true;
     }
 
     return this;
@@ -734,10 +739,10 @@ class Tween {
       time = time !== undefined ? time : now();
 
       let delta: number = time - _prevTime;
-      if (delta > TOO_LONG_FRAME_MS) {
-        time += delta - FRAME_MS;
-      }
       this._prevTime = time;
+      if (delta > TOO_LONG_FRAME_MS) {
+        time -= delta - FRAME_MS;
+      }
 
       if (!_isPlaying || (time < _startTime && !forceTime)) {
         return true;
@@ -769,7 +774,10 @@ class Tween {
 
     for (property in _valuesEnd) {
       const start = _valuesStart[property];
-      if (start === undefined || start === null) {
+      if (
+        (start === undefined || start === null) &&
+        !(Plugins[property] && Plugins[property].update)
+      ) {
         continue;
       }
       const end = _valuesEnd[property];
@@ -778,18 +786,37 @@ class Tween {
         : typeof currentEasing === 'function'
           ? currentEasing(elapsed)
           : defaultEasing(elapsed);
+      const _interpolationFunctionCall = _interpolationFunction[property]
+        ? _interpolationFunction[property]
+        : typeof _interpolationFunction === 'function'
+          ? _interpolationFunction
+          : Interpolation.Linear;
 
       if (typeof end === 'number') {
         object[property] =
           (((start + (end - start) * value) * DECIMAL) | 0) / DECIMAL;
       } else if (Array.isArray(end) && !Array.isArray(start)) {
-        object[property] = _interpolationFunction(end, value, object[property]);
+        object[property] = _interpolationFunctionCall(
+          end,
+          value,
+          object[property]
+        );
       } else if (end && end.update) {
         end.update(value);
       } else if (typeof end === 'function') {
         object[property] = end(value);
       } else {
         recompose(property, object, _valuesStart, _valuesEnd, value, elapsed);
+      }
+      if (Plugins[property] && Plugins[property].update) {
+        Plugins[property].update.call(
+          this,
+          object[property],
+          start,
+          end,
+          value,
+          elapsed
+        );
       }
       propCount++;
     }
@@ -799,8 +826,8 @@ class Tween {
       return false;
     }
 
-    if (__render) {
-      __render.update(object, elapsed);
+    if (__render && Tween.Renderer && Tween.Renderer.update) {
+      Tween.Renderer.update.call(this, object, elapsed);
     }
 
     this.emit(EVENT_UPDATE, object, elapsed, time);
