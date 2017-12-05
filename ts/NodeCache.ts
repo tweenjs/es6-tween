@@ -17,7 +17,7 @@ export default function(node, object, tween) {
       tween._startTime === storeID.tween._startTime
     ) {
       remove(storeID.tween);
-    } else {
+    } else if (typeof object === 'object' && !!object && !!storeID.object) {
       for (let prop in object) {
         if (prop in storeID.object) {
           if (tween._startTime === storeID.tween._startTime) {
@@ -27,11 +27,15 @@ export default function(node, object, tween) {
           }
         }
       }
-      return object;
+	  storeID.object = {...storeID.object, ...object}
     }
     return storeID.object;
   }
 
-  Store[ID] = { tween, object, propNormaliseRequired: false };
-  return Store[ID].object;
+  if (typeof object === 'object' && !!object) {
+	Store[ID] = { tween, object, propNormaliseRequired: false };
+	return Store[ID].object;
+  }
+
+  return object;
 }

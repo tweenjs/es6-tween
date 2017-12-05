@@ -1,5 +1,13 @@
 import { decompose, recompose, decomposeString, STRING_PROP } from './constants'
 
+/**
+ * Tween helper for plugins
+ * @namespace TWEEN.Interpolator
+ * @memberof TWEEN
+ * @param {any} a - Initial position
+ * @param {any} b - End position
+ * @return {Function} Returns function that accepts number between `0-1`
+ */
 const Interpolator = (a: any, b: any): Function => {
 	let isArray: boolean = Array.isArray(a);
 	let origin: any = typeof a === 'string' ? a : isArray ? a.slice() : Object.assign({}, a);
@@ -25,8 +33,14 @@ const Interpolator = (a: any, b: any): Function => {
 		}
 	}
 
-		a.unshift(STRING_PROP)
-		b.unshift(STRING_PROP)
+	let c = {isString:true,length:a.length}
+	let d = {isString:true,length:b.length}
+
+	while (i < c.length) {
+		c[i] = a[i]
+		d[i] = b[i]
+		i++
+	}
 	}
 	return function (t: number) {
 		if (isArray) {

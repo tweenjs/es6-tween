@@ -83,15 +83,26 @@ export function decompose(prop, obj, from, to, stringBuffer?) {
 		}
 	}
 
-	if (fromValue1[0] !== STRING_PROP && Array.isArray(fromValue1)) {
-    fromValue1.unshift(STRING_PROP);
+	i = 0;
+
+	if (fromValue1[0] === STRING_PROP) {
+		fromValue1.shift()
 	}
-	if (toValue1[0] !== STRING_PROP) {
-    toValue1.unshift(STRING_PROP);
+	if (toValue1[0] === STRING_PROP) {
+		toValue1.shift()
 	}
 
-    from[prop] = fromValue1;
-    to[prop] = toValue1;
+	let fromValue2 = {isString:true,length:fromValue1.length}
+	let toValue2 = {isString:true,length:toValue1.length}
+
+	while (i < fromValue2.length) {
+		fromValue2[i] = fromValue1[i]
+		toValue2[i] = toValue1[i]
+		i++
+	}
+
+    from[prop] = fromValue2;
+    to[prop] = toValue2;
     return true;
   } else if (typeof fromValue === 'object' && typeof toValue === 'object') {
     if (Array.isArray(fromValue)) {
@@ -132,9 +143,9 @@ export function recompose(prop, obj, from, to, t, originalT?, stringBuffer?) {
     if (!fromValue || !toValue) {
       return obj[prop];
     }
-    if (fromValue[0] === STRING_PROP || toValue[0] === STRING_PROP) {
+    if (typeof fromValue === 'object' && !!fromValue && fromValue.isString) {
       let STRING_BUFFER = '';
-      for (let i = 1, len = fromValue.length; i < len; i++) {
+      for (let i = 0, len = fromValue.length; i < len; i++) {
         const isRelative = typeof fromValue[i] === 'number' && typeof toValue[i] === 'string' && toValue[i][1] === '=';
         let currentValue =
           typeof fromValue[i] !== 'number'
@@ -167,7 +178,7 @@ export function recompose(prop, obj, from, to, t, originalT?, stringBuffer?) {
         }
         recompose(i, obj[prop], fromValue, toValue, t, originalT);
       }
-    } else if (typeof fromValue === 'object' && !!fromValue) {
+    } else if (typeof fromValue === 'object' && !!fromValue && !fromValue.isString) {
       for (let i in fromValue) {
         if (fromValue[i] === toValue[i]) {
           continue;

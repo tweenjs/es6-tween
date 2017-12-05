@@ -1,17 +1,17 @@
 {
   "name": "es6-tween",
-  "version": "4.2.0",
+  "version": "5.0.0",
   "description": "ES6 implementation of amazing tween.js",
-  "browser": "full/Tween.min.js",
-  "cdn": "full/Tween.min.js",
-  "main": "full/Tween.js",
+  "browser": "bundled/Tween.min.js",
+  "cdn": "bundled/Tween.min.js",
+  "main": "bundled/Tween.js",
   "module": "src/index.js",
   "directories": {
     "example": "examples"
   },
   "scripts": {
     "source": "rollup -c",
-    "minify": "uglifyjs full/Tween.js -c -m -o full/Tween.min.js --source-map \"filename='full/Tween.min.js.map'\"",
+    "minify": "uglifyjs bundled/Tween.js -c -m -o bundled/Tween.min.js --source-map \"filename='bundled/Tween.min.js.map'\"",
     "build": "npm run source && npm run minify",
     "dev": "rollup -c -w",
     "test": "tsc && rollup -c && ava --verbose",

@@ -38,7 +38,7 @@ export interface Params {
  * Tween main constructor
  * @constructor
  * @class
- * @namespace Tween
+ * @namespace TWEEN.Tween
  * @param {Object|Element} node Node Element or Tween initial object
  * @param {Object=} object If Node Element is using, second argument is used for Tween initial object
  * @example let tween = new Tween(myNode, {width:'100px'}).to({width:'300px'}, 2000).start()
@@ -65,6 +65,7 @@ class Tween {
   public _isFinite: boolean;
   public _isPlaying: boolean;
   public elapsed: number;
+  public _prevTime: number;
   private _onStartCallbackFired: boolean;
   private _rendered: boolean;
   private __render: boolean;
@@ -72,7 +73,6 @@ class Tween {
   private InitialValues: any;
   private _maxListener: number;
   private _chainedTweensCount: number = 0;
-  private _prevTime: number;
   /**
    * Easier way to call the Tween
    * @param {Element} node DOM Element
@@ -80,7 +80,7 @@ class Tween {
    * @param {object} to - Target value
    * @param {object} params - Options of tweens
    * @example Tween.fromTo(node, {x:0}, {x:200}, {duration:1000})
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    * @static
    */
   public static fromTo(node, object, to, params: Params = {}) {
@@ -99,7 +99,7 @@ class Tween {
    * @param {object} to - Target value
    * @param {object} params - Options of tweens
    * @example Tween.to(node, {x:200}, {duration:1000})
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    * @static
    */
   public static to(node, to, params) {
@@ -111,7 +111,7 @@ class Tween {
    * @param {object} from - Initial value
    * @param {object} params - Options of tweens
    * @example Tween.from(node, {x:200}, {duration:1000})
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    * @static
    */
   public static from(node, from, params) {
@@ -158,7 +158,7 @@ class Tween {
   /**
    * Sets max `event` listener's count to Events system
    * @param {number} count - Event listener's count
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   setMaxListener(count: number = 15) {
     this._maxListener = count;
@@ -169,7 +169,7 @@ class Tween {
    * Adds `event` to Events system
    * @param {string} event - Event listener name
    * @param {Function} callback - Event listener callback
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public on(event: string, callback: Function) {
     const { _maxListener } = this;
@@ -189,7 +189,7 @@ class Tween {
    * Removes itself after fired once
    * @param {string} event - Event listener name
    * @param {Function} callback - Event listener callback
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public once(event: string, callback: Function) {
     const { _maxListener } = this;
@@ -211,7 +211,7 @@ class Tween {
    * Removes `event` from Events system
    * @param {string} event - Event listener name
    * @param {Function} callback - Event listener callback
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public off(event: string, callback: Function) {
     const { _maxListener } = this;
@@ -228,7 +228,7 @@ class Tween {
   /**
    * Emits/Fired/Trigger `event` from Events system listeners
    * @param {string} event - Event listener name
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public emit(event: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any) {
     const { _maxListener } = this;
@@ -249,7 +249,7 @@ class Tween {
   /**
    * @return {boolean} State of playing of tween
    * @example tween.isPlaying() // returns `true` if tween in progress
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public isPlaying(): boolean {
     return this._isPlaying;
@@ -258,7 +258,7 @@ class Tween {
   /**
    * @return {boolean} State of started of tween
    * @example tween.isStarted() // returns `true` if tween in started
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public isStarted(): boolean {
     return this._onStartCallbackFired;
@@ -268,7 +268,7 @@ class Tween {
    * Reverses the tween state/direction
    * @example tween.reverse()
    * @param {boolean=} state Set state of current reverse
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public reverse(state?: boolean) {
     const { _reversed } = this;
@@ -281,7 +281,7 @@ class Tween {
   /**
    * @return {boolean} State of reversed
    * @example tween.reversed() // returns `true` if tween in reversed state
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public reversed(): boolean {
     return this._reversed;
@@ -290,7 +290,7 @@ class Tween {
   /**
    * Pauses tween
    * @example tween.pause()
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public pause() {
     if (!this._isPlaying) {
@@ -308,7 +308,7 @@ class Tween {
   /**
    * Play/Resume the tween
    * @example tween.play()
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public play() {
     if (this._isPlaying) {
@@ -329,7 +329,7 @@ class Tween {
    * Restarts tween from initial value
    * @param {boolean=} noDelay If this param is set to `true`, restarts tween without `delay`
    * @example tween.restart()
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public restart(noDelay?: boolean) {
     this._repeat = this._r;
@@ -345,7 +345,7 @@ class Tween {
    * @param {Time} time Tween update time
    * @param {boolean=} keepPlaying When this param is set to `false`, tween pausing after seek
    * @example tween.seek(500)
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    * @deprecated Not works as excepted, so we deprecated this method
    */
   public seek(time: number, keepPlaying?: boolean) {
@@ -377,7 +377,7 @@ class Tween {
    * Sets tween duration
    * @param {number} amount Duration is milliseconds
    * @example tween.duration(2000)
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public duration(amount: number) {
     this._duration =
@@ -391,7 +391,7 @@ class Tween {
    * @param {object} properties Target value (to value)
    * @param {number|Object=} [duration=1000] Duration of tween
    * @example let tween = new Tween({x:0}).to({x:100}, 2000)
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public to(properties: Object, duration: any = 1000, maybeUsed?: any) {
     this._valuesEnd = properties;
@@ -419,7 +419,7 @@ class Tween {
   /**
    * Renders and computes value at first render
    * @private
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public render() {
     if (this._rendered) {
@@ -434,6 +434,9 @@ class Tween {
       _easingFunction,
     } = this;
 
+    SET_NESTED(object);
+    SET_NESTED(_valuesEnd);
+
     if (node && node.queueID && Store[node.queueID]) {
       const prevTweenByNode = Store[node.queueID];
       if (
@@ -442,7 +445,7 @@ class Tween {
       ) {
         for (const property in _valuesEnd) {
           if (prevTweenByNode.tween._valuesEnd[property] !== undefined) {
-            delete prevTweenByNode.tween._valuesEnd[property];
+            //delete prevTweenByNode.tween._valuesEnd[property];
           }
         }
         prevTweenByNode.normalisedProp = true;
@@ -450,17 +453,14 @@ class Tween {
       }
     }
 
-    SET_NESTED(object);
-    SET_NESTED(_valuesEnd);
-
     if (node && InitialValues) {
-      if (!object) {
+      if (!object || Object.keys(object).length === 0) {
         object = this.object = NodeCache(
           node,
           InitialValues(node, _valuesEnd),
           this
         );
-      } else if (!_valuesEnd) {
+      } else if (!_valuesEnd || Object.keys(_valuesEnd).length === 0) {
         _valuesEnd = this._valuesEnd = InitialValues(node, object);
       }
     }
@@ -492,8 +492,12 @@ class Tween {
         end.unshift(start);
         for (let i = 0, len = end.length; i < len; i++) {
           if (typeof end[i] === 'string') {
-            end[i] = decomposeString(end[i]);
-            end[i].unshift(STRING_PROP);
+            let arrayOfStrings = decomposeString(end[i]);
+			let stringObject = {length: arrayOfStrings.length, isString: true}
+			for (let ii = 0, len2 = arrayOfStrings.length; ii < len2; ii++) {
+				stringObject[ii] = arrayOfStrings[ii]
+			}
+            end[i] = stringObject
           }
         }
       }
@@ -516,7 +520,7 @@ class Tween {
    * Start the tweening
    * @param {number|string} time setting manual time instead of Current browser timestamp or like `+1000` relative to current timestamp
    * @example tween.start()
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public start(time?: number | string) {
     this._startTime =
@@ -538,7 +542,7 @@ class Tween {
   /**
    * Stops the tween
    * @example tween.stop()
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public stop() {
     let {
@@ -575,7 +579,7 @@ class Tween {
    * Set delay of tween
    * @param {number} amount Sets tween delay / wait duration
    * @example tween.delay(500)
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public delay(amount: number) {
     this._delayTime =
@@ -588,7 +592,7 @@ class Tween {
    * Chained tweens
    * @param {any} arguments Arguments list
    * @example tween.chainedTweens(tween1, tween2)
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public chainedTweens() {
     this._chainedTweensCount = arguments.length;
@@ -606,7 +610,7 @@ class Tween {
    * Sets how times tween is repeating
    * @param {amount} amount the times of repeat
    * @example tween.repeat(5)
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public repeat(amount: number) {
     this._repeat = !this._duration
@@ -622,7 +626,7 @@ class Tween {
    * Set delay of each repeat alternate of tween
    * @param {number} amount Sets tween repeat alternate delay / repeat alternate wait duration
    * @example tween.reverseDelay(500)
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public reverseDelay(amount: number) {
     this._reverseDelayTime =
@@ -636,7 +640,7 @@ class Tween {
    * @param {boolean} state Enables alternate direction for repeat
    * @param {Function=} _easingReverse Easing function in reverse direction
    * @example tween.yoyo(true)
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public yoyo(state: boolean, _easingReverse?: Function) {
     this._yoyo =
@@ -655,7 +659,7 @@ class Tween {
    * Set easing
    * @param {Function} _easingFunction Easing function, applies in non-reverse direction if Tween#yoyo second argument is applied
    * @example tween.easing(Easing.Elastic.InOut)
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public easing(_easingFunction: Function) {
     this._easingFunction = _easingFunction;
@@ -667,7 +671,7 @@ class Tween {
    * Set interpolation
    * @param {Function} _interpolationFunction Interpolation function
    * @example tween.interpolation(Interpolation.Bezier)
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public interpolation(_interpolationFunction: Function) {
     if (typeof _interpolationFunction === 'function') {
@@ -680,7 +684,7 @@ class Tween {
   /**
    * Reassigns value for rare-case like Tween#restart or for Timeline
    * @private
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public reassignValues(time?: number) {
     const { _valuesStart, object, _delayTime } = this;
@@ -706,7 +710,7 @@ class Tween {
    * @param {boolean=} preserve Prevents from removing tween from store
    * @param {boolean=} forceTime Forces to be frame rendered, even mismatching time
    * @example tween.update(100)
-   * @memberof Tween
+   * @memberof TWEEN.Tween
    */
   public update(time?: number, preserve?: boolean, forceTime?: boolean) {
     let {
@@ -738,6 +742,7 @@ class Tween {
 
     if (!_duration) {
       elapsed = 1;
+	  _repeat = 0;
     } else {
       time = time !== undefined ? time : now();
 

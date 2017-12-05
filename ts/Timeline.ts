@@ -7,6 +7,8 @@ import {
   EVENT_REVERSE,
   EVENT_RESTART,
   EVENT_UPDATE,
+  FRAME_MS,
+  TOO_LONG_FRAME_MS
 } from './constants';
 import Selector from './selector';
 
@@ -30,10 +32,11 @@ let _id = 0;
  * It works same as `Tween` instance, using `.repeat`, `.restart` or `etc` works like a `Tween`, so please see `Tween` class for methods
  * @constructor
  * @class
- * @namespace Timeline
+ * @namespace TWEEN.Timeline
  * @param {Object=} params Default params for new tweens
  * @example let tl = new Timeline({delay:200})
  * @extends Tween
+ * @deprecated
  */
 class Timeline extends Tween {
   public _duration: number;
@@ -122,7 +125,7 @@ class Timeline extends Tween {
         this.add(
           Tween.fromTo(
             node,
-            typeof from === 'function' ? from(i, nodes.length) : { ...from },
+            typeof from === 'function' ? from(i, nodes.length) : typeof from === 'object' && !!from ? { ...from } : null,
             typeof to === 'function' ? to(i, nodes.length) : to,
             typeof params === 'function' ? params(i, nodes.length) : params
           ),
@@ -254,7 +257,14 @@ class Timeline extends Tween {
       _repeat,
       _isFinite,
       _isPlaying,
+	  _prevTime
     } = this;
+
+      let delta: number = time - _prevTime;
+      this._prevTime = time;
+      if (delta > TOO_LONG_FRAME_MS) {
+        time -= delta - FRAME_MS;
+      }
 
     if (!_isPlaying || time < _startTime) {
       return true;

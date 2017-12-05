@@ -4,7 +4,7 @@ export default {
   input: 'src/index.js',
   output: {
   format: 'umd',
-  file: 'full/Tween.js'
+  file: 'bundled/Tween.js'
   },
   sourcemap: true,
   context: 'this',

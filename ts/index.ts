@@ -14,7 +14,6 @@ import {
 } from './core';
 import Easing from './Easing';
 import Interpolation from './Interpolation';
-import Timeline from './Timeline';
 import Tween from './Tween';
 import Selector from './selector';
 import Interpolator from './Interpolator';
@@ -36,6 +35,5 @@ export {
   isRunning,
   Tween,
   Easing,
-  Interpolation,
-  Timeline,
+  Interpolation
 };
