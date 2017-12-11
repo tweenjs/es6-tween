@@ -173,14 +173,14 @@ const remove = (tween: any): void => {
 
 /**
  * Updates global tweens by given time
- * @param {number|Time} time Timestamp
+ * @param {number|Time=} time Timestamp
  * @param {Boolean=} preserve Prevents tween to be removed after finish
  * @memberof TWEEN
  * @example
  * TWEEN.update(500)
  */
 
-const update = (time: number, preserve?: boolean): boolean => {
+const update = (time?: number, preserve?: boolean): boolean => {
   time = time !== undefined ? time : now();
   if (_autoPlay && isStarted) {
     _tick = _ticker(update);
