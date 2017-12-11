@@ -6,6 +6,7 @@
   "cdn": "bundled/Tween.min.js",
   "main": "bundled/Tween.js",
   "module": "src/index.js",
+  "types": "src/index.d.js",
   "directories": {
     "example": "examples"
   },
