@@ -1,8 +1,9 @@
-dist
-src
-docs
-full
-lite
-guide_notes
-node_modules
+dist/
+src/
+docs/
+full/
+bundled/
+lite/
+guide_notes/
+node_modules/
 npm-debug.log
