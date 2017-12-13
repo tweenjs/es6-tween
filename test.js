@@ -1,5 +1,5 @@
 import test from 'ava'
-const { Easing, Tween, update, getAll, removeAll } = require('./full/Tween')
+const { Easing, Tween, update, getAll, removeAll } = require('./bundled/Tween')
 
 test('Events', t => {
 
