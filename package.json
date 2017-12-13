@@ -1,11 +1,12 @@
 {
   "name": "es6-tween",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "ES6 implementation of amazing tween.js",
   "browser": "bundled/Tween.min.js",
   "cdn": "bundled/Tween.min.js",
   "main": "bundled/Tween.js",
   "module": "src/index.js",
+  "types": "src/index.d.ts",
   "directories": {
     "example": "examples"
   },

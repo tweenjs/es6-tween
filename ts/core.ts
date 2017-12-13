@@ -11,7 +11,7 @@ declare let process: any;
  * TWEEN.now
  */
 const now: any = (function() {
-  if (typeof process !== 'undefined' && process.hrtime !== undefined) {
+  if (typeof process !== 'undefined' && process.hrtime !== undefined && (!process.versions || process.versions.electron === undefined)) {
     return function() {
       const time: number = process.hrtime();
 
@@ -173,14 +173,14 @@ const remove = (tween: any): void => {
 
 /**
  * Updates global tweens by given time
- * @param {number|Time} time Timestamp
+ * @param {number=} time Timestamp
  * @param {Boolean=} preserve Prevents tween to be removed after finish
  * @memberof TWEEN
  * @example
  * TWEEN.update(500)
  */
 
-const update = (time: number, preserve?: boolean): boolean => {
+const update = (time?: number, preserve?: boolean): boolean => {
   time = time !== undefined ? time : now();
   if (_autoPlay && isStarted) {
     _tick = _ticker(update);

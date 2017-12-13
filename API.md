@@ -1,15 +1,3 @@
-## Objects
-
-<dl>
-<dt><a href="#TWEEN">TWEEN</a> : <code>object</code></dt>
-<dd><p>Lightweight, effecient and modular ES6 version of tween.js</p>
-</dd>
-<dt><a href="#Timeline">Timeline</a> : <code>object</code></dt>
-<dd><p>Timeline main constructor.</p>
-<p>It works same as <code>Tween</code> instance, using <code>.repeat</code>, <code>.restart</code> or <code>etc</code> works like a <code>Tween</code>, so please see <code>Tween</code> class for methods</p>
-</dd>
-</dl>
-
 <a name="TWEEN"></a>
 
 ## TWEEN : <code>object</code>
@@ -29,6 +17,7 @@ Lightweight, effecient and modular ES6 version of tween.js
     * [.Easing](#TWEEN.Easing) : <code>object</code>
     * [.Interpolation](#TWEEN.Interpolation) : <code>object</code>
     * [.Interpolator](#TWEEN.Interpolator) ⇒ <code>function</code>
+    * ~~[.Timeline](#TWEEN.Timeline) : <code>object</code>~~
     * [.Tween](#TWEEN.Tween) : <code>object</code>
         * [.Tween#setMaxListener(count)](#TWEEN.Tween.Tween+setMaxListener)
         * [.Tween#on(event, callback)](#TWEEN.Tween.Tween+on)
@@ -63,7 +52,7 @@ Lightweight, effecient and modular ES6 version of tween.js
     * [.get(tween)](#TWEEN.get) ⇒ <code>Tween</code>
     * [.has(tween)](#TWEEN.has) ⇒ <code>Boolean</code>
     * [.remove(tween)](#TWEEN.remove)
-    * [.update(time, [preserve])](#TWEEN.update)
+    * [.update([time], [preserve])](#TWEEN.update)
     * [.isRunning()](#TWEEN.isRunning) ⇒ <code>Boolean</code>
 
 <a name="TWEEN.now"></a>
@@ -120,6 +109,24 @@ Tween helper for plugins
 | a | <code>any</code> | Initial position |
 | b | <code>any</code> | End position |
 
+<a name="TWEEN.Timeline"></a>
+
+### ~~TWEEN.Timeline : <code>object</code>~~
+***Deprecated***
+
+Timeline main constructor.It works same as `Tween` instance, using `.repeat`, `.restart` or `etc` works like a `Tween`, so please see `Tween` class for methods
+
+**Kind**: static namespace of [<code>TWEEN</code>](#TWEEN)  
+**Extends**: <code>Tween</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [params] | <code>Object</code> | Default params for new tweens |
+
+**Example**  
+```js
+let tl = new Timeline({delay:200})
+```
 <a name="TWEEN.Tween"></a>
 
 ### TWEEN.Tween : <code>object</code>
@@ -611,14 +618,14 @@ TWEEN.remove(tween)
 ```
 <a name="TWEEN.update"></a>
 
-### TWEEN.update(time, [preserve])
+### TWEEN.update([time], [preserve])
 Updates global tweens by given time
 
 **Kind**: static method of [<code>TWEEN</code>](#TWEEN)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| time | <code>number</code> \| <code>Time</code> | Timestamp |
+| [time] | <code>number</code> | Timestamp |
 | [preserve] | <code>Boolean</code> | Prevents tween to be removed after finish |
 
 **Example**  
@@ -635,106 +642,4 @@ The state of ticker running
 **Example**  
 ```js
 TWEEN.isRunning()
-```
-<a name="Timeline"></a>
-
-## Timeline : <code>object</code>
-Timeline main constructor.It works same as `Tween` instance, using `.repeat`, `.restart` or `etc` works like a `Tween`, so please see `Tween` class for methods
-
-**Kind**: global namespace  
-**Extends**: <code>Tween</code>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [params] | <code>Object</code> | Default params for new tweens |
-
-**Example**  
-```js
-let tl = new Timeline({delay:200})
-```
-
-* [Timeline](#Timeline) : <code>object</code>
-    * [.fromTo(nodes, from, to, params)](#Timeline+fromTo)
-    * [.from(nodes, from, params)](#Timeline+from)
-    * [.to(nodes, to, params)](#Timeline+to)
-    * [.addLabel(name, offset)](#Timeline+addLabel)
-    * [.add(tween, position)](#Timeline+add)
-
-<a name="Timeline+fromTo"></a>
-
-### timeline.fromTo(nodes, from, to, params)
-**Kind**: instance method of [<code>Timeline</code>](#Timeline)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| nodes | <code>Array.&lt;Element&gt;</code> | DOM Elements Collection (converted to Array) |
-| from | <code>object</code> | Initial value |
-| to | <code>object</code> | Target value |
-| params | <code>object</code> | Options of tweens |
-
-**Example**  
-```js
-tl.fromTo(nodes, {x:0}, {x:200}, {duration:1000, stagger:200})
-```
-<a name="Timeline+from"></a>
-
-### timeline.from(nodes, from, params)
-**Kind**: instance method of [<code>Timeline</code>](#Timeline)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| nodes | <code>Array.&lt;Element&gt;</code> | DOM Elements Collection (converted to Array) |
-| from | <code>object</code> | Initial value |
-| params | <code>object</code> | Options of tweens |
-
-**Example**  
-```js
-tl.from(nodes, {x:200}, {duration:1000, stagger:200})
-```
-<a name="Timeline+to"></a>
-
-### timeline.to(nodes, to, params)
-**Kind**: instance method of [<code>Timeline</code>](#Timeline)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| nodes | <code>Array.&lt;Element&gt;</code> | DOM Elements Collection (converted to Array) |
-| to | <code>object</code> | Target value |
-| params | <code>object</code> | Options of tweens |
-
-**Example**  
-```js
-tl.to(nodes, {x:200}, {duration:1000, stagger:200})
-```
-<a name="Timeline+addLabel"></a>
-
-### timeline.addLabel(name, offset)
-Add label to Timeline
-
-**Kind**: instance method of [<code>Timeline</code>](#Timeline)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>string</code> | Label name |
-| offset | <code>any</code> | Label value, can be `number` and/or `string` |
-
-**Example**  
-```js
-tl.add('label1', 200)
-```
-<a name="Timeline+add"></a>
-
-### timeline.add(tween, position)
-Add tween to Timeline
-
-**Kind**: instance method of [<code>Timeline</code>](#Timeline)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| tween | <code>Tween</code> | Tween instance |
-| position | <code>position</code> | Can be label name, number or relative number to label |
-
-**Example**  
-```js
-tl.add(new Tween(node, {x:0}).to({x:200}, 200))
 ```
