@@ -2,8 +2,8 @@
 
 ES6 implementation of <a href="https://github.com/tweenjs/tween.js">tween.js</a>
 
-[![size](http://img.badgesize.io/http://unpkg.com/es6-tween?cache=false)](http://unpkg.com/es6-tween)
-[![gzipsize](http://img.badgesize.io/http://unpkg.com/es6-tween?compression=gzip&cache=false)](http://unpkg.com/es6-tween)
+[![size](https://img.badgesize.io/https://unpkg.com/es6-tween?cache=false)](https://unpkg.com/es6-tween)
+[![gzipsize](https://img.badgesize.io/https://unpkg.com/es6-tween?compression=gzip&cache=false)](https://unpkg.com/es6-tween)
 [![CDNJS](https://img.shields.io/cdnjs/v/es6-tween.svg)](https://cdnjs.com/libraries/es6-tween)
 [![jsdelivr](https://img.shields.io/badge/cdn-jsdelivr-brightgreen.svg)](https://cdn.jsdelivr.net/npm/es6-tween)  [![unpkg](https://img.shields.io/badge/cdn-unpkg-brightgreen.svg)](https://unpkg.com/es6-tween)  [![npmcdn](https://img.shields.io/badge/cdn-npmcdn-brightgreen.svg)](https://npmcdn.com/es6-tween)
 [![NPM Version][npm-image]][npm-url]
@@ -188,7 +188,7 @@ All ES5 supported browsers including IE9+
 * [Full documentation](https://tweenjs.github.io/es6-tween/)
 * [API documentation](./API.md)
 * [Wiki page](https://github.com/tweenjs/es6-tween/wiki)
-* [Tutorial](http://learningthreejs.com/blog/2011/08/17/tweenjs-for-smooth-animation/)  using tween.js with three.js
+* [Tutorial](https://learningthreejs.com/blog/2011/08/17/tweenjs-for-smooth-animation/)  using tween.js with three.js
 
 ## Compatiblity Testing
 
@@ -215,7 +215,7 @@ If you want to add any feature or change existing features, you *must* run the t
 
 ## People
 
-[All contributors](http://github.com/tweenjs/es6-tween/contributors).
+[All contributors](https://github.com/tweenjs/es6-tween/contributors).
 
 ## Thanks to: 
 * [es6-tween contributors](https://github.com/tweenjs/es6-tween/graphs/contributors)
