@@ -134,7 +134,7 @@ $ npm run dev # builds and watchs development files
 Then reference the library source:
 
 ```html
-<script src="dist/Tween.min.js"></script>
+<script src="bundled/Tween.min.js"></script>
 ```
 
 ## Features

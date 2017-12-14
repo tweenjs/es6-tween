@@ -38,7 +38,7 @@
   "bugs": {
     "url": "https://github.com/tweenjs/es6-tween/issues"
   },
-  "homepage": "https://tweenjs.github.io/es6-tween",
+  "homepage": "https://es6-tween.js.org",
   "devDependencies": {
     "ava": "^0.22.0",
     "docdash": "^0.4.0",
