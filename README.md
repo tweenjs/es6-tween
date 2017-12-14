@@ -40,10 +40,10 @@ Starting at `v3`, we provide excluded plugins from core, so our core becomes lig
 
 ## Installation
 
-Download the [library](https://raw.githubusercontent.com/tweenjs/es6-tween/master/src/Tween.js) and include it in your code:
+Download the [library](https://raw.githubusercontent.com/tweenjs/es6-tween/master/ts/Tween.ts) and include it in your code:
 
 ```html
-<script src="js/Tween.js"></script>
+<script src="bundled/Tween.js"></script>
 ```
 
 ### CDN-Hosted version
