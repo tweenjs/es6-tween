@@ -825,7 +825,8 @@ class Tween {
           start,
           end,
           value,
-          elapsed
+          elapsed,
+		  property
         );
       }
       propCount++;
