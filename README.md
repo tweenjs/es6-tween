@@ -14,6 +14,51 @@ ES6 implementation of <a href="https://github.com/tweenjs/tween.js">tween.js</a>
 <br/>
 [![NPM](https://nodei.co/npm/es6-tween.png?downloads=true&stars=true)](https://nodei.co/npm/es6-tween/)
 
+# What is tween?
+
+```
+Inbetweening or tweening is a key process in all types of animation, including computer animation. It is the process of generating intermediate frames between two images, called key frames, to give the appearance that the first image evolves smoothly into the second image. Inbetweens are the drawings which create the illusion of motion.
+```
+
+# What means this in Javascript
+
+```
+Implementing tween in Javascript always has been hardly, especially in 2009-2012years, but there have been much of leaders, one of these GreenSock Animation Platform, shifty, CollieJS, CreateJS TweenJS and our tween.js.
+The @sole, @mrdoob and other contributors does the job amazing and worked hardly to make web better, interactive and live
+```
+
+# It's not tween.js!
+
+```
+Yes, we just implemented tween.js in ES6 for easier, understandable syntax to ES6 users and it's not successful as tween.js, but our users anyway uses this, it's awesome
+```
+
+# Why another one, there a lot of tweening library?
+
+```
+Yes, why another? Just we want to create library while keeping balance between feature-set/flexibility, performance and size. It's not hard, but not easy too. We work for users who users, who STARRED (Thank you, you're amazing)
+```
+
+# Alternatives
+
+- GSAP
+- kute.js
+- tween.js
+- TweenJS
+- animejs
+- Velocity.js
+- Shifty
+- jsAnim
+- MooFX
+- and a lot of these
+
+# But these alternatives
+not all of them does support the extend-ability and does not perform as well. Each of these has own Pros/Cons, we create own idea, create
+
+- Plug-in/Extend-ability powered tweening library
+- Performant, Memory, Power and CPU effecient
+- Lower file-size for better load-time, it makes app faster and performant, nothing can change this
+
 ```javascript
 TWEEN.autoPlay(true); // simplify the your code
 
@@ -36,7 +81,7 @@ Starting at `v3`, we provide excluded plugins from core, so our core becomes lig
 
 * Demo #1 [Morphing SVG Shape + Cross-browser SVG Transform](https://codepen.io/dalisoft/pen/mMJmxX)
 * Demo #2 [Morphing SVG Shape](https://codepen.io/dalisoft/pen/BdLydv)
-* Demo #3 [Timeline](https://codepen.io/dalisoft/pen/mMRWdr)
+* Collection on the [Codepen](https://codepen.io/collection/DapBmv/)
 
 ## Installation
 
@@ -75,12 +120,14 @@ PR are welcome...
 
 #### Using `gulp`
 
-PR are welcome...
+After package installed, go-to directory and then run:
+
+- if you want build, then `$ gulp`
+- if you want watch, then `$ gulp watch`
 
 #### Using `import`
 
 ```javascript
-// Full
 import { Easing, Tween, autoPlay } from 'es6-tween'
 ```
 

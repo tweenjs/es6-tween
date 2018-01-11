@@ -10,7 +10,7 @@ import { decompose, recompose, decomposeString, STRING_PROP } from './constants'
  */
 const Interpolator = (a: any, b: any): Function => {
 	let isArray: boolean = Array.isArray(a);
-	let origin: any = typeof a === 'string' ? a : isArray ? a.slice() : Object.assign({}, a);
+	let origin: any = typeof a === 'string' ? a : isArray ? a.slice() : {...a};
 	if (isArray) {
 		for (let i = 0, len = a.length; i < len; i++) {
 			decompose(i, origin, a, b)
