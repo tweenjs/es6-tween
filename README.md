@@ -24,7 +24,7 @@ Inbetweening or tweening is a key process in all types of animation, including c
 
 ```
 Implementing tween in Javascript always has been hardly, especially in 2009-2012years, but there have been much of leaders, one of these GreenSock Animation Platform, shifty, CollieJS, CreateJS TweenJS and our tween.js.
-The @sole, @mrdoob and other contributors does the job amazing and worked hardly to make web better, interactive and live
+The @sole, @mrdoob and other contributors did the job amazing and worked hardly to make web better, interactive and live
 ```
 
 # It's not tween.js!
