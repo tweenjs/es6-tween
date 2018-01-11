@@ -17,7 +17,6 @@ Lightweight, effecient and modular ES6 version of tween.js
     * [.Easing](#TWEEN.Easing) : <code>object</code>
     * [.Interpolation](#TWEEN.Interpolation) : <code>object</code>
     * [.Interpolator](#TWEEN.Interpolator) ⇒ <code>function</code>
-    * ~~[.Timeline](#TWEEN.Timeline) : <code>object</code>~~
     * [.Tween](#TWEEN.Tween) : <code>object</code>
         * [.Tween#setMaxListener(count)](#TWEEN.Tween.Tween+setMaxListener)
         * [.Tween#on(event, callback)](#TWEEN.Tween.Tween+on)
@@ -109,24 +108,6 @@ Tween helper for plugins
 | a | <code>any</code> | Initial position |
 | b | <code>any</code> | End position |
 
-<a name="TWEEN.Timeline"></a>
-
-### ~~TWEEN.Timeline : <code>object</code>~~
-***Deprecated***
-
-Timeline main constructor.It works same as `Tween` instance, using `.repeat`, `.restart` or `etc` works like a `Tween`, so please see `Tween` class for methods
-
-**Kind**: static namespace of [<code>TWEEN</code>](#TWEEN)  
-**Extends**: <code>Tween</code>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [params] | <code>Object</code> | Default params for new tweens |
-
-**Example**  
-```js
-let tl = new Timeline({delay:200})
-```
 <a name="TWEEN.Tween"></a>
 
 ### TWEEN.Tween : <code>object</code>
