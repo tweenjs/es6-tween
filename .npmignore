@@ -13,3 +13,4 @@ CONTRIBUTING.md
 ISSUE_TEMPLATE.md
 API.md
 .travis.yml
+yarn-error.log
