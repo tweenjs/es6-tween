@@ -206,7 +206,6 @@ All ES5 supported browsers including IE9+
 * - all devices should compatible with supported OS
 
 #### Package managers
-* `bower`
 * `npm`
 * `yarn`
 
@@ -214,7 +213,7 @@ All ES5 supported browsers including IE9+
 * `Rollup`
 
 #### Transpiler
-* `Buble`
+* `Babel`
 
 ## Documentation
 
@@ -238,7 +237,7 @@ Demos with this version are not yet implemented, sorry.
 ## Tests
 
 ```bash
-npm test
+$ yarn test
 ```
 
 or you can go [here](https://travis-ci.org/tweenjs/es6-tween) for more information, tests and etc...
