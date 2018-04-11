@@ -10,14 +10,14 @@ import {
   Plugins,
   remove,
   removeAll,
-  update,
-} from './core';
-import Easing from './Easing';
-import Interpolation from './Interpolation';
-import Tween from './Tween';
-import Selector from './selector';
-import Interpolator from './Interpolator';
-import './shim';
+  update
+} from './core'
+import Easing from './Easing'
+import Interpolation from './Interpolation'
+import Tween from './Tween'
+import Selector from './selector'
+import Interpolator from './Interpolator'
+import './shim'
 export {
   Plugins,
   Selector,
@@ -36,4 +36,4 @@ export {
   Tween,
   Easing,
   Interpolation
-};
+}

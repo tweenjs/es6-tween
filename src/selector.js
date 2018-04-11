@@ -1,4 +1,4 @@
-export default function(selector, collection) {
+export default function (selector, collection) {
   if (collection) {
     return !selector
       ? null
@@ -8,7 +8,7 @@ export default function(selector, collection) {
           ? !!document.querySelectorAll && document.querySelectorAll(selector)
           : Array.isArray(selector)
             ? selector
-            : selector.nodeType ? [selector] : [];
+            : selector.nodeType ? [selector] : []
   }
   return !selector
     ? null
@@ -18,5 +18,5 @@ export default function(selector, collection) {
         ? !!document.querySelector && document.querySelector(selector)
         : Array.isArray(selector)
           ? selector[0]
-          : selector.nodeType ? selector : null;
+          : selector.nodeType ? selector : null
 }
