@@ -8,12 +8,11 @@ Lightweight, effecient and modular ES6 version of tween.js
 **Copyright**: 2017 @dalisoft and es6-tween contributors  
 **Example**  
 ```js
-// ES6const {add, remove, isRunning, autoPlay} = TWEEN
+// ES6
+const {add, remove, isRunning, autoPlay} = TWEEN
 ```
 
 * [TWEEN](#TWEEN) : <code>object</code>
-    * [.now](#TWEEN.now) ⇒
-    * [.Plugins](#TWEEN.Plugins) : <code>object</code>
     * [.Easing](#TWEEN.Easing) : <code>object</code>
     * [.Interpolation](#TWEEN.Interpolation) : <code>object</code>
     * [.Interpolator](#TWEEN.Interpolator) ⇒ <code>function</code>
@@ -43,6 +42,8 @@ Lightweight, effecient and modular ES6 version of tween.js
         * [.Tween#easing(_easingFunction)](#TWEEN.Tween.Tween+easing)
         * [.Tween#interpolation(_interpolationFunction)](#TWEEN.Tween.Tween+interpolation)
         * [.Tween#update(time, [preserve], [forceTime])](#TWEEN.Tween.Tween+update)
+    * [.Plugins](#TWEEN.Plugins) : <code>object</code>
+    * [.now](#TWEEN.now) ⇒
     * [.add(tween)](#TWEEN.add)
     * [.onTick(fn)](#TWEEN.onTick)
     * [.FrameThrottle([frameCount])](#TWEEN.FrameThrottle)
@@ -54,27 +55,6 @@ Lightweight, effecient and modular ES6 version of tween.js
     * [.update([time], [preserve])](#TWEEN.update)
     * [.isRunning()](#TWEEN.isRunning) ⇒ <code>Boolean</code>
 
-<a name="TWEEN.now"></a>
-
-### TWEEN.now ⇒
-Get browser/Node.js current time-stamp
-
-**Kind**: static property of [<code>TWEEN</code>](#TWEEN)  
-**Returns**: Normalised current time-stamp in milliseconds  
-**Example**  
-```js
-TWEEN.now
-```
-<a name="TWEEN.Plugins"></a>
-
-### TWEEN.Plugins : <code>object</code>
-The plugins store object
-
-**Kind**: static namespace of [<code>TWEEN</code>](#TWEEN)  
-**Example**  
-```js
-let num = Plugins.num = function (node, start, end) {return t => start + (end - start) * t}
-```
 <a name="TWEEN.Easing"></a>
 
 ### TWEEN.Easing : <code>object</code>
@@ -83,7 +63,9 @@ List of full easings
 **Kind**: static namespace of [<code>TWEEN</code>](#TWEEN)  
 **Example**  
 ```js
-import {Tween, Easing} from 'es6-tween'// then set via new Tween({x:0}).to({x:100}, 1000).easing(Easing.Quadratic.InOut).start()
+import {Tween, Easing} from 'es6-tween'
+
+// then set via new Tween({x:0}).to({x:100}, 1000).easing(Easing.Quadratic.InOut).start()
 ```
 <a name="TWEEN.Interpolation"></a>
 
@@ -93,7 +75,10 @@ List of full Interpolation
 **Kind**: static namespace of [<code>TWEEN</code>](#TWEEN)  
 **Example**  
 ```js
-import {Interpolation, Tween} from 'es6-tween'let bezier = Interpolation.Beziernew Tween({x:0}).to({x:[0, 4, 8, 12, 15, 20, 30, 40, 20, 40, 10, 50]}, 1000).interpolation(bezier).start()
+import {Interpolation, Tween} from 'es6-tween'
+
+let bezier = Interpolation.Bezier
+new Tween({x:0}).to({x:[0, 4, 8, 12, 15, 20, 30, 40, 20, 40, 10, 50]}, 1000).interpolation(bezier).start()
 ```
 <a name="TWEEN.Interpolator"></a>
 
@@ -159,9 +144,9 @@ Sets max `event` listener's count to Events system
 
 **Kind**: static method of [<code>Tween</code>](#TWEEN.Tween)  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| count | <code>number</code> | Event listener's count |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| count | <code>number</code> | <code>15</code> | Event listener's count |
 
 <a name="TWEEN.Tween.Tween+on"></a>
 
@@ -178,7 +163,8 @@ Adds `event` to Events system
 <a name="TWEEN.Tween.Tween+once"></a>
 
 #### Tween.Tween#once(event, callback)
-Adds `event` to Events system.Removes itself after fired once
+Adds `event` to Events system.
+Removes itself after fired once
 
 **Kind**: static method of [<code>Tween</code>](#TWEEN.Tween)  
 
@@ -484,6 +470,29 @@ Updates initial object to target value by given `time`
 ```js
 tween.update(100)
 ```
+<a name="TWEEN.Plugins"></a>
+
+### TWEEN.Plugins : <code>object</code>
+The plugins store object
+
+**Kind**: static namespace of [<code>TWEEN</code>](#TWEEN)  
+**Example**  
+```js
+let num = Plugins.num = function (node, start, end) {
+return t => start + (end - start) * t
+}
+```
+<a name="TWEEN.now"></a>
+
+### TWEEN.now ⇒
+Get browser/Node.js current time-stamp
+
+**Kind**: static constant of [<code>TWEEN</code>](#TWEEN)  
+**Returns**: Normalised current time-stamp in milliseconds  
+**Example**  
+```js
+TWEEN.now
+```
 <a name="TWEEN.add"></a>
 
 ### TWEEN.add(tween)
@@ -497,7 +506,9 @@ Adds tween to list
 
 **Example**  
 ```js
-let tween = new Tween({x:0})tween.to({x:200}, 1000)TWEEN.add(tween)
+let tween = new Tween({x:0})
+tween.to({x:200}, 1000)
+TWEEN.add(tween)
 ```
 <a name="TWEEN.onTick"></a>
 

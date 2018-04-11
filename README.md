@@ -114,17 +114,6 @@ Download the [library](https://raw.githubusercontent.com/tweenjs/es6-tween/maste
 
 ### More advanced users might want to...
 
-#### Using `grunt`
-
-PR are welcome...
-
-#### Using `gulp`
-
-After package installed, go-to directory and then run:
-
-- if you want build, then `$ gulp`
-- if you want watch, then `$ gulp watch`
-
 #### Using `import`
 
 ```javascript
@@ -145,14 +134,12 @@ const { Tween, Easing, autoPlay } = require('es6-tween')
 </script>
 ```
 
-#### Using `npm`, `yarn` or `bower`
+#### Using `npm` or `yarn`
 
 ```bash
 $ yarn add es6-tween
 # or
 $ npm install es6-tween
-# or
-$ bower install es6-tween
 ```
 
 Then include the Tween.js module with the standard node.js `require`:
@@ -173,9 +160,9 @@ You can run script commands to build modules into single `UMD` compatible file:
 #### Using commands
 
 ```bash
-$ npm run build # builds production files
+$ yarn build # builds production files
 # or
-$ npm run dev # builds and watchs development files
+$ yarn dev # builds and watchs development files
 ```
 
 Then reference the library source:
