@@ -18,7 +18,8 @@
     "doc": "npx jsdoc --readme README.md --configure jsdoc.json --verbose",
     "doc-md": "npx jsdoc2md src/** > API.md",
     "test": "npx standard --verbose | npx snazzy && npx rollup -c && npx ava --verbose",
-    "fix": "npx standard --fix"
+    "fix": "npx standard --fix",
+    "precommit": "yarn test"
   },
   "repository": {
     "type": "git",

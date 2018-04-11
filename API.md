@@ -5,7 +5,7 @@ Lightweight, effecient and modular ES6 version of tween.js
 
 **Kind**: global namespace  
 **License**: MIT  
-**Copyright**: 2017 @dalisoft and es6-tween contributors  
+**Copyright**: 2018 @dalisoft and es6-tween contributors  
 **Example**  
 ```js
 // ES6
