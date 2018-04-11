@@ -1,6 +1,6 @@
 {
   "name": "es6-tween",
-  "version": "5.2.1",
+  "version": "5.2.2",
   "description": "ES6 implementation of amazing tween.js",
   "browser": "bundled/Tween.min.js",
   "cdn": "bundled/Tween.min.js",
@@ -17,7 +17,7 @@
     "prepublishOnly": "yarn build && npx ava --verbose && yarn doc && yarn doc-md",
     "doc": "npx jsdoc --readme README.md --configure jsdoc.json --verbose",
     "doc-md": "npx jsdoc2md src/** > API.md",
-    "test": "npx rollup -c && npx standard --verbose | npx snazzy && npx ava --verbose",
+    "test": "npx standard --verbose | npx snazzy && npx rollup -c && npx ava --verbose",
     "fix": "npx standard --fix"
   },
   "repository": {
