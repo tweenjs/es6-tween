@@ -190,5 +190,4 @@ test('Tween update should be run against all tween each time', t => {
   update(200)
 
   t.deepEqual(order, [0, 1, 2])
-  t.end()
 })

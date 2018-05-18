@@ -195,8 +195,16 @@ const update = (time = now(), preserve) => {
   }
 
   let i = 0
-  while (i < _tweens.length) {
+  var length = _tweens.length
+  while (i < length) {
     _tweens[i++].update(time, preserve)
+
+    if (length > _tweens.length) {
+      // The tween has been removed, keep same index
+      i--
+    }
+
+    length = _tweens.length
   }
 
   return true
