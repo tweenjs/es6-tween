@@ -159,3 +159,35 @@ test('Easing', t => {
   t.not(ElasticInOut(0.6), 0.6, 'Elastic.InOut was not eased as excepted')
   t.log('Elastic.InOut was eased as excepted')
 })
+
+test('Tween update should be run against all tween each time', t => {
+  const order = []
+
+  new Tween({ x: 0 })
+    .to({ x: 100 }, 100)
+    .start(0)
+    .on('complete', () => {
+      order.push(0)
+    })
+  new Tween({ x: 0 })
+    .to({ x: 100 }, 100)
+    .delay(10)
+    .start(0)
+    .on('complete', () => {
+      order.push(1)
+    })
+  new Tween({ x: 0 })
+    .to({ x: 100 }, 100)
+    .delay(20)
+    .start(0)
+    .on('complete', () => {
+      order.push(2)
+    })
+
+  t.plan(1)
+
+  update(0)
+  update(200)
+
+  t.deepEqual(order, [0, 1, 2])
+})
