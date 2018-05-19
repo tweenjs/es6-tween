@@ -195,7 +195,7 @@ const update = (time = now(), preserve) => {
   }
 
   let i = 0
-  var length = _tweens.length
+  let length = _tweens.length
   while (i < length) {
     _tweens[i++].update(time, preserve)
 
