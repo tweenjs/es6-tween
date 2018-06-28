@@ -51,10 +51,21 @@ const _tweens = []
 let isStarted = false
 let _autoPlay = false
 let _tick
+let _onRequestTick = []
 const _ticker = requestAnimationFrame
 const _stopTicker = cancelAnimationFrame
 let emptyFrame = 0
 let powerModeThrottle = 120
+
+const onRequestTick = (fn) => {
+  _onRequestTick.push(fn);
+}
+
+const _requestTick = () => {
+  for (let i = 0; i < _onRequestTick.length; i++) {
+    _onRequestTick[i]();
+  }
+}
 
 /**
  * Adds tween to list
@@ -79,6 +90,8 @@ const add = (tween) => {
   if (_autoPlay && !isStarted) {
     _tick = _ticker(update)
     isStarted = true
+  } else {
+    _requestTick();
   }
 }
 
@@ -179,19 +192,20 @@ const remove = (tween) => {
  */
 
 const update = (time = now(), preserve) => {
+  if (emptyFrame >= powerModeThrottle) {
+    isStarted = false
+    emptyFrame = 0
+    return false
+  }
+
   if (_autoPlay && isStarted) {
     _tick = _ticker(update)
+  } else {
+    _requestTick()
   }
 
   if (!_tweens.length) {
     emptyFrame++
-  }
-
-  if (emptyFrame > powerModeThrottle) {
-    _stopTicker(_tick)
-    isStarted = false
-    emptyFrame = 0
-    return false
   }
 
   let i = 0
@@ -243,6 +257,7 @@ export {
   update,
   autoPlay,
   onTick,
+  onRequestTick,
   isRunning,
   FrameThrottle
 }
