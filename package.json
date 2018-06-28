@@ -54,6 +54,11 @@
   },
   "dependencies": {},
   "standard": {
-    "ignore": ["node_modules", "bundled", "examples", "performance"]
+    "ignore": [
+      "node_modules",
+      "bundled",
+      "examples",
+      "performance"
+    ]
   }
 }

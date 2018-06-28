@@ -7,6 +7,8 @@ import {
   has,
   isRunning,
   now,
+  onRequestTick,
+  FrameThrottle,
   Plugins,
   remove,
   removeAll,
@@ -33,6 +35,8 @@ export {
   update,
   autoPlay,
   isRunning,
+  onRequestTick,
+  FrameThrottle,
   Tween,
   Easing,
   Interpolation
