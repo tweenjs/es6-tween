@@ -48,6 +48,7 @@ const {add, remove, isRunning, autoPlay} = TWEEN
     * [.onTick(fn)](#TWEEN.onTick)
     * [.FrameThrottle([frameCount])](#TWEEN.FrameThrottle)
     * [.autoPlay(state)](#TWEEN.autoPlay)
+    * [.onRequestTick(fn)](#TWEEN.onRequestTick)
     * [.removeAll()](#TWEEN.removeAll)
     * [.get(tween)](#TWEEN.get) ⇒ <code>Tween</code>
     * [.has(tween)](#TWEEN.has) ⇒ <code>Boolean</code>
@@ -543,7 +544,7 @@ TWEEN.FrameThrottle(60)
 <a name="TWEEN.autoPlay"></a>
 
 ### TWEEN.autoPlay(state)
-Runs update loop automaticlly
+Runs update loop automatically
 
 **Kind**: static method of [<code>TWEEN</code>](#TWEEN)  
 
@@ -554,6 +555,23 @@ Runs update loop automaticlly
 **Example**  
 ```js
 TWEEN.autoPlay(true)
+```
+<a name="TWEEN.onRequestTick"></a>
+
+### TWEEN.onRequestTick(fn)
+Add a function called when another animation frame is requested. This is only called when autoPlay is false.
+
+**Kind**: static method of [<code>TWEEN</code>](#TWEEN)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fn | <code>function</code> | Function called when another animation frame is requested |
+
+**Example**  
+```js
+TWEEN.onRequestTick(() => {
+    requestAnimationFrame(TWEEN.update);
+})
 ```
 <a name="TWEEN.removeAll"></a>
 
