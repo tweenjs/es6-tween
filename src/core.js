@@ -1,5 +1,5 @@
 /* global process */
-import { cancelAnimationFrame, requestAnimationFrame, root } from './shim'
+import { requestAnimationFrame, root } from './shim'
 
 /**
  * Get browser/Node.js current time-stamp
@@ -50,20 +50,18 @@ const now = (function () {
 const _tweens = []
 let isStarted = false
 let _autoPlay = false
-let _tick
 let _onRequestTick = []
 const _ticker = requestAnimationFrame
-const _stopTicker = cancelAnimationFrame
 let emptyFrame = 0
 let powerModeThrottle = 120
 
 const onRequestTick = (fn) => {
-  _onRequestTick.push(fn);
+  _onRequestTick.push(fn)
 }
 
 const _requestTick = () => {
   for (let i = 0; i < _onRequestTick.length; i++) {
-    _onRequestTick[i]();
+    _onRequestTick[i]()
   }
 }
 
@@ -88,10 +86,10 @@ const add = (tween) => {
   emptyFrame = 0
 
   if (_autoPlay && !isStarted) {
-    _tick = _ticker(update)
+    _ticker(update)
     isStarted = true
   } else {
-    _requestTick();
+    _requestTick()
   }
 }
 
@@ -199,7 +197,7 @@ const update = (time = now(), preserve) => {
   }
 
   if (_autoPlay && isStarted) {
-    _tick = _ticker(update)
+    _ticker(update)
   } else {
     _requestTick()
   }
