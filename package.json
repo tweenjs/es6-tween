@@ -1,6 +1,6 @@
 {
-  "name": "es6-tween",
-  "version": "5.2.2",
+  "name": "@adactive/es6-tween",
+  "version": "5.3.0-alpha.1",
   "description": "ES6 implementation of amazing tween.js",
   "browser": "bundled/Tween.min.js",
   "cdn": "bundled/Tween.min.js",
@@ -54,6 +54,11 @@
   },
   "dependencies": {},
   "standard": {
-    "ignore": ["node_modules", "bundled", "examples", "performance"]
+    "ignore": [
+      "node_modules",
+      "bundled",
+      "examples",
+      "performance"
+    ]
   }
 }
