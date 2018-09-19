@@ -43,7 +43,7 @@ test('Events', t => {
 })
 
 test('Value Interpolation', t => {
-  let obj = { a: 0, b: 'B value 1', c: { x: 2 }, d: [3], _e: 4, g: 5, h: 6 }
+  let obj = { a: 0, b: 'B value 1', c: { x: 2 }, d: [3], _e: 4, g: 5, h: 0 }
 
   Object.defineProperty(obj, 'e', {
     get () { return obj._e },
@@ -64,7 +64,7 @@ test('Value Interpolation', t => {
   t.is(obj.d[0], 3)
   t.is(obj.e, 4)
   t.is(obj.g, 5)
-  t.is(obj.h, 6)
+  t.is(obj.h, 0)
 
   update(50)
 
