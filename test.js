@@ -43,7 +43,7 @@ test('Events', t => {
 })
 
 test('Value Interpolation', t => {
-  let obj = { a: 0, b: 'B value 1', c: { x: 2 }, d: [3], _e: 4, g: 5 }
+  let obj = { a: 0, b: 'B value 1', c: { x: 2 }, d: [3], _e: 4, g: 5, h: 0 }
 
   Object.defineProperty(obj, 'e', {
     get () { return obj._e },
@@ -53,7 +53,7 @@ test('Value Interpolation', t => {
   })
 
   new Tween(obj)
-    .to({ a: 1, b: 'B value 2', c: { x: 3 }, d: [4], _e: 5, g: '+=1' }, 100)
+    .to({ a: 1, b: 'B value 2', c: { x: 3 }, d: [4], _e: 5, g: '+=1', h: 250000 }, 100)
     .start(0)
 
   update(0)
@@ -64,6 +64,7 @@ test('Value Interpolation', t => {
   t.is(obj.d[0], 3)
   t.is(obj.e, 4)
   t.is(obj.g, 5)
+  t.is(obj.h, 0)
 
   update(50)
 
@@ -85,6 +86,9 @@ test('Value Interpolation', t => {
   t.is(obj.g, 5.5, 'Relative number interpolation not worked as excepted')
   t.log('Relative number interpolation worked as excepted')
 
+  t.is(obj.h, 125000, 'Big number interpolation not worked as excepted')
+  t.log('Big number interpolation worked as excepted')
+
   update(100)
 
   t.is(obj.a, 1)
@@ -93,6 +97,7 @@ test('Value Interpolation', t => {
   t.is(obj.d[0], 4)
   t.is(obj.e, 5)
   t.is(obj.g, 6)
+  t.is(obj.h, 250000, 'Big number interpolation ending value not worked as excepted')
 })
 
 test('Value Array-based Interpolation', t => {

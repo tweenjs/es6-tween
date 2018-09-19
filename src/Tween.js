@@ -29,8 +29,7 @@ import {
   EVENT_STOP,
   EVENT_SEEK,
   FRAME_MS,
-  TOO_LONG_FRAME_MS,
-  DECIMAL
+  TOO_LONG_FRAME_MS
 } from './constants'
 
 let _id = 0 // Unique ID
@@ -787,8 +786,7 @@ class Tween {
           : Interpolation.Linear
 
       if (typeof end === 'number') {
-        object[property] =
-          (((start + (end - start) * value) * DECIMAL) | 0) / DECIMAL
+        object[property] = start + (end - start) * value
       } else if (Array.isArray(end) && !Array.isArray(start)) {
         object[property] = _interpolationFunctionCall(
           end,
