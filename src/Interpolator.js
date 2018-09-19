@@ -10,7 +10,7 @@ import { decompose, recompose, decomposeString } from './constants'
  */
 const Interpolator = (a, b) => {
   let isArray = Array.isArray(a)
-  let origin = typeof a === 'string' ? a : isArray ? a.slice() : {...a}
+  let origin = typeof a === 'string' ? a : isArray ? a.slice() : { ...a }
   if (isArray) {
     for (let i = 0, len = a.length; i < len; i++) {
       decompose(i, origin, a, b)
@@ -33,8 +33,8 @@ const Interpolator = (a, b) => {
       }
     }
 
-    let c = {isString: true, length: a.length}
-    let d = {isString: true, length: b.length}
+    let c = { isString: true, length: a.length }
+    let d = { isString: true, length: b.length }
 
     while (i < c.length) {
       c[i] = a[i]
