@@ -40,7 +40,7 @@ const now = (function () {
 
 /**
  * Lightweight, effecient and modular ES6 version of tween.js
- * @copyright 2017 @dalisoft and es6-tween contributors
+ * @copyright 2019 @dalisoft and es6-tween contributors
  * @license MIT
  * @namespace TWEEN
  * @example
