@@ -1,13 +1,4 @@
-/* global global */
-export let assign = (source, ...args) => {
-  for (let i = 0, len = args.length; i < len; i++) {
-    const arg = args[i]
-    for (const p in arg) {
-      source[p] = arg[p]
-    }
-  }
-  return source
-}
+/* global global, self */
 export let root =
   typeof self !== 'undefined'
     ? self : typeof window !== 'undefined'
@@ -17,7 +8,7 @@ export let root =
           ? exports : {})
 export let requestAnimationFrame =
   root.requestAnimationFrame ||
-  ((fn) => root.setTimeout(fn, 16))
+  ((fn) => root.setTimeout(fn, 50 / 3))
 export let cancelAnimationFrame =
   root.cancelAnimationFrame ||
   ((id) => root.clearTimeout(id))
