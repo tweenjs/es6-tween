@@ -8,12 +8,13 @@ export let assign = (source, ...args) => {
   }
   return source
 }
-export let create =
-  Object.create || ((source = {}) => ({ ...source }))
 export let root =
-  typeof window !== 'undefined'
-    ? window
-    : typeof global !== 'undefined' ? global : this
+  typeof self !== 'undefined'
+    ? self : typeof window !== 'undefined'
+      ? window
+      : typeof global !== 'undefined'
+        ? global : this || (typeof exports !== 'undefined'
+          ? exports : {})
 export let requestAnimationFrame =
   root.requestAnimationFrame ||
   ((fn) => root.setTimeout(fn, 16))
