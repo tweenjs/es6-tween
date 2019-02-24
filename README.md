@@ -256,7 +256,19 @@ If you want to add any feature or change existing features, you *must* run the t
 
 ## Projects using es6-tween
 
-If you using our app and happy with this and share your app? Please make PR and we append to there your project
+* [ft](https://github.com/2players/ft)
+* [react-heartwood-components](https://www.npmjs.com/package/@sprucelabs/react-heartwood-components)
+* [el-controls](https://github.com/eljs/el-controls)
+* [lightweight-pixijs-engine](https://github.com/dgzornoza/lightweight-pixijs-engine#readme)
+* [vue-sliderx](https://www.npmjs.com/package/vue-sliderx)
+* [vue-mapbox-map](https://github.com/cityseer/vue-mapbox-map)
+* [vuxtras](https://github.com/homerjam/vuxtras#readme)
+* [Slye](https://github.com/Slye3D/slye#readme)
+* [react-3d-globe](https://chrisrzhou.github.io/react-3d-globe/)
+
+It's great to see this library to be used in production and/or library, thank you!
+
+If you have projects using es6-tween, please make issue or PR, i will add here your project too :)
 
 [npm-image]: https://img.shields.io/npm/v/es6-tween.svg
 [npm-url]: https://npmjs.org/package/es6-tween
