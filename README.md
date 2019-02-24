@@ -1,6 +1,9 @@
 # es6-tween
 
-ES6 implementation of <a href="https://github.com/tweenjs/tween.js">tween.js</a>
+- High-performant animations without headaches
+- Simple, modular and functional animation library for web and node
+- Tweening library that needs to use where performance matter
+- Flexible, extendable, modular and resource-efficient tweening library
 
 [![size](http://img.badgesize.io/https://unpkg.com/es6-tween?cache=false)](https://unpkg.com/es6-tween)
 [![gzipsize](http://img.badgesize.io/https://unpkg.com/es6-tween?compression=gzip&cache=false)](https://unpkg.com/es6-tween)
@@ -14,50 +17,11 @@ ES6 implementation of <a href="https://github.com/tweenjs/tween.js">tween.js</a>
 <br/>
 [![NPM](https://nodei.co/npm/es6-tween.png?downloads=true&stars=true)](https://nodei.co/npm/es6-tween/)
 
-# What is tween?
+# Note
 
-```
-Inbetweening or tweening is a key process in all types of animation, including computer animation. It is the process of generating intermediate frames between two images, called key frames, to give the appearance that the first image evolves smoothly into the second image. Inbetweens are the drawings which create the illusion of motion.
-```
+We already know what is tweening and why it's need, so there no need to describe it's, Google will do this if you want.
+**This library is not made as alternative to another libraries, it's has own pros and cons**
 
-# What means this in Javascript
-
-```
-Implementing tween in Javascript always has been hardly, especially in 2009-2012years, but there have been much of leaders, one of these GreenSock Animation Platform, shifty, CollieJS, CreateJS TweenJS and our tween.js.
-The @sole, @mrdoob and other contributors did the job amazing and worked hardly to make web better, interactive and live
-```
-
-# It's not tween.js!
-
-```
-Yes, we just implemented tween.js in ES6 for easier, understandable syntax to ES6 users and it's not successful as tween.js, but our users anyway uses this, it's awesome
-```
-
-# Why another one, there a lot of tweening library?
-
-```
-Yes, why another? Just we want to create library while keeping balance between feature-set/flexibility, performance and size. It's not hard, but not easy too. We work for users who users, who STARRED (Thank you, you're amazing)
-```
-
-# Alternatives
-
-- GSAP
-- kute.js
-- tween.js
-- TweenJS
-- animejs
-- Velocity.js
-- Shifty
-- jsAnim
-- MooFX
-- and a lot of these
-
-# But these alternatives
-not all of them does support the extend-ability and does not perform as well. Each of these has own Pros/Cons, we create own idea, create
-
-- Plug-in/Extend-ability powered tweening library
-- Performant, Memory, Power and CPU effecient
-- Lower file-size for better load-time, it makes app faster and performant, nothing can change this
 
 ```javascript
 TWEEN.autoPlay(true); // simplify the your code
