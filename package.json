@@ -1,6 +1,6 @@
 {
   "name": "es6-tween",
-  "version": "5.3.1",
+  "version": "5.3.2",
   "description": "ES6 implementation of amazing tween.js",
   "browser": "bundled/Tween.min.js",
   "cdn": "bundled/Tween.min.js",
@@ -14,12 +14,12 @@
     "minify": "npx uglifyjs bundled/Tween.js -c -m -o bundled/Tween.min.js --source-map \"filename='bundled/Tween.min.js.map'\"",
     "build": "yarn source && yarn minify",
     "dev": "npx rollup -c -w",
-    "prepublishOnly": "yarn build && npx ava --verbose && yarn doc && yarn doc-md",
+    "prepublishOnly": "yarn lint && yarn doc && yarn doc-md",
     "doc": "npx jsdoc --readme README.md --configure jsdoc.json --verbose",
     "doc-md": "npx jsdoc2md src/** > API.md",
-    "test": "npx standard --verbose | npx snazzy && npx rollup -c && npx ava --verbose",
-    "fix": "npx standard --fix",
-    "precommit": "yarn test"
+    "test": "yarn lint && yarn source && npx ava --verbose",
+    "lint": "npx eslint ./src",
+    "lint-fix": "npx eslint ./src --fix"
   },
   "repository": {
     "type": "git",
@@ -41,25 +41,23 @@
   },
   "homepage": "https://es6-tween.js.org",
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.44",
-    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.44",
-    "@babel/preset-env": "^7.0.0-beta.44",
-    "ava": "^0.22.0",
+    "@babel/core": "^7.3.3",
+    "@babel/plugin-proposal-class-properties": "^7.3.3",
+    "@babel/preset-env": "^7.3.1",
+    "ava": "^1.2.1",
     "docdash": "^0.4.0",
+    "eslint": "^5.14.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "husky": "^1.3.1",
     "jsdoc": "^3.5.5",
     "jsdoc-to-markdown": "^3.1.0-1",
-    "rollup": "^0.50.1",
-    "rollup-plugin-babel": "^4.0.0-beta.4",
-    "standard": "^12.0.1",
-    "uglify-js": "^3.3.5"
+    "rollup": "^1.2.3",
+    "rollup-plugin-babel": "^4.3.2",
+    "uglify-js": "^3.4.9"
   },
-  "dependencies": {},
-  "standard": {
-    "ignore": [
-      "node_modules",
-      "bundled",
-      "examples",
-      "performance"
-    ]
-  }
+  "dependencies": {}
 }
