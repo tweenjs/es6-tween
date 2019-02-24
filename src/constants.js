@@ -126,7 +126,6 @@ export function decompose (prop, obj, from, to, stringBuffer) {
 }
 
 // Recompose value
-export const DECIMAL = Math.pow(10, 4)
 export const RGB = 'rgb('
 export const RGBA = 'rgba('
 
@@ -156,13 +155,10 @@ export function recompose (prop, obj, from, to, t, originalT, stringBuffer) {
         let currentValue =
           typeof fromValue[i] !== 'number'
             ? fromValue[i]
-            : (((isRelative
+            : isRelative
               ? fromValue[i] +
                 parseFloat(toValue[i][0] + toValue[i].substr(2)) * t
-              : fromValue[i] + (toValue[i] - fromValue[i]) * t) *
-              DECIMAL) |
-            0) /
-          DECIMAL
+              : fromValue[i] + (toValue[i] - fromValue[i]) * t
         if (isRGBColor(fromValue, i) || isRGBColor(fromValue, i, RGBA)) {
           currentValue |= 0
         }
@@ -195,12 +191,9 @@ export function recompose (prop, obj, from, to, t, originalT, stringBuffer) {
   } else if (typeof fromValue === 'number') {
     const isRelative = typeof toValue === 'string'
     obj[prop] =
-      (((isRelative
+      isRelative
         ? fromValue + parseFloat(toValue[0] + toValue.substr(2)) * t
-        : fromValue + (toValue - fromValue) * t) *
-          DECIMAL) |
-        0) /
-      DECIMAL
+        : fromValue + (toValue - fromValue) * t
     if (isRelative && originalT === 1) {
       from[prop] = obj[prop]
     }

@@ -12,7 +12,7 @@ export default {
   plugins: [
     babel({
       babelrc: false,
-      exclude: ['node_modules/**', 'bundles/**'],
+      exclude: ['node_modules/**', 'bundles/**', 'performance/**', 'logo/**', 'examples/**'],
       presets: [
         [
           '@babel/preset-env',
