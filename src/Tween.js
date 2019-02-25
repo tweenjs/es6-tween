@@ -2,7 +2,8 @@ import {
   add,
   now,
   Plugins,
-  remove
+  remove,
+  isRunning
 } from './core'
 import Easing from './Easing'
 import Interpolation from './Interpolation'
@@ -101,7 +102,7 @@ class Tween {
       object = this.object = NodeCache(node, object, this)
     }
     this._valuesEnd = null
-    this._valuesStart = {}
+    this._valuesStart = Array.isArray(object) ? [] : {}
 
     this._duration = 1000
     this._easingFunction = defaultEasing
@@ -733,7 +734,7 @@ class Tween {
 
       let delta = time - _prevTime
       this._prevTime = time
-      if (delta > TOO_LONG_FRAME_MS) {
+      if (delta > TOO_LONG_FRAME_MS && isRunning()) {
         time -= delta - FRAME_MS
       }
 

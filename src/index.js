@@ -19,6 +19,7 @@ import Interpolation from './Interpolation'
 import Tween from './Tween'
 import Selector from './selector'
 import Interpolator from './Interpolator'
+import * as utils from './constants'
 import './shim'
 export {
   Plugins,
@@ -39,5 +40,6 @@ export {
   FrameThrottle,
   Tween,
   Easing,
-  Interpolation
+  Interpolation,
+  utils
 }

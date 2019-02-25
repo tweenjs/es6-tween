@@ -10,21 +10,6 @@ export default {
   },
   context: 'this',
   plugins: [
-    babel({
-      babelrc: false,
-      exclude: ['node_modules/**', 'bundles/**', 'performance/**', 'logo/**', 'examples/**'],
-      presets: [
-        [
-          '@babel/preset-env',
-          {
-            modules: false,
-            shippedProposals: true
-          }
-        ]
-      ],
-      plugins: [
-        '@babel/plugin-proposal-class-properties'
-      ]
-    })
+    babel()
   ]
 }
