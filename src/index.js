@@ -17,6 +17,7 @@ import {
 import Easing from './Easing'
 import Interpolation from './Interpolation'
 import Tween from './Tween'
+import Timeline from './Timeline'
 import Selector from './selector'
 import Interpolator from './Interpolator'
 import * as utils from './constants'
@@ -39,6 +40,7 @@ export {
   onRequestTick,
   FrameThrottle,
   Tween,
+  Timeline,
   Easing,
   Interpolation,
   utils
