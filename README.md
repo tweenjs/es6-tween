@@ -5,15 +5,13 @@
 - Tweening library that needs to use where performance matter
 - Flexible, extendable, modular and resource-efficient tweening library
 
-[![size](http://img.badgesize.io/https://unpkg.com/es6-tween?cache=false)](https://unpkg.com/es6-tween)
-[![gzipsize](http://img.badgesize.io/https://unpkg.com/es6-tween?compression=gzip&cache=false)](https://unpkg.com/es6-tween)
-[![CDNJS](https://img.shields.io/cdnjs/v/es6-tween.svg)](https://cdnjs.com/libraries/es6-tween)
-[![jsdelivr](https://img.shields.io/badge/cdn-jsdelivr-brightgreen.svg)](https://cdn.jsdelivr.net/npm/es6-tween)  [![unpkg](https://img.shields.io/badge/cdn-unpkg-brightgreen.svg)](https://unpkg.com/es6-tween)  [![npmcdn](https://img.shields.io/badge/cdn-npmcdn-brightgreen.svg)](https://npmcdn.com/es6-tween)
+[![NPM Min Size][npm-min-size]][unpkg-url]
+[![NPM Gzip Size][npm-gzip-size]][unpkg-url]
+[![CDNJS][cdnjs-image]][cdnjs-url]
 [![NPM Version][npm-image]][npm-url]
-[![NPM Downloads][downloads-image]][downloads-url]
+[![NPM Downloads][downloads-image]][npm-url]
 [![license](https://img.shields.io/github/license/tweenjs/es6-tween.svg)]()
 [![Travis tests][travis-image]][travis-url]
-[![Flattr this][flattr-image]][flattr-url]
 <br/>
 [![NPM](https://nodei.co/npm/es6-tween.png?downloads=true&stars=true)](https://nodei.co/npm/es6-tween/)
 
@@ -234,13 +232,13 @@ It's great to see this library to be used in production and/or library, thank yo
 
 If you have projects using es6-tween, please make issue or PR, i will add here your project too :)
 
+[npm-min-size]: https://img.shields.io/bundlephobia/min/es6-tween.svg
+[npm-gzip-size]: https://img.badgesize.io/https://unpkg.com/es6-tween?compression=gzip
 [npm-image]: https://img.shields.io/npm/v/es6-tween.svg
 [npm-url]: https://npmjs.org/package/es6-tween
 [downloads-image]: https://img.shields.io/npm/dm/es6-tween.svg
-[downloads-url]: https://npmjs.org/package/es6-tween
 [travis-image]: https://travis-ci.org/tweenjs/es6-tween.svg?branch=master
 [travis-url]: https://travis-ci.org/tweenjs/es6-tween
-[flattr-image]: https://api.flattr.com/button/flattr-badge-large.png
-[flattr-url]: https://flattr.com/submit/auto?fid=kxw7jx&url=https%3A%2F%2Fgithub.com%2Ftweenjs%2Fes6-tween
 [cdnjs-image]: https://img.shields.io/cdnjs/v/es6-tween.svg
 [cdnjs-url]: https://cdnjs.com/libraries/es6-tween
+[unpkg-url]: https://unpkg.com/es6-tween
