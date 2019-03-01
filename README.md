@@ -5,7 +5,7 @@
 - Tweening library that needs to use where performance matter
 - Flexible, extendable, modular and resource-efficient tweening library
 
-[![size](http://img.badgesize.io/https://unpkg.com/es6-tween?cache=false)](https://unpkg.com/es6-tween)
+![npm bundle size](https://img.shields.io/bundlephobia/min/es6-tween.svg?style=plastic)
 [![gzipsize](http://img.badgesize.io/https://unpkg.com/es6-tween?compression=gzip&cache=false)](https://unpkg.com/es6-tween)
 [![CDNJS](https://img.shields.io/cdnjs/v/es6-tween.svg)](https://cdnjs.com/libraries/es6-tween)
 [![jsdelivr](https://img.shields.io/badge/cdn-jsdelivr-brightgreen.svg)](https://cdn.jsdelivr.net/npm/es6-tween)  [![unpkg](https://img.shields.io/badge/cdn-unpkg-brightgreen.svg)](https://unpkg.com/es6-tween)  [![npmcdn](https://img.shields.io/badge/cdn-npmcdn-brightgreen.svg)](https://npmcdn.com/es6-tween)
