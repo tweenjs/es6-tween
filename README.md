@@ -5,11 +5,11 @@
 - Tweening library that needs to use where performance matter
 - Flexible, extendable, modular and resource-efficient tweening library
 
-![npm_min_size](npm-min-size)
-[![npm-gzip-size](npm-gzip-size)](unpkg-url)
-[![CDNJS](cdnjs-image)](cdnjs-url)
+[![NPM Min Size][npm-min-size]][unpkg-url]
+[![NPM Gzip Size][npm-gzip-size]][unpkg-url]
+[![CDNJS][cdnjs-image]][cdnjs-url]
 [![NPM Version][npm-image]][npm-url]
-[![NPM Downloads][downloads-image]][downloads-url]
+[![NPM Downloads][downloads-image]][npm-url]
 [![license](https://img.shields.io/github/license/tweenjs/es6-tween.svg)]()
 [![Travis tests][travis-image]][travis-url]
 <br/>
@@ -237,7 +237,6 @@ If you have projects using es6-tween, please make issue or PR, i will add here y
 [npm-image]: https://img.shields.io/npm/v/es6-tween.svg
 [npm-url]: https://npmjs.org/package/es6-tween
 [downloads-image]: https://img.shields.io/npm/dm/es6-tween.svg
-[downloads-url]: https://npmjs.org/package/es6-tween
 [travis-image]: https://travis-ci.org/tweenjs/es6-tween.svg?branch=master
 [travis-url]: https://travis-ci.org/tweenjs/es6-tween
 [cdnjs-image]: https://img.shields.io/cdnjs/v/es6-tween.svg
