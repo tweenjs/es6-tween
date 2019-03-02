@@ -20,6 +20,13 @@
 We already know what is tweening and why it's need, so there no need to describe it's, Google will do this if you want.
 **This library is not made as alternative to another libraries, it's has own pros and cons**
 
+# Docs
+
+* [See docs at GitBook](https://tweenjs.gitbook.io/es6-tween/)
+* [Homepage](https://tweenjs.github.io/es6-tween/) (not completed)
+* [API documentation](./API.md)
+* [Wiki page](https://github.com/tweenjs/es6-tween/wiki)
+
 
 ```javascript
 TWEEN.autoPlay(true); // simplify the your code
@@ -142,59 +149,12 @@ Then reference the library source:
 * Can also use custom easing functions
 * Much of easings
 
-## Compatiblity
-All ES5 supported browsers including IE9+
-
-#### Browsers
-* Chrome
-* Firefox 3.5+
-* Opera 9.5+
-* IE8+
-* Safari 5.1+
-
-#### OS (Fully working)
-* Android 4.1+
-* iOS6+
-* WP8.5+
-* OS X
-* Windows 7+
-
-#### Device
-* iPhone
-* iPad
-* Android devices
-* Nokia Lumia
-* Samsung devices
-* - all devices should compatible with supported OS
-
-#### Package managers
-* `npm`
-* `yarn`
-
-#### Bundler
-* `Rollup`
-
-#### Transpiler
-* `Babel`
-
-## Documentation
-
-* Original source: <a href="https://github.com/tweenjs/tween.js">check out at here</a>
-* [Full documentation](https://tweenjs.github.io/es6-tween/)
-* [API documentation](./API.md)
-* [Wiki page](https://github.com/tweenjs/es6-tween/wiki)
-* [Tutorial](https://learningthreejs.com/blog/2011/08/17/tweenjs-for-smooth-animation/)  using tween.js with three.js
-
 ## Compatiblity Testing
 
 Thanks to BrowserStack for providing us testing in a real devices to make it cross-browser, bug-free and better.
 BrowserStack saved my countless hours, before i spent on testing much of time, now it's very easy. I recommend to others use this service.
 I sure, BrowserStack helps us to make it, so i am linking to BrowserStack as our sponsor.
 [<img src="https://cloud.githubusercontent.com/assets/7864462/12837037/452a17c6-cb73-11e5-9f39-fc96893bc9bf.png" alt="Browser Stack Logo" width="400">](https://www.browserstack.com/)
-
-## Examples
-
-Demos with this version are not yet implemented, sorry.
 
 ## Tests
 
