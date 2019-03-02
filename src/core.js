@@ -1,5 +1,5 @@
 /* global process */
-import { requestAnimationFrame, root } from './shim'
+import { requestAnimationFrame, cancelAnimationFrame, root } from './shim'
 
 /**
  * Get browser/Node.js current time-stamp
@@ -54,6 +54,7 @@ let _onRequestTick = []
 const _ticker = requestAnimationFrame
 let emptyFrame = 0
 let powerModeThrottle = 120
+let _tick
 
 const onRequestTick = (fn) => {
   _onRequestTick.push(fn)
@@ -86,10 +87,8 @@ const add = (tween) => {
   emptyFrame = 0
 
   if (_autoPlay && !isStarted) {
-    _ticker(update)
+    _tick = _ticker(update)
     isStarted = true
-  } else {
-    _requestTick()
   }
 }
 
@@ -110,7 +109,7 @@ const onTick = (fn) => _tweens.push({ update: fn })
  * TWEEN.FrameThrottle(60)
  */
 const FrameThrottle = (frameCount = 120) => {
-  powerModeThrottle = frameCount
+  powerModeThrottle = frameCount * 1.05
 }
 
 /**
@@ -137,6 +136,7 @@ const autoPlay = (state) => {
  */
 const removeAll = () => {
   _tweens.length = 0
+  cancelAnimationFrame(_tick)
 }
 
 /**
@@ -178,6 +178,9 @@ const remove = (tween) => {
   if (i !== -1) {
     _tweens.splice(i, 1)
   }
+  if (_tweens.length === 0) {
+    cancelAnimationFrame(_tick)
+  }
 }
 
 /**
@@ -193,11 +196,12 @@ const update = (time = now(), preserve) => {
   if (emptyFrame >= powerModeThrottle) {
     isStarted = false
     emptyFrame = 0
+    cancelAnimationFrame(_tick)
     return false
   }
 
   if (_autoPlay && isStarted) {
-    _ticker(update)
+    _tick = _ticker(update)
   } else {
     _requestTick()
   }
