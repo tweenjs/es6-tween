@@ -1,6 +1,6 @@
 {
   "name": "es6-tween",
-  "version": "5.4.0",
+  "version": "5.4.1",
   "description": "ES6 implementation of amazing tween.js",
   "browser": "bundled/Tween.min.js",
   "cdn": "bundled/Tween.min.js",
@@ -14,7 +14,7 @@
     "minify": "npx uglifyjs bundled/Tween.js -c -m -o bundled/Tween.min.js --source-map \"filename='bundled/Tween.min.js.map'\"",
     "build": "yarn source && yarn minify",
     "dev": "npx rollup -c -w",
-    "prepublishOnly": "yarn lint && yarn doc && yarn doc-md",
+    "prepublishOnly": "yarn build && yarn lint && yarn doc && yarn doc-md",
     "doc": "npx jsdoc --readme README.md --configure jsdoc.json --verbose",
     "doc-md": "npx jsdoc2md src/** > API.md",
     "test": "yarn lint && npm run source && npx ava",
