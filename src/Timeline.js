@@ -2,6 +2,7 @@ import { add, now, remove, isRunning } from './core'
 import PlaybackPosition from './PlaybackPosition'
 import Tween from './Tween'
 import {
+  EVENT_START,
   EVENT_COMPLETE,
   EVENT_REPEAT,
   EVENT_REVERSE,
@@ -36,13 +37,12 @@ let _id = 0
  * @param {Object=} params Default params for new tweens
  * @example let tl = new Timeline({delay:200})
  * @extends Tween
- * @deprecated
  */
 class Timeline extends Tween {
   constructor (params) {
     super()
     this._duration = 0
-    this._startTime = now()
+    this._startTime = params.startTime !== undefined ? params.startTime : now()
     this._tweens = []
     this.elapsed = 0
     this._id = _id++
@@ -50,6 +50,7 @@ class Timeline extends Tween {
     this.position = new PlaybackPosition()
     this.position.addLabel('afterLast', this._duration)
     this.position.addLabel('afterInit', this._startTime)
+    this._onStartCallbackFired = false
 
     return this
   }
@@ -98,10 +99,10 @@ class Timeline extends Tween {
    * @static
    */
   fromTo (nodes, from, to, params) {
-    nodes = Selector(nodes, true)
+    nodes = Selector(nodes, true, true)
     if (nodes && nodes.length) {
       if (this._defaultParams) {
-        params = { ...this._defaultParams, ...params }
+        params = params ? { ...this._defaultParams, ...params } : this._defaultParams
       }
       const position = params.label
       const offset =
@@ -215,7 +216,7 @@ class Timeline extends Tween {
     tween._isPlaying = true
     this._duration = Math.max(
       _duration,
-      tween._startTime + tween._delayTime + tween._duration
+      Math.max(tween._startTime + tween._delayTime, tween._duration)
     )
     this._tweens.push(tween)
     this.position.setLabel('afterLast', this._duration)
@@ -249,7 +250,8 @@ class Timeline extends Tween {
       _repeat,
       _isFinite,
       _isPlaying,
-      _prevTime
+      _prevTime,
+      _onStartCallbackFired
     } = this
 
     let elapsed
@@ -271,6 +273,11 @@ class Timeline extends Tween {
     elapsed = _reversed ? 1 - elapsed : elapsed
 
     this.elapsed = elapsed
+
+    if (!_onStartCallbackFired) {
+      this.emit(EVENT_START)
+      this._onStartCallbackFired = true
+    }
 
     const timing = time - _startTime
     const _timing = _reversed ? _duration - timing : timing

@@ -2,7 +2,7 @@
 
 import test from 'ava'
 
-import { Easing, Tween, update, getAll, removeAll } from './src'
+import { Easing, Tween, Timeline, update, getAll, removeAll } from './src'
 
 import browserTestMiddleware from './withPage'
 
@@ -16,27 +16,27 @@ test('Events', t => {
   t.plan(9)
 
   tween.on('start', () => {
-    t.log('Event [Start]: Was called successfully')
+    t.log('on:start was called successfully')
     t.pass()
   })
 
   tween.on('update', () => {
-    t.log('Event [Update]: Was called successfully')
+    t.log('on:update was called successfully')
     t.pass()
   })
 
   tween.on('repeat', () => {
-    t.log('Event [Repeat]: Was called successfully')
+    t.log('on:repeat was called successfully')
     t.pass()
   })
 
   tween.on('reverse', () => {
-    t.log('Event [Reverse]: Was called successfully')
+    t.log('on:reverse was called successfully')
     t.pass()
   })
 
   tween.on('complete', () => {
-    t.log('Event [Complete]: Was called successfully')
+    t.log('on:complete was called successfully')
     t.pass()
   })
 
@@ -222,10 +222,10 @@ test('Headless tests', browserTestMiddleware, (t, page) => {
           successMessage: 'on:start event works as excepted'
         })
       })
-      .once('update', () => {
+      .on('update', (obj, elapsed) => {
         tests.push({
           method: 'log',
-          successMessage: 'on:update event works as excepted'
+          successMessage: 'on:update event works as excepted with elapsed ' + elapsed
         })
       })
       .on('complete', () => {
@@ -375,4 +375,60 @@ test('Headless tests', browserTestMiddleware, (t, page) => {
       }
     })
   })
+})
+
+test('Timeline', (t) => {
+  const obj = { x: 0 }
+  const obj2 = { x: 0 }
+  const obj3 = { x: 0 }
+
+  const from = [obj, obj2, obj3]
+  const to = { x: 200 }
+
+  const tl = new Timeline({ duration: 1000, startTime: 0, stagger: 1000 }).to(from, to)
+
+  tl.on('start', () => {
+    t.pass()
+    t.log('on:start event works as excepted')
+  })
+  tl.on('update', (elapsed) => {
+    t.pass()
+    t.log('on:update event works as excepted with elapsed ' + elapsed)
+  })
+  tl.on('complete', () => {
+    t.pass()
+    t.log('on:complete event works as excepted')
+  })
+
+  tl.start(0)
+
+  t.is(obj.x, 0)
+  t.is(obj2.x, 0)
+  t.is(obj3.x, 0)
+
+  update(1000)
+
+  t.is(obj.x, 200)
+  t.is(obj2.x, 0)
+  t.is(obj3.x, 0)
+
+  update(2000)
+
+  t.is(obj.x, 200)
+  t.is(obj2.x, 200)
+  t.is(obj3.x, 0)
+
+  update(3000)
+
+  t.is(obj.x, 200)
+  t.is(obj2.x, 200)
+  t.is(obj3.x, 200)
+
+  update(4000)
+
+  t.is(obj.x, 200)
+  t.is(obj2.x, 200)
+  t.is(obj3.x, 200)
+
+  t.log('All values interpolation works as excepted')
 })
