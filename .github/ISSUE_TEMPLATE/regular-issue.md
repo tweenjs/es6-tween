@@ -14,17 +14,16 @@ assignees: ''
 ### Related
 This issue is related to
 
-- [ ] LICENSE
 - [ ] README
-- [ ] ABOUT COPYRIGHT VIOLATION (be careful before checking this...!)
 - [ ] package.json
-- [ ] demos/examples
-- [ ] core.ts
-- [ ] Tween.ts
-- [ ] lite.ts
-- [ ] Easing.ts
-- [ ] Interpolation.ts
-- [ ] Timeline.js
+- [ ] Demos
+- [ ] Core features/functionality
+- [ ] Tween class
+- [ ] Easing
+- [ ] Interpolation
+- [ ] Timeline class
+- [ ] LICENSE
+- [ ] ABOUT COPYRIGHT VIOLATION (be careful before checking this...!)
 
 - or provide something else (from es6-tween files...)
 
