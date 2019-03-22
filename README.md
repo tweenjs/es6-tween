@@ -183,7 +183,7 @@ If you want to add any feature or change existing features, you *must* run the t
 * [el-controls](https://github.com/eljs/el-controls)
 * [lightweight-pixijs-engine](https://github.com/dgzornoza/lightweight-pixijs-engine#readme)
 * [vue-sliderx](https://www.npmjs.com/package/vue-sliderx)
-* [vue-mapbox-map](https://github.com/cityseer/vue-mapbox-map)
+* [vue-mapbox-feature](https://cityseer.github.io/vue-mapbox-feature)
 * [vuxtras](https://github.com/homerjam/vuxtras#readme)
 * [Slye](https://github.com/Slye3D/slye#readme)
 * [react-3d-globe](https://chrisrzhou.github.io/react-3d-globe/)
