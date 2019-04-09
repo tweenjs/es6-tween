@@ -202,6 +202,32 @@ test('Tween update should be run against all tween each time', t => {
   t.deepEqual(order, [0, 1, 2])
 })
 
+test('Tween should work after recall when using power saving feature', t => {
+  const init = (obj) =>
+    new Tween(obj)
+      .to({ z: 360 }, 1000)
+      .on('complete', init)
+      .start(0)
+
+  const obj1 = { z: 0 }
+  init(obj1)
+
+  update(500)
+  t.is(obj1.z, 180, 'Tweening update does not work as excepted')
+  update(1000)
+  t.is(obj1.z, 360, 'Tweening update does not work as excepted')
+
+  update(0)
+
+  const obj2 = { z: 0 }
+  init(obj2)
+
+  update(500)
+  t.is(obj2.z, 180, 'Tweening update does not work as excepted')
+  update(1000)
+  t.is(obj2.z, 360, 'Tweening update does not work as excepted')
+})
+
 test('Headless tests', browserTestMiddleware, (t, page) => {
   return page.evaluate(() => {
     const deepArrayCopy = arr => arr.map(child => Array.isArray(child)

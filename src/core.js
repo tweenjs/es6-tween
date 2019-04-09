@@ -137,6 +137,7 @@ const autoPlay = (state) => {
 const removeAll = () => {
   _tweens.length = 0
   cancelAnimationFrame(_tick)
+  isStarted = false
 }
 
 /**
@@ -180,6 +181,7 @@ const remove = (tween) => {
   }
   if (_tweens.length === 0) {
     cancelAnimationFrame(_tick)
+    isStarted = false
   }
 }
 
