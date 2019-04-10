@@ -22,35 +22,32 @@ We already know what is tweening and why it's need, so there no need to describe
 
 # Docs
 
-* [See docs at GitBook](https://tweenjs.gitbook.io/es6-tween/)
-* [Homepage](https://tweenjs.github.io/es6-tween/) (not completed)
-* [API documentation](./API.md)
-* [Wiki page](https://github.com/tweenjs/es6-tween/wiki)
-
+- [See docs at GitBook](https://tweenjs.gitbook.io/es6-tween/)
+- [Homepage](https://tweenjs.github.io/es6-tween/) (not completed)
+- [API documentation](./API.md)
+- [Wiki page](https://github.com/tweenjs/es6-tween/wiki)
 
 ```javascript
 TWEEN.autoPlay(true); // simplify the your code
 
 let coords = { x: 0, y: 0 };
 let tween = new TWEEN.Tween(coords)
-	.to({ x: 100, y: 100 }, 1000)
-	.on('update', ({x, y}) => {
-		console.log(`The values is x: ${x} and y: ${y}`);
-	})
-	.start();
-
+  .to({ x: 100, y: 100 }, 1000)
+  .on("update", ({ x, y }) => {
+    console.log(`The values is x: ${x} and y: ${y}`);
+  })
+  .start();
 ```
 
 ## Plugins
 
 Starting at `v3`, we provide excluded plugins from core, so our core becomes lighter and faster. [Here our plugins list](https://www.npmjs.com/browse/keyword/es6-tween)
 
-
 ## Demos
 
-* Demo #1 [Morphing SVG Shape + Cross-browser SVG Transform](https://codepen.io/dalisoft/pen/mMJmxX)
-* Demo #2 [Morphing SVG Shape](https://codepen.io/dalisoft/pen/BdLydv)
-* Collection on the [Codepen](https://codepen.io/collection/DapBmv/)
+- Demo #1 [Morphing SVG Shape + Cross-browser SVG Transform](https://codepen.io/dalisoft/pen/mMJmxX)
+- Demo #2 [Morphing SVG Shape](https://codepen.io/dalisoft/pen/BdLydv)
+- Collection on the [Codepen](https://codepen.io/collection/DapBmv/)
 
 ## Installation
 
@@ -62,31 +59,28 @@ Download the [library](https://raw.githubusercontent.com/tweenjs/es6-tween/maste
 
 ### CDN-Hosted version
 
-* See [cdnjs-hosted version](https://cdnjs.com/libraries/es6-tween) for get which result you want
-* NOTE: `@latest` suffix sometimes saves life by loading latest, because sometimes CDN services will not load the latest
+- See [cdnjs-hosted version](https://cdnjs.com/libraries/es6-tween) for get which result you want
+- NOTE: `@latest` suffix sometimes saves life by loading latest, because sometimes CDN services will not load the latest
 
-* Now you can load from CDN
+- Now you can load from CDN
 
 ```html
 <!-- jsDelivr -->
 <script src="https://cdn.jsdelivr.net/npm/es6-tween"></script>
 
-
 <!-- unpkg -->
 <script src="https://unpkg.com/es6-tween"></script>
-
 
 <!-- npmcdn -->
 <script src="https://npmcdn.com/es6-tween"></script>
 ```
-
 
 ### More advanced users might want to...
 
 #### Using `import`
 
 ```javascript
-import { Easing, Tween, autoPlay } from 'es6-tween'
+import { Easing, Tween, autoPlay } from "es6-tween";
 ```
 
 #### Using [getlibs](https://github.com/activewidgets/getlibs)
@@ -94,12 +88,12 @@ import { Easing, Tween, autoPlay } from 'es6-tween'
 ```html
 <script src="https://unpkg.com/getlibs"></script>
 <script type="x-module">
-// ES6
-import { Easing, Tween, autoPlay } from 'es6-tween'
+  // ES6
+  import { Easing, Tween, autoPlay } from 'es6-tween'
 
 
-// CommonJS
-const { Tween, Easing, autoPlay } = require('es6-tween')
+  // CommonJS
+  const { Tween, Easing, autoPlay } = require('es6-tween')
 </script>
 ```
 
@@ -114,13 +108,13 @@ $ npm install es6-tween
 Then include the Tween.js module with the standard node.js `require`:
 
 ```javascript
-const { Tween, Easing, autoPlay } = require('es6-tween');
+const { Tween, Easing, autoPlay } = require("es6-tween");
 ```
 
 And you can use Tween.js as in all other examples--for example:
 
 ```javascript
-const t = new Tween( /* etc */ );
+const t = new Tween(/* etc */);
 t.start();
 ```
 
@@ -142,12 +136,12 @@ Then reference the library source:
 
 ## Features
 
-* Tweens everything you give them, string, number, number of arrays, number of object, all-to, interpolators and much more. Endless possibilites
-* Can use CSS units (e.g. appending `px`)
-* Can interpolate colours
-* Easing functions are reusable outside of Tween
-* Can also use custom easing functions
-* Much of easings
+- Tweens everything you give them, string, number, number of arrays, number of object, all-to, interpolators and much more. Endless possibilites
+- Can use CSS units (e.g. appending `px`)
+- Can interpolate colours
+- Easing functions are reusable outside of Tween
+- Can also use custom easing functions
+- Much of easings
 
 ## Compatiblity Testing
 
@@ -166,27 +160,41 @@ or you can go [here](https://travis-ci.org/tweenjs/es6-tween) for more informati
 
 every time you want to run the tests.
 
-If you want to add any feature or change existing features, you *must* run the tests to make sure you didn't break anything else. If you send a PR to add something new and it doesn't have tests, or the tests don't pass, the PR won't be accepted. See [contributing](CONTRIBUTING.md) for more information.
+If you want to add any feature or change existing features, you _must_ run the tests to make sure you didn't break anything else. If you send a PR to add something new and it doesn't have tests, or the tests don't pass, the PR won't be accepted. See [contributing](CONTRIBUTING.md) for more information.
 
 ## People
 
-[All contributors](https://github.com/tweenjs/es6-tween/contributors).
+- [All contributors](https://github.com/tweenjs/es6-tween/contributors).
+- [es6-tween contributors](https://github.com/tweenjs/es6-tween/graphs/contributors)/
 
-## Thanks to: 
-* [es6-tween contributors](https://github.com/tweenjs/es6-tween/graphs/contributors)
-* Rollup, Buble, Travis CI, BrowserStack, jsDoc, docdash theme, TypeScript and others (make issue, if i'm missed you) with their teams, devs and supporters
+## Thanks to
+
+these tools developers and to their community and without these tools maybe this library wouldn't be possible
+
+- [GitHub](https://github.com/)
+- [Travis CI](http://travis-ci.org)
+- [BrowserStack](https://www.browserstack.com/)
+- [Node.js](https://nodejs.org/en/)
+- [ESLint](http://eslint.org)
+- [jsDoc](http://usejsdoc.org) ([docdash theme](https://github.com/clenemt/docdash))
+- [Rollup](https://rollupjs.org/guide/en)
+- [Babel](https://babeljs.io)
+- [Ava](https://github.com/avajs/ava)
+- [Puppeteer](https://pptr.dev)
+- [UglifyJS v3](https://github.com/mishoo/UglifyJS2)
+- [Husky](https://github.com/typicode/husky)
 
 ## Projects using es6-tween
 
-* [ft](https://github.com/2players/ft)
-* [react-heartwood-components](https://www.npmjs.com/package/@sprucelabs/react-heartwood-components)
-* [el-controls](https://github.com/eljs/el-controls)
-* [lightweight-pixijs-engine](https://github.com/dgzornoza/lightweight-pixijs-engine#readme)
-* [vue-sliderx](https://www.npmjs.com/package/vue-sliderx)
-* [vue-mapbox-feature](https://cityseer.github.io/vue-mapbox-feature)
-* [vuxtras](https://github.com/homerjam/vuxtras#readme)
-* [Slye](https://github.com/Slye3D/slye#readme)
-* [react-3d-globe](https://chrisrzhou.github.io/react-3d-globe/)
+- [ft](https://github.com/2players/ft)
+- [react-heartwood-components](https://www.npmjs.com/package/@sprucelabs/react-heartwood-components)
+- [el-controls](https://github.com/eljs/el-controls)
+- [lightweight-pixijs-engine](https://github.com/dgzornoza/lightweight-pixijs-engine#readme)
+- [vue-sliderx](https://www.npmjs.com/package/vue-sliderx)
+- [vue-mapbox-feature](https://cityseer.github.io/vue-mapbox-feature)
+- [vuxtras](https://github.com/homerjam/vuxtras#readme)
+- [Slye](https://github.com/Slye3D/slye#readme)
+- [react-3d-globe](https://chrisrzhou.github.io/react-3d-globe/)
 
 It's great to see this library to be used in production and/or library, thank you!
 
