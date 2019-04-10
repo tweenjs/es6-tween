@@ -1,11 +1,11 @@
 .gitignore
+.git
 bower.json
 tsconfig.json
 tslint.json
 assets
 docs
 examples
-ts
 logo
 performance
 guide_notes
@@ -14,3 +14,5 @@ ISSUE_TEMPLATE.md
 API.md
 .travis.yml
 yarn-error.log
+.vscode
+.idea

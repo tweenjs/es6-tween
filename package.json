@@ -1,6 +1,6 @@
 {
   "name": "es6-tween",
-  "version": "5.4.2",
+  "version": "5.4.3",
   "description": "ES6 implementation of amazing tween.js",
   "browser": "bundled/Tween.min.js",
   "cdn": "bundled/Tween.min.js",
@@ -67,10 +67,10 @@
       "esm"
     ],
     "babel": {
-			"extensions": [
-				"js",
-				"mjs"
-			]
-		}
+      "extensions": [
+        "js",
+        "mjs"
+      ]
+    }
   }
 }
