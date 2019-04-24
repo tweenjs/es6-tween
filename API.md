@@ -48,6 +48,7 @@ const {add, remove, isRunning, autoPlay} = TWEEN
     * [.add(tween)](#TWEEN.add)
     * [.onTick(fn)](#TWEEN.onTick)
     * [.FrameThrottle([frameCount])](#TWEEN.FrameThrottle)
+    * [.ToggleLagSmoothing([state])](#TWEEN.ToggleLagSmoothing)
     * [.autoPlay(state)](#TWEEN.autoPlay)
     * [.removeAll()](#TWEEN.removeAll)
     * [.get(tween)](#TWEEN.get) ⇒ <code>Tween</code>
@@ -55,6 +56,7 @@ const {add, remove, isRunning, autoPlay} = TWEEN
     * [.remove(tween)](#TWEEN.remove)
     * [.update([time], [preserve])](#TWEEN.update)
     * [.isRunning()](#TWEEN.isRunning) ⇒ <code>Boolean</code>
+    * [.isLagSmoothing()](#TWEEN.isLagSmoothing) ⇒ <code>Boolean</code>
 
 <a name="TWEEN.Easing"></a>
 
@@ -559,6 +561,21 @@ Sets after how much frames empty updating should stop
 ```js
 TWEEN.FrameThrottle(60)
 ```
+<a name="TWEEN.ToggleLagSmoothing"></a>
+
+### TWEEN.ToggleLagSmoothing([state])
+Handle lag, useful if you have rendering Canvas or DOM objects or using es6-tween plugins
+
+**Kind**: static method of [<code>TWEEN</code>](#TWEEN)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [state] | <code>number</code> | <code>true</code> | handle lag state |
+
+**Example**  
+```js
+TWEEN.ToggleLagSmoothing(false)
+```
 <a name="TWEEN.autoPlay"></a>
 
 ### TWEEN.autoPlay(state)
@@ -650,6 +667,17 @@ The state of ticker running
 
 **Kind**: static method of [<code>TWEEN</code>](#TWEEN)  
 **Returns**: <code>Boolean</code> - Status of running updates on all tweens  
+**Example**  
+```js
+TWEEN.isRunning()
+```
+<a name="TWEEN.isLagSmoothing"></a>
+
+### TWEEN.isLagSmoothing() ⇒ <code>Boolean</code>
+Returns state of lag smoothing handling
+
+**Kind**: static method of [<code>TWEEN</code>](#TWEEN)  
+**Returns**: <code>Boolean</code> - Status of lag smoothing state  
 **Example**  
 ```js
 TWEEN.isRunning()

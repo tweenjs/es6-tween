@@ -1,4 +1,4 @@
-import { add, now, remove, isRunning } from './core'
+import { add, now, remove, isRunning, isLagSmoothing } from './core'
 import PlaybackPosition from './PlaybackPosition'
 import Tween from './Tween'
 import {
@@ -260,7 +260,7 @@ class Timeline extends Tween {
 
     let delta = time - _prevTime
     this._prevTime = time
-    if (delta > TOO_LONG_FRAME_MS && isRunning()) {
+    if (delta > TOO_LONG_FRAME_MS && isRunning() && isLagSmoothing()) {
       time -= delta - FRAME_MS
     }
 

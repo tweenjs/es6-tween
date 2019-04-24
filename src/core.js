@@ -55,6 +55,7 @@ const _ticker = requestAnimationFrame
 let emptyFrame = 0
 let powerModeThrottle = 120
 let _tick
+let handleLag = true
 
 const onRequestTick = (fn) => {
   _onRequestTick.push(fn)
@@ -110,6 +111,17 @@ const onTick = (fn) => _tweens.push({ update: fn })
  */
 const FrameThrottle = (frameCount = 120) => {
   powerModeThrottle = frameCount * 1.05
+}
+
+/**
+ * Handle lag, useful if you have rendering Canvas or DOM objects or using es6-tween plugins
+ * @param {number} [state=true] handle lag state
+ * @memberof TWEEN
+ * @example
+ * TWEEN.ToggleLagSmoothing(false)
+ */
+const ToggleLagSmoothing = (_state = true) => {
+  handleLag = _state
 }
 
 /**
@@ -237,6 +249,14 @@ const update = (time = now(), preserve) => {
 const isRunning = () => isStarted
 
 /**
+ * Returns state of lag smoothing handling
+ * @return {Boolean} Status of lag smoothing state
+ * @memberof TWEEN
+ * @example TWEEN.isRunning()
+ */
+const isLagSmoothing = () => handleLag
+
+/**
  * The plugins store object
  * @namespace TWEEN.Plugins
  * @memberof TWEEN
@@ -263,5 +283,7 @@ export {
   onTick,
   onRequestTick,
   isRunning,
-  FrameThrottle
+  isLagSmoothing,
+  FrameThrottle,
+  ToggleLagSmoothing
 }

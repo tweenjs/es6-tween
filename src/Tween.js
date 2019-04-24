@@ -3,7 +3,8 @@ import {
   now,
   Plugins,
   remove,
-  isRunning
+  isRunning,
+  isLagSmoothing
 } from './core'
 import Easing from './Easing'
 import Interpolation from './Interpolation'
@@ -734,7 +735,7 @@ class Tween {
 
       let delta = time - _prevTime
       this._prevTime = time
-      if (delta > TOO_LONG_FRAME_MS && isRunning()) {
+      if (delta > TOO_LONG_FRAME_MS && isRunning() && isLagSmoothing()) {
         time -= delta - FRAME_MS
       }
 
