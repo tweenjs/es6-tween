@@ -104,7 +104,7 @@ const onTick = (fn) => _tweens.push({ update: fn })
 
 /**
  * Sets after how much frames empty updating should stop
- * @param {number} [frameCount=120] count of frames that should stop after all tweens removed
+ * @param {number} frameCount=120 count of frames that should stop after all tweens removed
  * @memberof TWEEN
  * @example
  * TWEEN.FrameThrottle(60)
@@ -115,7 +115,7 @@ const FrameThrottle = (frameCount = 120) => {
 
 /**
  * Handle lag, useful if you have rendering Canvas or DOM objects or using es6-tween plugins
- * @param {number} [state=true] handle lag state
+ * @param {number} state=true handle lag state
  * @memberof TWEEN
  * @example
  * TWEEN.ToggleLagSmoothing(false)
