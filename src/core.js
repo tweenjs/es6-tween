@@ -207,7 +207,7 @@ const remove = (tween) => {
  */
 
 const update = (time = now(), preserve) => {
-  if (emptyFrame >= powerModeThrottle) {
+  if (emptyFrame >= powerModeThrottle && handleLag) {
     isStarted = false
     emptyFrame = 0
     cancelAnimationFrame(_tick)
