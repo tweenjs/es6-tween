@@ -33,7 +33,7 @@ const Easing = {
 
   Cubic: {
     In (k) {
-      return Math.pow(k,3)
+      return Math.pow(k, 3)
     },
 
     Out (k) {
@@ -42,7 +42,7 @@ const Easing = {
 
     InOut (k) {
       if ((k *= 2) < 1) {
-        return 0.5 * Math.pow(k,3)
+        return 0.5 * Math.pow(k, 3)
       }
 
       return 0.5 * ((k -= 2) * k * k + 2)
@@ -51,7 +51,7 @@ const Easing = {
 
   Quartic: {
     In (k) {
-      return Math.pow(k,4)
+      return Math.pow(k, 4)
     },
 
     Out (k) {
@@ -60,7 +60,7 @@ const Easing = {
 
     InOut (k) {
       if ((k *= 2) < 1) {
-        return 0.5 * Math.pow(k,4)
+        return 0.5 * Math.pow(k, 4)
       }
 
       return -0.5 * ((k -= 2) * k * k * k - 2)
@@ -69,7 +69,7 @@ const Easing = {
 
   Quintic: {
     In (k) {
-      return Math.pow(k,5)
+      return Math.pow(k, 5)
     },
 
     Out (k) {
@@ -78,7 +78,7 @@ const Easing = {
 
     InOut (k) {
       if ((k *= 2) < 1) {
-        return 0.5 * Math.pow(k,5)
+        return 0.5 * Math.pow(k, 5)
       }
 
       return 0.5 * ((k -= 2) * k * k * k * k + 2)
@@ -223,7 +223,6 @@ const Easing = {
     Out (k) {
       let x = 2.75
       let y = 7.5625
-      
       if (k < 1 / x) {
         return y * k * k
       } else if (k < 2 / x) {
