@@ -51,10 +51,10 @@ Starting at `v3`, we provide excluded plugins from core, so our core becomes lig
 
 ## Installation
 
-Download the [library](https://unpkg.com/es6-tween@5.5.2/bundled/Tween.min.js) and include it in your code:
+Download the [library](https://unpkg.com/es6-tween/bundled/Tween.js) and include it in your code:
 
 ```html
-<script src="bundled/Tween.min.js"></script>
+<script src="bundled/Tween.js"></script>
 ```
 
 ### CDN-Hosted version
