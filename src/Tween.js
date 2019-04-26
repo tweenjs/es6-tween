@@ -396,16 +396,16 @@ class Tween {
     }
     let temp1 = Object.keys(this._valuesEnd)
     let temp2 = Object.keys(this.object)
-    if(temp1.length > temp2.length){
+    if (temp1.length > temp2.length) {
       temp1.forEach((el) => {
-        if(!temp2.includes(el)){
-          delete this._valuesEnd[el];
+        if (!temp2.includes(el)) {
+          delete this._valuesEnd[el]
         }
       })
     }
-    if(temp2.length > temp1.length){
+    if (temp2.length > temp1.length) {
       temp2.forEach((el) => {
-        if(!temp1.includes(el)){
+        if (!temp1.includes(el)) {
           delete this.object[el]
         }
       })
