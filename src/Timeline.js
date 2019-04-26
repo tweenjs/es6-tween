@@ -14,15 +14,13 @@ import {
 import Selector from './selector'
 
 export const shuffle = a => {
-  let j
   let x
-  let i
-  for (i = a.length; i; i -= 1) {
-    j = Math.floor(Math.random() * i)
-    x = a[i - 1]
-    a[i - 1] = a[j]
-    a[j] = x
-  }
+  a.forEach((el, i) => {
+    let random = Math.floor(Math.random() * (a.length))
+    x = a[random]
+    a[random] = a[i]
+    a[i] = x
+  })
   return a
 }
 
