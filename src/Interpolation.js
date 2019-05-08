@@ -77,14 +77,7 @@ const Interpolation = {
         i = Math.floor((f = m * (1 + k)))
       }
 
-      return fn(
-        v[(i - 1 + m) % m],
-        v[i],
-        v[(i + 1) % m],
-        v[(i + 2) % m],
-        f - i,
-        value
-      )
+      return fn(v[(i - 1 + m) % m], v[i], v[(i + 1) % m], v[(i + 2) % m], f - i, value)
     } else {
       if (k < 0) {
         return fn(v[1], v[1], v[0], v[0], -k, value)
@@ -94,14 +87,7 @@ const Interpolation = {
         return fn(v[m - 1], v[m - 1], v[m], v[m], (k | 0) - k, value)
       }
 
-      return fn(
-        v[i ? i - 1 : 0],
-        v[i],
-        v[m < i + 1 ? m : i + 1],
-        v[m < i + 2 ? m : i + 2],
-        f - i,
-        value
-      )
+      return fn(v[i ? i - 1 : 0], v[i], v[m < i + 1 ? m : i + 1], v[m < i + 2 ? m : i + 2], f - i, value)
     }
   },
 
@@ -116,8 +102,7 @@ const Interpolation = {
           if (p0[0] === STRING_PROP) {
             let STRING_BUFFER = ''
             for (let i = 1, len = p0.length; i < len; i++) {
-              let currentValue =
-                typeof p0[i] === 'number' ? p0[i] + (p1[i] - p0[i]) * t : p1[i]
+              let currentValue = typeof p0[i] === 'number' ? p0[i] + (p1[i] - p0[i]) * t : p1[i]
               if (isRGBColor(p0, i) || isRGBColor(p0, i, RGBA)) {
                 currentValue |= 0
               }
@@ -163,7 +148,7 @@ const Interpolation = {
     Factorial: (function () {
       const a = [1]
 
-      return n => {
+      return (n) => {
         let s = 1
 
         if (a[n]) {
@@ -188,27 +173,14 @@ const Interpolation = {
         const t2 = t * t
         const t3 = t * t2
 
-        return (
-          (2 * p1 - 2 * p2 + v0 + v1) * t3 +
-          (-3 * p1 + 3 * p2 - 2 * v0 - v1) * t2 +
-          v0 * t +
-          p1
-        )
+        return (2 * p1 - 2 * p2 + v0 + v1) * t3 + (-3 * p1 + 3 * p2 - 2 * v0 - v1) * t2 + v0 * t + p1
       } else if (typeof p0 === 'object') {
         if (p0.length !== undefined) {
           if (p0[0] === STRING_PROP) {
             let STRING_BUFFER = ''
             for (let i = 1, len = p0.length; i < len; i++) {
               let currentValue =
-                typeof p0[i] === 'number'
-                  ? Interpolation.Utils.CatmullRom(
-                    p0[i],
-                    p1[i],
-                    p2[i],
-                    p3[i],
-                    t
-                  )
-                  : p3[i]
+                typeof p0[i] === 'number' ? Interpolation.Utils.CatmullRom(p0[i], p1[i], p2[i], p3[i], t) : p3[i]
               if (isRGBColor(p0, i) || isRGBColor(p0, i, RGBA)) {
                 currentValue |= 0
               }
@@ -217,25 +189,11 @@ const Interpolation = {
             return STRING_BUFFER
           }
           for (let p = 0, len = v.length; p < len; p++) {
-            v[p] = Interpolation.Utils.CatmullRom(
-              p0[p],
-              p1[p],
-              p2[p],
-              p3[p],
-              t,
-              v[p]
-            )
+            v[p] = Interpolation.Utils.CatmullRom(p0[p], p1[p], p2[p], p3[p], t, v[p])
           }
         } else {
           for (const p in v) {
-            v[p] = Interpolation.Utils.CatmullRom(
-              p0[p],
-              p1[p],
-              p2[p],
-              p3[p],
-              t,
-              v[p]
-            )
+            v[p] = Interpolation.Utils.CatmullRom(p0[p], p1[p], p2[p], p3[p], t, v[p])
           }
         }
         return v

@@ -7,12 +7,7 @@ export default class PlaybackPosition {
   parseLabel (name, offset) {
     const { offsets, labels } = this
     let i = labels.indexOf(name)
-    if (
-      typeof name === 'string' &&
-      name.indexOf('=') !== -1 &&
-      !offset &&
-      i === -1
-    ) {
+    if (typeof name === 'string' && name.indexOf('=') !== -1 && !offset && i === -1) {
       const rty = name.substr(name.indexOf('=') - 1, 2)
       const rt = name.split(rty)
       offset = rt.length === 2 ? rty + rt[1] : null

@@ -33,7 +33,7 @@ TWEEN.autoPlay(true); // simplify the your code
 let coords = { x: 0, y: 0 };
 let tween = new TWEEN.Tween(coords)
   .to({ x: 100, y: 100 }, 1000)
-  .on("update", ({ x, y }) => {
+  .on('update', ({ x, y }) => {
     console.log(`The values is x: ${x} and y: ${y}`);
   })
   .start();
@@ -80,7 +80,7 @@ Download the [library](https://unpkg.com/es6-tween/bundled/Tween.js) and include
 #### Using `import`
 
 ```javascript
-import { Easing, Tween, autoPlay } from "es6-tween";
+import { Easing, Tween, autoPlay } from 'es6-tween';
 ```
 
 #### Using [getlibs](https://github.com/activewidgets/getlibs)
@@ -108,7 +108,7 @@ $ npm install es6-tween
 Then include the Tween.js module with the standard node.js `require`:
 
 ```javascript
-const { Tween, Easing, autoPlay } = require("es6-tween");
+const { Tween, Easing, autoPlay } = require('es6-tween');
 ```
 
 And you can use Tween.js as in all other examples--for example:

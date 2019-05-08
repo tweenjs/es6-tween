@@ -1,16 +1,7 @@
-import {
-  add,
-  now,
-  Plugins,
-  remove,
-  isRunning,
-  isLagSmoothing
-} from './core'
+import { add, now, Plugins, remove, isRunning, isLagSmoothing } from './core'
 import Easing from './Easing'
 import Interpolation from './Interpolation'
-import NodeCache, {
-  Store
-} from './NodeCache'
+import NodeCache, { Store } from './NodeCache'
 import Selector from './selector'
 import {
   decompose,
@@ -96,9 +87,7 @@ class Tween {
     if (!!node && typeof node === 'object' && !object && !node.nodeType) {
       object = this.object = node
       node = null
-    } else if (!!node &&
-      (node.nodeType || node.length || typeof node === 'string')
-    ) {
+    } else if (!!node && (node.nodeType || node.length || typeof node === 'string')) {
       node = this.node = Selector(node)
       object = this.object = NodeCache(node, object, this)
     }
@@ -146,9 +135,7 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   on (event, callback) {
-    const {
-      _maxListener
-    } = this
+    const { _maxListener } = this
     const callbackName = event + EVENT_CALLBACK
     for (let i = 0; i < _maxListener; i++) {
       const callbackId = callbackName + i
@@ -168,9 +155,7 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   once (event, callback) {
-    const {
-      _maxListener
-    } = this
+    const { _maxListener } = this
     const callbackName = event + EVENT_CALLBACK
     for (let i = 0; i < _maxListener; i++) {
       const callbackId = callbackName + i
@@ -192,9 +177,7 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   off (event, callback) {
-    const {
-      _maxListener
-    } = this
+    const { _maxListener } = this
     const callbackName = event + EVENT_CALLBACK
     for (let i = 0; i < _maxListener; i++) {
       const callbackId = callbackName + i
@@ -211,9 +194,7 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   emit (event, arg1, arg2, arg3, arg4) {
-    const {
-      _maxListener
-    } = this
+    const { _maxListener } = this
     const callbackName = event + EVENT_CALLBACK
 
     if (!this[callbackName + 0]) {
@@ -253,9 +234,7 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   reverse (state) {
-    const {
-      _reversed
-    } = this
+    const { _reversed } = this
 
     this._reversed = state !== undefined ? state : !_reversed
 
@@ -333,12 +312,7 @@ class Tween {
    * @deprecated Not works as excepted, so we deprecated this method
    */
   seek (time, keepPlaying) {
-    const {
-      _duration,
-      _initTime,
-      _startTime,
-      _reversed
-    } = this
+    const { _duration, _initTime, _startTime, _reversed } = this
 
     let updateTime = _initTime + time
     this._isPlaying = true
@@ -362,8 +336,7 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   duration (amount) {
-    this._duration =
-      typeof amount === 'function' ? amount(this._duration) : amount
+    this._duration = typeof amount === 'function' ? amount(this._duration) : amount
 
     return this
   }
@@ -379,17 +352,13 @@ class Tween {
     this._valuesEnd = properties
 
     if (typeof duration === 'number' || typeof duration === 'function') {
-      this._duration =
-        typeof duration === 'function' ? duration(this._duration) : duration
+      this._duration = typeof duration === 'function' ? duration(this._duration) : duration
     } else if (typeof duration === 'object') {
       for (const prop in duration) {
         if (typeof this[prop] === 'function') {
-          const [
-            arg1 = null,
-            arg2 = null,
-            arg3 = null,
-            arg4 = null
-          ] = Array.isArray(duration[prop]) ? duration[prop] : [duration[prop]]
+          const [arg1 = null, arg2 = null, arg3 = null, arg4 = null] = Array.isArray(duration[prop])
+            ? duration[prop]
+            : [duration[prop]]
           this[prop](arg1, arg2, arg3, arg4)
         }
       }
@@ -407,23 +376,14 @@ class Tween {
     if (this._rendered) {
       return this
     }
-    let {
-      _valuesStart,
-      _valuesEnd,
-      object,
-      node,
-      InitialValues
-    } = this
+    let { _valuesStart, _valuesEnd, object, node, InitialValues } = this
 
     SET_NESTED(object)
     SET_NESTED(_valuesEnd)
 
     if (node && node.queueID && Store[node.queueID]) {
       const prevTweenByNode = Store[node.queueID]
-      if (
-        prevTweenByNode.propNormaliseRequired &&
-        prevTweenByNode.tween !== this
-      ) {
+      if (prevTweenByNode.propNormaliseRequired && prevTweenByNode.tween !== this) {
         for (const property in _valuesEnd) {
           if (prevTweenByNode.tween._valuesEnd[property] !== undefined) {
             // delete prevTweenByNode.tween._valuesEnd[property];
@@ -436,11 +396,7 @@ class Tween {
 
     if (node && InitialValues) {
       if (!object || Object.keys(object).length === 0) {
-        object = this.object = NodeCache(
-          node,
-          InitialValues(node, _valuesEnd),
-          this
-        )
+        object = this.object = NodeCache(node, InitialValues(node, _valuesEnd), this)
       } else if (!_valuesEnd || Object.keys(_valuesEnd).length === 0) {
         _valuesEnd = this._valuesEnd = InitialValues(node, object)
       }
@@ -507,10 +463,7 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   start (time) {
-    this._startTime =
-      time !== undefined
-        ? typeof time === 'string' ? now() + parseFloat(time) : time
-        : now()
+    this._startTime = time !== undefined ? (typeof time === 'string' ? now() + parseFloat(time) : time) : now()
     this._startTime += this._delayTime
     this._initTime = this._prevTime = this._startTime
 
@@ -529,16 +482,7 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   stop () {
-    let {
-      _isPlaying,
-      _isFinite,
-      object,
-      _startTime,
-      _duration,
-      _r,
-      _yoyo,
-      _reversed
-    } = this
+    let { _isPlaying, _isFinite, object, _startTime, _duration, _r, _yoyo, _reversed } = this
 
     if (!_isPlaying) {
       return this
@@ -565,8 +509,7 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   delay (amount) {
-    this._delayTime =
-      typeof amount === 'function' ? amount(this._delayTime) : amount
+    this._delayTime = typeof amount === 'function' ? amount(this._delayTime) : amount
 
     return this
   }
@@ -596,9 +539,7 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   repeat (amount) {
-    this._repeat = !this._duration
-      ? 0
-      : typeof amount === 'function' ? amount(this._repeat) : amount
+    this._repeat = !this._duration ? 0 : typeof amount === 'function' ? amount(this._repeat) : amount
     this._r = this._repeat
     this._isFinite = isFinite(amount)
 
@@ -612,8 +553,7 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   reverseDelay (amount) {
-    this._reverseDelayTime =
-      typeof amount === 'function' ? amount(this._reverseDelayTime) : amount
+    this._reverseDelayTime = typeof amount === 'function' ? amount(this._reverseDelayTime) : amount
 
     return this
   }
@@ -626,10 +566,7 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   yoyo (state, _easingReverse) {
-    this._yoyo =
-      typeof state === 'function'
-        ? state(this._yoyo)
-        : state === null ? this._yoyo : state
+    this._yoyo = typeof state === 'function' ? state(this._yoyo) : state === null ? this._yoyo : state
     if (!state) {
       this._reversed = false
     }
@@ -670,11 +607,7 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   reassignValues (time) {
-    const {
-      _valuesStart,
-      object,
-      _delayTime
-    } = this
+    const { _valuesStart, object, _delayTime } = this
 
     this._isPlaying = true
     this._startTime = time !== undefined ? time : now()
@@ -759,9 +692,7 @@ class Tween {
       this._onStartCallbackFired = true
     }
 
-    currentEasing = _reversed
-      ? _easingReverse || _easingFunction
-      : _easingFunction
+    currentEasing = _reversed ? _easingReverse || _easingFunction : _easingFunction
 
     if (!object) {
       return true
@@ -769,10 +700,7 @@ class Tween {
 
     for (property in _valuesEnd) {
       const start = _valuesStart[property]
-      if (
-        (start === undefined || start === null) &&
-        !(Plugins[property] && Plugins[property].update)
-      ) {
+      if ((start === undefined || start === null) && !(Plugins[property] && Plugins[property].update)) {
         continue
       }
       const end = _valuesEnd[property]
@@ -790,11 +718,7 @@ class Tween {
       if (typeof end === 'number') {
         object[property] = start + (end - start) * value
       } else if (Array.isArray(end) && !Array.isArray(start)) {
-        object[property] = _interpolationFunctionCall(
-          end,
-          value,
-          object[property]
-        )
+        object[property] = _interpolationFunctionCall(end, value, object[property])
       } else if (end && end.update) {
         end.update(value)
       } else if (typeof end === 'function') {
@@ -805,15 +729,7 @@ class Tween {
         recompose(property, object, _valuesStart, _valuesEnd, value, elapsed)
       }
       if (Plugins[property] && Plugins[property].update) {
-        Plugins[property].update.call(
-          this,
-          object[property],
-          start,
-          end,
-          value,
-          elapsed,
-          property
-        )
+        Plugins[property].update.call(this, object[property], start, end, value, elapsed, property)
       }
       propCount++
     }

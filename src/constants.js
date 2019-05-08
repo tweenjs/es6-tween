@@ -39,8 +39,7 @@ export function deepCopy (source) {
   return source
 }
 
-const isNaNForST = v =>
-  isNaN(+v) || ((v[0] === '+' || v[0] === '-') && v[1] === '=') || v === '' || v === ' '
+const isNaNForST = (v) => isNaN(+v) || ((v[0] === '+' || v[0] === '-') && v[1] === '=') || v === '' || v === ' '
 
 const hexColor = /^#([0-9a-f]{6}|[0-9a-f]{3})$/i
 const hex2rgb = (all, hex) => {
@@ -54,14 +53,19 @@ const hex2rgb = (all, hex) => {
     hex = r + r + g + g + b + b
   }
   let color = parseInt(hex, 16)
-  r = color >> 16 & 255
-  g = color >> 8 & 255
+  r = (color >> 16) & 255
+  g = (color >> 8) & 255
   b = color & 255
   return 'rgb(' + r + ',' + g + ',' + b + ')'
 }
 
 export function decomposeString (fromValue) {
-  return typeof fromValue !== 'string' ? fromValue : fromValue.replace(hexColor, hex2rgb).match(NUM_REGEX).map(v => (isNaNForST(v) ? v : +v))
+  return typeof fromValue !== 'string'
+    ? fromValue
+    : fromValue
+      .replace(hexColor, hex2rgb)
+      .match(NUM_REGEX)
+      .map((v) => (isNaNForST(v) ? v : +v))
 }
 
 // Decompose value, now for only `string` that required
@@ -112,9 +116,7 @@ export function decompose (prop, obj, from, to, stringBuffer) {
     return true
   } else if (typeof fromValue === 'object' && typeof toValue === 'object') {
     if (Array.isArray(fromValue)) {
-      return fromValue.map((v, i) =>
-        decompose(i, obj[prop], fromValue, toValue)
-      )
+      return fromValue.map((v, i) => decompose(i, obj[prop], fromValue, toValue))
     } else {
       for (let prop2 in toValue) {
         decompose(prop2, obj[prop], fromValue, toValue)
@@ -130,19 +132,14 @@ export const RGB = 'rgb('
 export const RGBA = 'rgba('
 
 export const isRGBColor = (v, i, r = RGB) =>
-  typeof v[i] === 'number' &&
-  (v[i - 1] === r || v[i - 3] === r || v[i - 5] === r)
+  typeof v[i] === 'number' && (v[i - 1] === r || v[i - 3] === r || v[i - 5] === r)
 export function recompose (prop, obj, from, to, t, originalT, stringBuffer) {
   const fromValue = stringBuffer ? from : from[prop]
   const toValue = stringBuffer ? to : to[prop]
   if (toValue === undefined) {
     return fromValue
   }
-  if (
-    fromValue === undefined ||
-    typeof fromValue === 'string' ||
-    fromValue === toValue
-  ) {
+  if (fromValue === undefined || typeof fromValue === 'string' || fromValue === toValue) {
     return toValue
   } else if (typeof fromValue === 'object' && typeof toValue === 'object') {
     if (!fromValue || !toValue) {
@@ -156,17 +153,14 @@ export function recompose (prop, obj, from, to, t, originalT, stringBuffer) {
           typeof fromValue[i] !== 'number'
             ? fromValue[i]
             : isRelative
-              ? fromValue[i] +
-                parseFloat(toValue[i][0] + toValue[i].substr(2)) * t
+              ? fromValue[i] + parseFloat(toValue[i][0] + toValue[i].substr(2)) * t
               : fromValue[i] + (toValue[i] - fromValue[i]) * t
         if (isRGBColor(fromValue, i) || isRGBColor(fromValue, i, RGBA)) {
           currentValue |= 0
         }
         STRING_BUFFER += currentValue
         if (isRelative && originalT === 1) {
-          fromValue[i] =
-            fromValue[i] +
-            parseFloat(toValue[i][0] + toValue[i].substr(2))
+          fromValue[i] = fromValue[i] + parseFloat(toValue[i][0] + toValue[i].substr(2))
         }
       }
       if (!stringBuffer) {
@@ -190,10 +184,9 @@ export function recompose (prop, obj, from, to, t, originalT, stringBuffer) {
     }
   } else if (typeof fromValue === 'number') {
     const isRelative = typeof toValue === 'string'
-    obj[prop] =
-      isRelative
-        ? fromValue + parseFloat(toValue[0] + toValue.substr(2)) * t
-        : fromValue + (toValue - fromValue) * t
+    obj[prop] = isRelative
+      ? fromValue + parseFloat(toValue[0] + toValue.substr(2)) * t
+      : fromValue + (toValue - fromValue) * t
     if (isRelative && originalT === 1) {
       from[prop] = obj[prop]
     }
@@ -240,10 +233,7 @@ const propExtract = function (obj, property) {
       return nested
     } else if (nested[prop] === undefined) {
       if (lastArr || lastObj) {
-        nested[prop] =
-          index === propsLastIndex
-            ? value
-            : lastArr || nextIsArray ? [] : lastObj ? {} : null
+        nested[prop] = index === propsLastIndex ? value : lastArr || nextIsArray ? [] : lastObj ? {} : null
         lastObj = lastArr = false
         return nested[prop]
       }

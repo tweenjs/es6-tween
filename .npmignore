@@ -1,5 +1,6 @@
 .gitignore
 .git
+.github
 bower.json
 tsconfig.json
 tslint.json

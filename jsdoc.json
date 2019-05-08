@@ -1,12 +1,16 @@
 {
     "tags": {
         "allowUnknownTags": true,
-        "dictionaries": ["jsdoc"]
+        "dictionaries": [
+            "jsdoc"
+        ]
     },
     "source": {
-        "include": ["src"],
+        "include": [
+            "src"
+        ],
         "includePattern": ".js$",
-        "excludePattern": "(node_modules/|docs)"
+        "excludePattern": "(node_modules/|logo|docs|bundled|examples|performance|.vscode|.github)"
     },
     "plugins": [
         "plugins/markdown"

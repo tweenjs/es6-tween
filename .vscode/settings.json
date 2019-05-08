@@ -1,4 +1,5 @@
 {
-    "eslint.enable": true,
-    "prettier.requireConfig": false
+  "eslint.enable": true,
+  "eslint.packageManager": "npm",
+  "prettier.requireConfig": true
 }

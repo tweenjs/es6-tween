@@ -13,7 +13,7 @@ import {
 } from './constants'
 import Selector from './selector'
 
-export const shuffle = a => {
+export const shuffle = (a) => {
   let j
   let x
   let i
@@ -42,7 +42,7 @@ class Timeline extends Tween {
   constructor (params) {
     super()
     this._duration = 0
-    this._startTime = params.startTime !== undefined ? params.startTime : now()
+    this._startTime = params && params.startTime !== undefined ? params.startTime : now()
     this._tweens = []
     this.elapsed = 0
     this._id = _id++
@@ -59,7 +59,7 @@ class Timeline extends Tween {
     return this
   }
   timingOrder (fn) {
-    const timing = fn(this._tweens.map(t => t._startTime))
+    const timing = fn(this._tweens.map((t) => t._startTime))
     this._tweens.map((tween, i) => {
       tween._startTime = timing[i]
     })
@@ -71,7 +71,7 @@ class Timeline extends Tween {
       const totalStagger = (stagger || 0) * (nodes.length - 1)
       return nodes.map((node, i) => totalStagger - (stagger || 0) * i + offset)
     } else if (mode === 'async') {
-      return nodes.map(node => offset)
+      return nodes.map((node) => offset)
     } else if (mode === 'sequence' || mode === 'delayed') {
       let { stagger } = params
       if (!stagger) {
@@ -79,7 +79,7 @@ class Timeline extends Tween {
       }
       return nodes.map((node, i) => stagger * i + offset)
     } else if (mode === 'oneByOne') {
-      return nodes.map(node => params.duration)
+      return nodes.map((node) => params.duration)
     } else if (mode === 'shuffle') {
       const { stagger } = params
       return shuffle(nodes.map((node, i) => (stagger || 0) * i + offset))
@@ -108,17 +108,18 @@ class Timeline extends Tween {
       const offset =
         typeof position === 'number'
           ? position
-          : this.position.parseLabel(
-            typeof position !== 'undefined' ? position : 'afterLast',
-            null
-          )
+          : this.position.parseLabel(typeof position !== 'undefined' ? position : 'afterLast', null)
       const mode = this.getTiming(params.mode, nodes, params, offset)
       for (let i = 0, node, len = nodes.length; i < len; i++) {
         node = nodes[i]
         this.add(
           Tween.fromTo(
             node,
-            typeof from === 'function' ? from(i, nodes.length) : typeof from === 'object' && !!from ? { ...from } : null,
+            typeof from === 'function'
+              ? from(i, nodes.length)
+              : typeof from === 'object' && !!from
+                ? { ...from }
+                : null,
             typeof to === 'function' ? to(i, nodes.length) : to,
             typeof params === 'function' ? params(i, nodes.length) : params
           ),
@@ -169,10 +170,7 @@ class Timeline extends Tween {
     for (let i = 0, len = this._tweens.length; i < len; i++) {
       const _tween = this._tweens[i]
       fn(_tween, i)
-      this._duration = Math.max(
-        this._duration,
-        _tween._duration + _tween._startTime
-      )
+      this._duration = Math.max(this._duration, _tween._duration + _tween._startTime)
     }
     return this
   }
@@ -186,7 +184,7 @@ class Timeline extends Tween {
    */
   add (tween, position) {
     if (Array.isArray(tween)) {
-      tween.map(_tween => {
+      tween.map((_tween) => {
         this.add(_tween, position)
       })
       return this
@@ -207,17 +205,11 @@ class Timeline extends Tween {
     const offset =
       typeof position === 'number'
         ? position
-        : this.position.parseLabel(
-          typeof position !== 'undefined' ? position : 'afterLast',
-          null
-        )
+        : this.position.parseLabel(typeof position !== 'undefined' ? position : 'afterLast', null)
     tween._startTime = Math.max(this._startTime, tween._delayTime, offset)
     tween._delayTime = offset
     tween._isPlaying = true
-    this._duration = Math.max(
-      _duration,
-      Math.max(tween._startTime + tween._delayTime, tween._duration)
-    )
+    this._duration = Math.max(_duration, Math.max(tween._startTime + tween._delayTime, tween._duration))
     this._tweens.push(tween)
     this.position.setLabel('afterLast', this._duration)
     return this
@@ -232,11 +224,11 @@ class Timeline extends Tween {
   }
 
   easing (easing) {
-    return this.map(tween => tween.easing(easing))
+    return this.map((tween) => tween.easing(easing))
   }
 
   interpolation (interpolation) {
-    return this.map(tween => tween.interpolation(interpolation))
+    return this.map((tween) => tween.interpolation(interpolation))
   }
 
   update (time) {
@@ -300,7 +292,7 @@ class Timeline extends Tween {
 
         if (_yoyo) {
           this._reversed = !_reversed
-          this.timingOrder(timing => timing.reverse())
+          this.timingOrder((timing) => timing.reverse())
         }
 
         if (_reversed && _reverseDelayTime) {
@@ -331,9 +323,7 @@ class Timeline extends Tween {
   }
 
   progress (value) {
-    return value !== undefined
-      ? this.update(value * this._duration)
-      : this.elapsed
+    return value !== undefined ? this.update(value * this._duration) : this.elapsed
   }
 }
 export default Timeline

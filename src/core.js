@@ -9,7 +9,11 @@ import { requestAnimationFrame, cancelAnimationFrame, root } from './shim'
  * TWEEN.now
  */
 const now = (function () {
-  if (typeof process !== 'undefined' && process.hrtime !== undefined && (!process.versions || process.versions.electron === undefined)) {
+  if (
+    typeof process !== 'undefined' &&
+    process.hrtime !== undefined &&
+    (!process.versions || process.versions.electron === undefined)
+  ) {
     return function () {
       const time = process.hrtime()
 
@@ -17,19 +21,14 @@ const now = (function () {
       return time[0] * 1000 + time[1] / 1000000
     }
     // In a browser, use window.performance.now if it is available.
-  } else if (
-    root.performance !== undefined &&
-    root.performance.now !== undefined
-  ) {
+  } else if (root.performance !== undefined && root.performance.now !== undefined) {
     // This must be bound, because directly assigning this function
     // leads to an invocation exception in Chrome.
     return root.performance.now.bind(root.performance)
     // Use Date.now if it is available.
   } else {
     const offset =
-      root.performance &&
-      root.performance.timing &&
-      root.performance.timing.navigationStart
+      root.performance && root.performance.timing && root.performance.timing.navigationStart
         ? root.performance.timing.navigationStart
         : Date.now()
     return function () {

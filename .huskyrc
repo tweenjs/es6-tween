@@ -1,6 +1,0 @@
-{
-  "hooks": {
-    "pre-commit": "yarn lint",
-    "pre-push": "yarn source && npx ava --verbose"
-  }
-}

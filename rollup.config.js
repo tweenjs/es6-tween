@@ -9,7 +9,5 @@ export default {
     sourcemap: true
   },
   context: 'this',
-  plugins: [
-    babel()
-  ]
+  plugins: [babel()]
 }

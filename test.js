@@ -6,7 +6,7 @@ import { Easing, Tween, Timeline, update, getAll, removeAll } from './src'
 
 import browserTestMiddleware from './withPage'
 
-test('Events', t => {
+test('Events', (t) => {
   let tween = new Tween({ x: 0 })
     .to({ x: 100 }, 100)
     .repeat(2)
@@ -47,19 +47,19 @@ test('Events', t => {
   update(300)
 })
 
-test('Value Interpolation', t => {
+test('Value Interpolation', (t) => {
   let obj = { a: 0, b: 'B value 1', c: { x: 2 }, d: [3], _e: 4, g: 5, h: 0 }
 
   Object.defineProperty(obj, 'e', {
-    get () { return obj._e },
+    get () {
+      return obj._e
+    },
     set (x) {
       obj._e = x
     }
   })
 
-  new Tween(obj)
-    .to({ a: 1, b: 'B value 2', c: { x: 3 }, d: [4], _e: 5, g: '+=1', h: 250000 }, 100)
-    .start(0)
+  new Tween(obj).to({ a: 1, b: 'B value 2', c: { x: 3 }, d: [4], _e: 5, g: '+=1', h: 250000 }, 100).start(0)
 
   update(0)
 
@@ -105,11 +105,9 @@ test('Value Interpolation', t => {
   t.is(obj.h, 250000, 'Big number interpolation ending value not worked as excepted')
 })
 
-test('Value Array-based Interpolation', t => {
+test('Value Array-based Interpolation', (t) => {
   let obj = { x: 0 }
-  new Tween(obj)
-    .to({ x: [1, 3, 5] }, 100)
-    .start(0)
+  new Tween(obj).to({ x: [1, 3, 5] }, 100).start(0)
 
   t.is(obj.x, 0)
 
@@ -123,37 +121,33 @@ test('Value Array-based Interpolation', t => {
   update(100)
 })
 
-test('Tweens List Controlling', t => {
+test('Tweens List Controlling', (t) => {
   let tween = new Tween({ x: 0 })
     .to({ x: 100 }, 100)
     .repeat(2)
     .yoyo(true)
     .start(0)
 
-  t.is(getAll()
-    .length, 1, 'Tween added in tweens list')
+  t.is(getAll().length, 1, 'Tween added in tweens list')
   t.log('Tweens adding was done')
 
   tween.stop()
 
-  t.is(getAll()
-    .length, 0, 'Tween removed from tweens list')
+  t.is(getAll().length, 0, 'Tween removed from tweens list')
   t.log('Tween removing was done')
 
   tween.restart()
 
-  t.is(getAll()
-    .length, 1, 'Tween added in tweens list')
+  t.is(getAll().length, 1, 'Tween added in tweens list')
   t.log('Tweens restart and re-add to tweens list was done')
 
   removeAll()
 
-  t.is(getAll()
-    .length, 0, 'All Tweens was removed from tweens list')
+  t.is(getAll().length, 0, 'All Tweens was removed from tweens list')
   t.log('Tween removeAll was worked fine')
 })
 
-test('Easing', t => {
+test('Easing', (t) => {
   const { Quadratic, Elastic, Linear } = Easing
 
   const { InOut: QuadraticInOut } = Quadratic
@@ -170,7 +164,7 @@ test('Easing', t => {
   t.log('Elastic.InOut was eased as excepted')
 })
 
-test('Tween update should be run against all tween each time', t => {
+test('Tween update should be run against all tween each time', (t) => {
   const order = []
 
   new Tween({ x: 0 })
@@ -202,7 +196,7 @@ test('Tween update should be run against all tween each time', t => {
   t.deepEqual(order, [0, 1, 2])
 })
 
-test('Tween should work after recall when using power saving feature', t => {
+test('Tween should work after recall when using power saving feature', (t) => {
   const init = (obj) =>
     new Tween(obj)
       .to({ z: 360 }, 1000)
@@ -229,178 +223,185 @@ test('Tween should work after recall when using power saving feature', t => {
 })
 
 test('Headless tests', browserTestMiddleware, (t, page) => {
-  return page.evaluate(() => {
-    const deepArrayCopy = arr => arr.map(child => Array.isArray(child)
-      ? deepArrayCopy(child) : Object.keys(child) && Object.keys(child).length
-        ? Object.assign({}, child) : child)
+  return page
+    .evaluate(() => {
+      const deepArrayCopy = (arr) =>
+        arr.map((child) =>
+          Array.isArray(child)
+            ? deepArrayCopy(child)
+            : Object.keys(child) && Object.keys(child).length
+              ? Object.assign({}, child)
+              : child
+        )
 
-    const tests = []
+      const tests = []
 
-    const obj = { x: 0, y: [50, 'String test 100'] }
-    const obj2 = { x: 0 }
-    const arr1 = [ [ 100 ], { f: 200 } ]
+      const obj = { x: 0, y: [50, 'String test 100'] }
+      const obj2 = { x: 0 }
+      const arr1 = [[100], { f: 200 }]
 
-    const tween1 = new TWEEN.Tween(obj)
-      .to({ x: 200, y: [100, 'String test 200'] }, 2000)
-      .on('start', () => {
-        tests.push({
-          method: 'log',
-          successMessage: 'on:start event works as excepted'
+      const tween1 = new TWEEN.Tween(obj)
+        .to({ x: 200, y: [100, 'String test 200'] }, 2000)
+        .on('start', () => {
+          tests.push({
+            method: 'log',
+            successMessage: 'on:start event works as excepted'
+          })
         })
-      })
-      .on('update', (obj, elapsed) => {
-        tests.push({
-          method: 'log',
-          successMessage: 'on:update event works as excepted with elapsed ' + elapsed
+        .on('update', (obj, elapsed) => {
+          tests.push({
+            method: 'log',
+            successMessage: 'on:update event works as excepted with elapsed ' + elapsed
+          })
         })
-      })
-      .on('complete', () => {
-        tests.push({
-          method: 'log',
-          successMessage: 'on:complete event works as excepted'
+        .on('complete', () => {
+          tests.push({
+            method: 'log',
+            successMessage: 'on:complete event works as excepted'
+          })
         })
+      const tween2 = new TWEEN.Tween(obj2).to({ x: 200 }, 4000).easing(TWEEN.Easing.Elastic.InOut)
+      const tween3 = new TWEEN.Tween(arr1).to([[0], { f: 100 }], 2000)
+
+      tween1.start(0)
+      tween2.start(0)
+      tween3.start(0)
+
+      tests.push({
+        method: 'is',
+        a: obj.x,
+        b: 0,
+        failMessage: 'ID: ObjX_24U'
       })
-    const tween2 = new TWEEN.Tween(obj2).to({ x: 200 }, 4000).easing(TWEEN.Easing.Elastic.InOut)
-    const tween3 = new TWEEN.Tween(arr1).to([ [ 0 ], { f: 100 } ], 2000)
+      tests.push({
+        method: 'is',
+        a: obj.y[0],
+        b: 50,
+        failMessage: 'ID: ObjY_25C'
+      })
+      tests.push({
+        method: 'is',
+        a: obj.y[1],
+        b: 'String test 100',
+        failMessage: 'ID: ObjY_26G'
+      })
+      tests.push({
+        method: 'is',
+        a: obj2.x,
+        b: 0,
+        failMessage: 'ID: ObjX_26Z'
+      })
+      tests.push({
+        method: 'is',
+        a: arr1[0][0],
+        b: 100,
+        failMessage: 'ID: ObjA_27L'
+      })
+      tests.push({
+        method: 'is',
+        a: arr1[1].f,
+        b: 200,
+        failMessage: 'ID: ObjF_27X'
+      })
 
-    tween1.start(0)
-    tween2.start(0)
-    tween3.start(0)
+      TWEEN.update(1000)
 
-    tests.push({
-      method: 'is',
-      a: obj.x,
-      b: 0,
-      failMessage: 'ID: ObjX_24U'
-    })
-    tests.push({
-      method: 'is',
-      a: obj.y[0],
-      b: 50,
-      failMessage: 'ID: ObjY_25C'
-    })
-    tests.push({
-      method: 'is',
-      a: obj.y[1],
-      b: 'String test 100',
-      failMessage: 'ID: ObjY_26G'
-    })
-    tests.push({
-      method: 'is',
-      a: obj2.x,
-      b: 0,
-      failMessage: 'ID: ObjX_26Z'
-    })
-    tests.push({
-      method: 'is',
-      a: arr1[0][0],
-      b: 100,
-      failMessage: 'ID: ObjA_27L'
-    })
-    tests.push({
-      method: 'is',
-      a: arr1[1].f,
-      b: 200,
-      failMessage: 'ID: ObjF_27X'
-    })
+      tests.push({
+        method: 'is',
+        a: obj.x,
+        b: 100,
+        failMessage: 'There something wrong with number interpolation',
+        successMessage: 'Number interpolation works as excepted'
+      })
+      tests.push({
+        method: 'is',
+        a: obj.y[0],
+        b: 75,
+        failMessage: 'There something wrong with Array number interpolation',
+        successMessage: 'Array Number interpolation works as excepted'
+      })
+      tests.push({
+        method: 'is',
+        a: obj.y[1],
+        b: 'String test 150',
+        failMessage: 'There something wrong with Array string interpolation',
+        successMessage: 'Array string interpolation works as excepted'
+      })
+      tests.push({
+        method: 'not',
+        a: obj2.x,
+        b: 50,
+        failMessage: 'Easing not works properly or tween instance not handles easing function properly',
+        successMessage: 'Easing function works properly'
+      })
+      tests.push({
+        method: 'deepEqual',
+        a: deepArrayCopy(arr1),
+        b: [[50], { f: 150 }],
+        failMessage: 'Array-based tween failed due of internal processor/instance and/or something failed within core',
+        successMessage: 'Array-based tweens works properly'
+      })
 
-    TWEEN.update(1000)
+      TWEEN.update(2000)
 
-    tests.push({
-      method: 'is',
-      a: obj.x,
-      b: 100,
-      failMessage: 'There something wrong with number interpolation',
-      successMessage: 'Number interpolation works as excepted'
-    })
-    tests.push({
-      method: 'is',
-      a: obj.y[0],
-      b: 75,
-      failMessage: 'There something wrong with Array number interpolation',
-      successMessage: 'Array Number interpolation works as excepted'
-    })
-    tests.push({
-      method: 'is',
-      a: obj.y[1],
-      b: 'String test 150',
-      failMessage: 'There something wrong with Array string interpolation',
-      successMessage: 'Array string interpolation works as excepted'
-    })
-    tests.push({
-      method: 'not',
-      a: obj2.x,
-      b: 50,
-      failMessage: 'Easing not works properly or tween instance not handles easing function properly',
-      successMessage: 'Easing function works properly'
-    })
-    tests.push({
-      method: 'deepEqual',
-      a: deepArrayCopy(arr1),
-      b: [ [ 50 ], { f: 150 } ],
-      failMessage: 'Array-based tween failed due of internal processor/instance and/or something failed within core',
-      successMessage: 'Array-based tweens works properly'
-    })
+      tests.push({
+        method: 'is',
+        a: obj.x,
+        b: 200,
+        failMessage: 'ID: ObjX_32R'
+      })
+      tests.push({
+        method: 'is',
+        a: obj.y[0],
+        b: 100,
+        failMessage: 'ID: ObjY_33V'
+      })
+      tests.push({
+        method: 'is',
+        a: obj.y[1],
+        b: 'String test 200',
+        failMessage: 'ID: ObjY_33S'
+      })
+      tests.push({
+        method: 'not',
+        a: obj2.x,
+        b: 200,
+        failMessage: 'ID: ObjY_34I'
+      })
+      tests.push({
+        method: 'is',
+        a: arr1[0][0],
+        b: 0,
+        failMessage: 'ID: ObjA_34P'
+      })
+      tests.push({
+        method: 'is',
+        a: arr1[1].f,
+        b: 100,
+        failMessage: 'ID: ObjF_35T'
+      })
 
-    TWEEN.update(2000)
+      TWEEN.update(4000)
 
-    tests.push({
-      method: 'is',
-      a: obj.x,
-      b: 200,
-      failMessage: 'ID: ObjX_32R'
-    })
-    tests.push({
-      method: 'is',
-      a: obj.y[0],
-      b: 100,
-      failMessage: 'ID: ObjY_33V'
-    })
-    tests.push({
-      method: 'is',
-      a: obj.y[1],
-      b: 'String test 200',
-      failMessage: 'ID: ObjY_33S'
-    })
-    tests.push({
-      method: 'not',
-      a: obj2.x,
-      b: 200,
-      failMessage: 'ID: ObjY_34I'
-    })
-    tests.push({
-      method: 'is',
-      a: arr1[0][0],
-      b: 0,
-      failMessage: 'ID: ObjA_34P'
-    })
-    tests.push({
-      method: 'is',
-      a: arr1[1].f,
-      b: 100,
-      failMessage: 'ID: ObjF_35T'
-    })
+      tests.push({
+        method: 'is',
+        a: obj2.x,
+        b: 200,
+        failMessage: 'ID: ObjY_36K'
+      })
 
-    TWEEN.update(4000)
-
-    tests.push({
-      method: 'is',
-      a: obj2.x,
-      b: 200,
-      failMessage: 'ID: ObjY_36K'
+      return tests
     })
-
-    return tests
-  }).then(tests => {
-    tests.map(({ method, a, b, failMessage, successMessage }) => {
-      if (method === 'log') {
-        t.log(successMessage)
-      } else {
-        t[method](a, b, failMessage)
-        successMessage && t.log(successMessage)
-      }
+    .then((tests) => {
+      tests.map(({ method, a, b, failMessage, successMessage }) => {
+        if (method === 'log') {
+          t.log(successMessage)
+        } else {
+          t[method](a, b, failMessage)
+          successMessage && t.log(successMessage)
+        }
+      })
     })
-  })
 })
 
 test('Timeline', (t) => {
