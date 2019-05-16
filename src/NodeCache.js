@@ -23,7 +23,7 @@ export default function (node, object, tween) {
           }
         }
       }
-      storeID.object = { ...storeID.object, ...object }
+      Object.assign(storeID.object, object)
     }
     return storeID.object
   }

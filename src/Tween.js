@@ -193,7 +193,7 @@ class Tween {
    * @param {string} event - Event listener name
    * @memberof TWEEN.Tween
    */
-  emit (event, arg1, arg2, arg3, arg4) {
+  emit (event, arg1, arg2, arg3) {
     const { _maxListener } = this
     const callbackName = event + EVENT_CALLBACK
 
@@ -203,7 +203,7 @@ class Tween {
     for (let i = 0; i < _maxListener; i++) {
       const callbackId = callbackName + i
       if (this[callbackId]) {
-        this[callbackId](arg1, arg2, arg3, arg4)
+        this[callbackId](arg1, arg2, arg3)
       }
     }
     return this

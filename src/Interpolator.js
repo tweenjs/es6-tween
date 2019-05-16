@@ -36,7 +36,7 @@ const Interpolator = (a, b) => {
     a.isString = true
     b.isString = true
   }
-  return function (t) {
+  return (t) => {
     if (isArray) {
       for (let i = 0, len = a.length; i < len; i++) {
         recompose(i, origin, a, b, t)
