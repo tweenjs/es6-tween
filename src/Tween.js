@@ -334,6 +334,7 @@ class Tween {
    * @param {number} amount Duration is milliseconds
    * @example tween.duration(2000)
    * @memberof TWEEN.Tween
+   * @deprecated Not works as excepted and useless, so we deprecated this method
    */
   duration (amount) {
     this._duration = typeof amount === 'function' ? amount(this._duration) : amount
@@ -430,14 +431,8 @@ class Tween {
         for (let i = 0, len = end.length; i < len; i++) {
           if (typeof end[i] === 'string') {
             let arrayOfStrings = decomposeString(end[i])
-            let stringObject = {
-              length: arrayOfStrings.length,
-              isString: true
-            }
-            for (let ii = 0, len2 = arrayOfStrings.length; ii < len2; ii++) {
-              stringObject[ii] = arrayOfStrings[ii]
-            }
-            end[i] = stringObject
+            arrayOfStrings.isString = true
+            end[i] = arrayOfStrings
           }
         }
       }
@@ -717,7 +712,7 @@ class Tween {
 
       if (typeof end === 'number') {
         object[property] = start + (end - start) * value
-      } else if (Array.isArray(end) && !Array.isArray(start)) {
+      } else if (Array.isArray(end) && !end.isString && (!Array.isArray(start) || start.isString)) {
         object[property] = _interpolationFunctionCall(end, value, object[property])
       } else if (end && end.update) {
         end.update(value)

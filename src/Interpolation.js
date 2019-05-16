@@ -16,6 +16,7 @@ const Interpolation = {
     const f = m * k
     const i = Math.floor(f)
     const fn = Interpolation.Utils.Linear
+
     if (k < 0) {
       return fn(v[0], v[1], f, value)
     }
@@ -93,25 +94,35 @@ const Interpolation = {
 
   Utils: {
     Linear (p0, p1, t, v) {
-      if (typeof p0 === 'string') {
+      if (p0 === p1 || typeof p0 === 'string') {
+        // Quick return for performance reason
+        if (p1.length && p1.splice && p1.isString) {
+          p1 = ''
+          for (let i = 0, len = p0.length; i < len; i++) {
+            p1 += p0[i]
+          }
+        }
         return p1
       } else if (typeof p0 === 'number') {
         return typeof p0 === 'function' ? p0(t) : p0 + (p1 - p0) * t
       } else if (typeof p0 === 'object') {
         if (p0.length !== undefined) {
-          if (p0[0] === STRING_PROP) {
+          const isForceStringProp = typeof p0[0] === 'string' || p0.isString
+          if (isForceStringProp || p0[0] === STRING_PROP) {
             let STRING_BUFFER = ''
-            for (let i = 1, len = p0.length; i < len; i++) {
-              let currentValue = typeof p0[i] === 'number' ? p0[i] + (p1[i] - p0[i]) * t : p1[i]
-              if (isRGBColor(p0, i) || isRGBColor(p0, i, RGBA)) {
+            for (let i = isForceStringProp ? 0 : 1, len = p0.length; i < len; i++) {
+              let currentValue =
+                t === 0 ? p0[i] : t === 1 ? p1[i] : typeof p0[i] === 'number' ? p0[i] + (p1[i] - p0[i]) * t : p1[i]
+              if ((t > 0 && t < 1 && isRGBColor(p0, i)) || isRGBColor(p0, i, RGBA)) {
                 currentValue |= 0
               }
               STRING_BUFFER += currentValue
             }
             return STRING_BUFFER
-          }
-          for (let p = 0, len = v.length; p < len; p++) {
-            v[p] = Interpolation.Utils.Linear(p0[p], p1[p], t, v[p])
+          } else if (v && v.length && v.splice) {
+            for (let p = 0, len = v.length; p < len; p++) {
+              v[p] = Interpolation.Utils.Linear(p0[p], p1[p], t, v[p])
+            }
           }
         } else {
           for (const p in v) {

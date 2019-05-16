@@ -9,7 +9,7 @@ import { decompose, recompose, decomposeString } from './constants'
  * @return {Function} Returns function that accepts number between `0-1`
  */
 const Interpolator = (a, b) => {
-  let isArray = Array.isArray(a)
+  let isArray = Array.isArray(a) && !a.isString
   let origin = typeof a === 'string' ? a : isArray ? a.slice() : { ...a }
   if (isArray) {
     for (let i = 0, len = a.length; i < len; i++) {
@@ -33,14 +33,8 @@ const Interpolator = (a, b) => {
       }
     }
 
-    let c = { isString: true, length: a.length }
-    let d = { isString: true, length: b.length }
-
-    while (i < c.length) {
-      c[i] = a[i]
-      d[i] = b[i]
-      i++
-    }
+    a.isString = true
+    b.isString = true
   }
   return function (t) {
     if (isArray) {

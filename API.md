@@ -31,7 +31,7 @@ const {add, remove, isRunning, autoPlay} = TWEEN
         * [.Tween#play()](#TWEEN.Tween.Tween+play)
         * [.Tween#restart([noDelay])](#TWEEN.Tween.Tween+restart)
         * ~~[.Tween#seek(time, [keepPlaying])](#TWEEN.Tween.Tween+seek)~~
-        * [.Tween#duration(amount)](#TWEEN.Tween.Tween+duration)
+        * ~~[.Tween#duration(amount)](#TWEEN.Tween.Tween+duration)~~
         * [.Tween#to(properties, [duration])](#TWEEN.Tween.Tween+to)
         * [.Tween#start(time)](#TWEEN.Tween.Tween+start)
         * [.Tween#stop()](#TWEEN.Tween.Tween+stop)
@@ -145,7 +145,7 @@ let tween = new Tween(myNode, {width:'100px'}).to({width:'300px'}, 2000).start()
     * [.Tween#play()](#TWEEN.Tween.Tween+play)
     * [.Tween#restart([noDelay])](#TWEEN.Tween.Tween+restart)
     * ~~[.Tween#seek(time, [keepPlaying])](#TWEEN.Tween.Tween+seek)~~
-    * [.Tween#duration(amount)](#TWEEN.Tween.Tween+duration)
+    * ~~[.Tween#duration(amount)](#TWEEN.Tween.Tween+duration)~~
     * [.Tween#to(properties, [duration])](#TWEEN.Tween.Tween+to)
     * [.Tween#start(time)](#TWEEN.Tween.Tween+start)
     * [.Tween#stop()](#TWEEN.Tween.Tween+stop)
@@ -314,7 +314,9 @@ tween.seek(500)
 ```
 <a name="TWEEN.Tween.Tween+duration"></a>
 
-#### Tween.Tween#duration(amount)
+#### ~~Tween.Tween#duration(amount)~~
+***Deprecated***
+
 Sets tween duration
 
 **Kind**: static method of [<code>Tween</code>](#TWEEN.Tween)  

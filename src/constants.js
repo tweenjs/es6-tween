@@ -73,7 +73,15 @@ export function decompose (prop, obj, from, to, stringBuffer) {
   const fromValue = from[prop]
   const toValue = to[prop]
 
-  if (typeof fromValue === 'string' || typeof toValue === 'string') {
+  if (typeof fromValue === 'string' && Array.isArray(toValue)) {
+    const fromValue1 = decomposeString(fromValue)
+    const toValues = toValue.map(decomposeString)
+
+    fromValue1.isString = true
+    from[prop] = fromValue1
+    to[prop] = toValues
+    return true
+  } else if (typeof fromValue === 'string' || typeof toValue === 'string') {
     let fromValue1 = Array.isArray(fromValue) && fromValue[0] === STRING_PROP ? fromValue : decomposeString(fromValue)
     let toValue1 = Array.isArray(toValue) && toValue[0] === STRING_PROP ? toValue : decomposeString(toValue)
 
@@ -96,23 +104,11 @@ export function decompose (prop, obj, from, to, stringBuffer) {
       toValue1.shift()
     }
 
-    let fromValue2 = {
-      isString: true,
-      length: fromValue1.length
-    }
-    let toValue2 = {
-      isString: true,
-      length: toValue1.length
-    }
+    fromValue1.isString = true
+    toValue1.isString = true
 
-    while (i < fromValue2.length) {
-      fromValue2[i] = fromValue1[i]
-      toValue2[i] = toValue1[i]
-      i++
-    }
-
-    from[prop] = fromValue2
-    to[prop] = toValue2
+    from[prop] = fromValue1
+    to[prop] = toValue1
     return true
   } else if (typeof fromValue === 'object' && typeof toValue === 'object') {
     if (Array.isArray(fromValue)) {
