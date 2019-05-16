@@ -48,7 +48,7 @@ test('Events', (t) => {
 })
 
 test('Value Interpolation', (t) => {
-  let obj = { a: 0, b: 'B value 1', c: { x: 2 }, d: [3], _e: 4, g: 5, h: 0, j: 0, k: 'rgb(0, 0, 0)' }
+  let obj = { a: 0, b: 'B value 1', c: { x: 2 }, d: [3], _e: 4, g: 5, h: 0, j: 0, k: '#000' }
 
   Object.defineProperty(obj, 'e', {
     get () {

@@ -21,7 +21,6 @@ export const EVENT_SEEK = 'seek'
 export const STRING_PROP = 'STRING_PROP'
 // Also RegExp's for string tweening
 export const NUM_REGEX = /\s+|([A-Za-z?().,{}:""[\]#%]+)|([-+]=+)?([-+]+)?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]=?\d+)?/g
-export const HEXC_REGEX = /^#([0-9a-f]{6}|[0-9a-f]{3})$/i
 
 // Copies everything, duplicates, no shallow-copy
 export function deepCopy (source) {
@@ -41,7 +40,7 @@ export function deepCopy (source) {
 
 const isNaNForST = (v) => isNaN(+v) || ((v[0] === '+' || v[0] === '-') && v[1] === '=') || v === '' || v === ' '
 
-const hexColor = /^#([0-9a-f]{6}|[0-9a-f]{3})$/i
+const hexColor = /^#([0-9a-f]{6}|[0-9a-f]{3})$/gi
 const hex2rgb = (all, hex) => {
   let r
   let g
@@ -56,7 +55,7 @@ const hex2rgb = (all, hex) => {
   r = (color >> 16) & 255
   g = (color >> 8) & 255
   b = color & 255
-  return 'rgb(' + r + ',' + g + ',' + b + ')'
+  return 'rgb(' + r + ', ' + g + ', ' + b + ')'
 }
 
 export function decomposeString (fromValue) {
