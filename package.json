@@ -1,6 +1,6 @@
 {
   "name": "es6-tween",
-  "version": "5.5.9",
+  "version": "5.5.10",
   "description": "ES6 implementation of amazing tween.js",
   "browser": "bundled/Tween.min.js",
   "cdn": "bundled/Tween.min.js",

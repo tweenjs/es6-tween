@@ -402,52 +402,55 @@ class Tween {
         _valuesEnd = this._valuesEnd = InitialValues(node, object)
       }
     }
-    for (const property in _valuesEnd) {
-      let start = object && object[property] && deepCopy(object[property])
-      let end = _valuesEnd[property]
-      if (Plugins[property] && Plugins[property].init) {
-        Plugins[property].init.call(this, start, end, property, object)
-        if (start === undefined && _valuesStart[property]) {
-          start = _valuesStart[property]
+    if (!_valuesStart.processed) {
+      for (const property in _valuesEnd) {
+        let start = object && object[property] && deepCopy(object[property])
+        let end = _valuesEnd[property]
+        if (Plugins[property] && Plugins[property].init) {
+          Plugins[property].init.call(this, start, end, property, object)
+          if (start === undefined && _valuesStart[property]) {
+            start = _valuesStart[property]
+          }
+          if (Plugins[property].skipProcess) {
+            continue
+          }
         }
-        if (Plugins[property].skipProcess) {
+        if (
+          (typeof start === 'number' && isNaN(start)) ||
+          start === null ||
+          end === null ||
+          start === false ||
+          end === false ||
+          start === undefined ||
+          end === undefined ||
+          start === end
+        ) {
           continue
         }
-      }
-      if (
-        (typeof start === 'number' && isNaN(start)) ||
-        start === null ||
-        end === null ||
-        start === false ||
-        end === false ||
-        start === undefined ||
-        end === undefined ||
-        start === end
-      ) {
-        continue
-      }
-      _valuesStart[property] = start
-      if (Array.isArray(end)) {
-        if (!Array.isArray(start)) {
-          end.unshift(start)
-          for (let i = 0, len = end.length; i < len; i++) {
-            if (typeof end[i] === 'string') {
-              end[i] = decomposeString(end[i])
+        _valuesStart[property] = start
+        if (Array.isArray(end)) {
+          if (!Array.isArray(start)) {
+            end.unshift(start)
+            for (let i = 0, len = end.length; i < len; i++) {
+              if (typeof end[i] === 'string') {
+                end[i] = decomposeString(end[i])
+              }
+            }
+          } else {
+            if (end.isString && object[property].isString && !start.isString) {
+              start.isString = true
+            } else {
+              decompose(property, object, _valuesStart, _valuesEnd)
             }
           }
         } else {
-          if (end.isString && object[property].isString && !start.isString) {
-            start.isString = true
-          } else {
-            decompose(property, object, _valuesStart, _valuesEnd)
-          }
+          decompose(property, object, _valuesStart, _valuesEnd)
         }
-      } else {
-        decompose(property, object, _valuesStart, _valuesEnd)
+        if (typeof start === 'number' && typeof end === 'string' && end[1] === '=') {
+          continue
+        }
       }
-      if (typeof start === 'number' && typeof end === 'string' && end[1] === '=') {
-        continue
-      }
+      _valuesStart.processed = true
     }
 
     if (Tween.Renderer && this.node && Tween.Renderer.init) {
