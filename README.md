@@ -15,12 +15,16 @@
 <br/>
 [![NPM](https://nodei.co/npm/es6-tween.png?downloads=true&stars=true)](https://nodei.co/npm/es6-tween/)
 
-# Note
+## Note
 
 We already know what is tweening and why it's need, so there no need to describe it's, Google will do this if you want.
 **This library is not made as alternative to another libraries, it's has own pros and cons**
 
-# Docs
+## Frameworks
+
+- [react-es6-tween](https://github.com/dalisoft/react-es6-tween)
+
+## Docs
 
 - [See docs at GitBook](https://tweenjs.gitbook.io/es6-tween/)
 - [Homepage](https://tweenjs.github.io/es6-tween/) (not completed)
