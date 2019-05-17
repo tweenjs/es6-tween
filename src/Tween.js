@@ -455,6 +455,8 @@ class Tween {
       this.__render = true
     }
 
+    this._rendered = true
+
     return this
   }
 
