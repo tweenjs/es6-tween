@@ -426,6 +426,7 @@ class Tween {
       ) {
         continue
       }
+      _valuesStart[property] = start
       if (Array.isArray(end)) {
         if (!Array.isArray(start)) {
           end.unshift(start)
@@ -437,14 +438,16 @@ class Tween {
         } else {
           if (end.isString && object[property].isString && !start.isString) {
             start.isString = true
+          } else {
+            decompose(property, object, _valuesStart, _valuesEnd)
           }
         }
+      } else {
+        decompose(property, object, _valuesStart, _valuesEnd)
       }
-      _valuesStart[property] = start
       if (typeof start === 'number' && typeof end === 'string' && end[1] === '=') {
         continue
       }
-      decompose(property, object, _valuesStart, _valuesEnd)
     }
 
     if (Tween.Renderer && this.node && Tween.Renderer.init) {
@@ -716,7 +719,7 @@ class Tween {
 
       if (typeof end === 'number') {
         object[property] = start + (end - start) * value
-      } else if (Array.isArray(end) && !end.isString && (!Array.isArray(start) || start.isString)) {
+      } else if (Array.isArray(end) && !end.isString && !Array.isArray(start)) {
         object[property] = _interpolationFunctionCall(end, value, object[property])
       } else if (end && end.update) {
         end.update(value)
@@ -724,8 +727,6 @@ class Tween {
         object[property] = end(value)
       } else if (typeof end === 'string' && typeof start === 'number') {
         object[property] = start + parseFloat(end[0] + end.substr(2)) * value
-      } else if (start && end && start.splice && end.splice && start.isString && end.isString) {
-        object[property] = recompose(property, object, _valuesStart, _valuesEnd, value, elapsed)
       } else {
         recompose(property, object, _valuesStart, _valuesEnd, value, elapsed)
       }

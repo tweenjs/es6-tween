@@ -59,7 +59,13 @@ const hex2rgb = (all, hex) => {
 }
 
 export function decomposeString (fromValue) {
-  if (typeof fromValue !== 'string' || (fromValue && fromValue.splice && fromValue.isString)) {
+  if (fromValue && fromValue.splice && fromValue.isString) {
+    return fromValue
+  }
+  if (typeof fromValue !== 'string') {
+    return fromValue
+  }
+  if (fromValue.charAt(1) === '=') {
     return fromValue
   }
   const value = fromValue
@@ -71,10 +77,24 @@ export function decomposeString (fromValue) {
 }
 
 // Decompose value, now for only `string` that required
-export function decompose (prop, obj, from, to, stringBuffer) {
+export function decompose (prop, obj, from, to) {
   const fromValue = from[prop]
   const toValue = to[prop]
 
+  if (fromValue === toValue) {
+    return true
+  } else if (Array.isArray(fromValue) && Array.isArray(toValue) && fromValue.length === toValue.length) {
+    for (let i = 0, len = toValue.length; i < len; i++) {
+      const a = fromValue[i]
+      const b = toValue[i]
+
+      if (a === b || (typeof a === 'number' && typeof b === 'number')) {
+        continue
+      } else {
+        decompose(i, obj[prop], fromValue, toValue)
+      }
+    }
+  }
   if (typeof fromValue === 'number' && typeof toValue === 'number') {
     //
   } else if (fromValue && fromValue.splice && fromValue.isString && toValue && toValue.splice && toValue.isString) {
@@ -89,6 +109,9 @@ export function decompose (prop, obj, from, to, stringBuffer) {
     let fromValue1 = Array.isArray(fromValue) && fromValue[0] === STRING_PROP ? fromValue : decomposeString(fromValue)
     let toValue1 = Array.isArray(toValue) && toValue[0] === STRING_PROP ? toValue : decomposeString(toValue)
 
+    if (fromValue1 === undefined) {
+      return
+    }
     let i = 1
     while (i < fromValue1.length) {
       if (fromValue1[i] === toValue1[i] && typeof fromValue1[i - 1] === 'string') {
@@ -132,7 +155,7 @@ export const isRGBColor = (v, i, r = RGB) =>
   typeof v[i] === 'number' && (v[i - 1] === r || v[i - 3] === r || v[i - 5] === r)
 export function recompose (prop, obj, from, to, t, originalT, stringBuffer) {
   const fromValue = stringBuffer ? from : from[prop]
-  const toValue = stringBuffer ? to : to[prop]
+  let toValue = stringBuffer ? to : to[prop]
   if (toValue === undefined) {
     return fromValue
   }
@@ -177,7 +200,7 @@ export function recompose (prop, obj, from, to, t, originalT, stringBuffer) {
       return STRING_BUFFER
     } else if (Array.isArray(fromValue) && fromValue[0] !== STRING_PROP) {
       for (let i = 0, len = fromValue.length; i < len; i++) {
-        if (fromValue[i] === toValue[i]) {
+        if (fromValue[i] === toValue[i] || typeof obj[prop] === 'string') {
           continue
         }
         recompose(i, obj[prop], fromValue, toValue, t, originalT)
