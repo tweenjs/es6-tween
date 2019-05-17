@@ -426,13 +426,17 @@ class Tween {
       ) {
         continue
       }
-      if (Array.isArray(end) && !Array.isArray(start)) {
-        end.unshift(start)
-        for (let i = 0, len = end.length; i < len; i++) {
-          if (typeof end[i] === 'string') {
-            let arrayOfStrings = decomposeString(end[i])
-            arrayOfStrings.isString = true
-            end[i] = arrayOfStrings
+      if (Array.isArray(end)) {
+        if (!Array.isArray(start)) {
+          end.unshift(start)
+          for (let i = 0, len = end.length; i < len; i++) {
+            if (typeof end[i] === 'string') {
+              end[i] = decomposeString(end[i])
+            }
+          }
+        } else {
+          if (end.isString && object[property].isString && !start.isString) {
+            start.isString = true
           }
         }
       }
@@ -720,6 +724,8 @@ class Tween {
         object[property] = end(value)
       } else if (typeof end === 'string' && typeof start === 'number') {
         object[property] = start + parseFloat(end[0] + end.substr(2)) * value
+      } else if (start && end && start.splice && end.splice && start.isString && end.isString) {
+        object[property] = recompose(property, object, _valuesStart, _valuesEnd, value, elapsed)
       } else {
         recompose(property, object, _valuesStart, _valuesEnd, value, elapsed)
       }

@@ -59,12 +59,18 @@ const hex2rgb = (all, hex) => {
 }
 
 export function decomposeString (fromValue) {
-  return typeof fromValue !== 'string'
-    ? fromValue
-    : fromValue
-      .replace(hexColor, hex2rgb)
-      .match(NUM_REGEX)
-      .map((v) => (isNaNForST(v) ? v : +v))
+  if (fromValue && fromValue.splice && fromValue.isString) {
+    return fromValue
+  }
+  const value =
+    typeof fromValue !== 'string'
+      ? fromValue
+      : fromValue
+        .replace(hexColor, hex2rgb)
+        .match(NUM_REGEX)
+        .map((v) => (isNaNForST(v) ? v : +v))
+  value.isString = true
+  return value
 }
 
 // Decompose value, now for only `string` that required
@@ -72,11 +78,13 @@ export function decompose (prop, obj, from, to, stringBuffer) {
   const fromValue = from[prop]
   const toValue = to[prop]
 
-  if (typeof fromValue === 'string' && Array.isArray(toValue)) {
+  if (typeof fromValue === 'number' && typeof toValue === 'number') {
+    //
+  } else if (fromValue && fromValue.splice && fromValue.isString && toValue && toValue.splice && toValue.isString) {
+  } else if (typeof fromValue === 'string' && Array.isArray(toValue)) {
     const fromValue1 = decomposeString(fromValue)
     const toValues = toValue.map(decomposeString)
 
-    fromValue1.isString = true
     from[prop] = fromValue1
     to[prop] = toValues
     return true
@@ -103,14 +111,11 @@ export function decompose (prop, obj, from, to, stringBuffer) {
       toValue1.shift()
     }
 
-    fromValue1.isString = true
-    toValue1.isString = true
-
     from[prop] = fromValue1
     to[prop] = toValue1
     return true
   } else if (typeof fromValue === 'object' && typeof toValue === 'object') {
-    if (Array.isArray(fromValue)) {
+    if (Array.isArray(fromValue) && !fromValue.isString) {
       return fromValue.map((v, i) => decompose(i, obj[prop], fromValue, toValue))
     } else {
       for (let prop2 in toValue) {
@@ -140,22 +145,33 @@ export function recompose (prop, obj, from, to, t, originalT, stringBuffer) {
     if (!fromValue || !toValue) {
       return obj[prop]
     }
-    if (typeof fromValue === 'object' && !!fromValue && fromValue.isString) {
+    if (
+      typeof fromValue === 'object' &&
+      !!fromValue &&
+      fromValue.isString &&
+      toValue &&
+      toValue.splice &&
+      toValue.isString
+    ) {
       let STRING_BUFFER = ''
       for (let i = 0, len = fromValue.length; i < len; i++) {
-        const isRelative = typeof fromValue[i] === 'number' && typeof toValue[i] === 'string' && toValue[i][1] === '='
-        let currentValue =
-          typeof fromValue[i] !== 'number'
-            ? fromValue[i]
-            : isRelative
-              ? fromValue[i] + parseFloat(toValue[i][0] + toValue[i].substr(2)) * t
-              : fromValue[i] + (toValue[i] - fromValue[i]) * t
-        if (isRGBColor(fromValue, i) || isRGBColor(fromValue, i, RGBA)) {
-          currentValue |= 0
-        }
-        STRING_BUFFER += currentValue
-        if (isRelative && originalT === 1) {
-          fromValue[i] = fromValue[i] + parseFloat(toValue[i][0] + toValue[i].substr(2))
+        if (fromValue[i] !== toValue[i] || typeof fromValue[i] !== 'number' || typeof toValue[i] === 'number') {
+          const isRelative = typeof fromValue[i] === 'number' && typeof toValue[i] === 'string' && toValue[i][1] === '='
+          let currentValue =
+            typeof fromValue[i] !== 'number'
+              ? fromValue[i]
+              : isRelative
+                ? fromValue[i] + parseFloat(toValue[i][0] + toValue[i].substr(2)) * t
+                : fromValue[i] + (toValue[i] - fromValue[i]) * t
+          if (isRGBColor(fromValue, i) || isRGBColor(fromValue, i, RGBA)) {
+            currentValue |= 0
+          }
+          STRING_BUFFER += currentValue
+          if (isRelative && originalT === 1) {
+            fromValue[i] = fromValue[i] + parseFloat(toValue[i][0] + toValue[i].substr(2))
+          }
+        } else {
+          STRING_BUFFER += fromValue[i]
         }
       }
       if (!stringBuffer) {

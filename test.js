@@ -48,7 +48,22 @@ test('Events', (t) => {
 })
 
 test('Value Interpolation', (t) => {
-  let obj = { a: 0, b: 'B value 1', c: { x: 2 }, d: [3], _e: 4, g: 5, h: 0, j: 0, k: '#000', l: '#0cf', m: '#fc0' }
+  const m = ['rgb(', 0, ', 204, ', 255, ')']
+  m.isString = true
+
+  let obj = {
+    a: 0,
+    b: 'B value 1',
+    c: { x: 2 },
+    d: [3],
+    _e: 4,
+    g: 5,
+    h: 0,
+    j: 0,
+    k: '#000',
+    l: '#0cf',
+    m
+  }
 
   Object.defineProperty(obj, 'e', {
     get () {
@@ -59,6 +74,8 @@ test('Value Interpolation', (t) => {
     }
   })
 
+  const m2 = ['rgb(', 255, ', 204, ', 0, ')']
+  m2.isString = true
   new Tween(obj)
     .to(
       {
@@ -72,7 +89,7 @@ test('Value Interpolation', (t) => {
         j: [1, 2],
         k: ['rgb(100, 100, 100)', 'rgb(200, 200, 200)'],
         l: '#fc0',
-        m: '#0cf'
+        m: 'rgb(255, 204, 0)'
       },
       100
     )
@@ -90,7 +107,7 @@ test('Value Interpolation', (t) => {
   t.is(obj.j, 0)
   t.is(obj.k, 'rgb(0, 0, 0)')
   t.is(obj.l, 'rgb(0, 204, 255)')
-  t.is(obj.m, 'rgb(255, 204, 0)')
+  t.is(obj.m, 'rgb(0, 204, 255)')
 
   update(50)
 
@@ -133,7 +150,7 @@ test('Value Interpolation', (t) => {
   t.is(obj.j, 2, 'Multi-Interpolation not worked as excepted')
   t.is(obj.k, 'rgb(200, 200, 200)', 'Multi-Interpolation not worked as excepted')
   t.is(obj.l, 'rgb(255, 204, 0)', 'String interpolation not worked as excepted')
-  t.is(obj.m, 'rgb(0, 204, 255)', 'String interpolation not worked as excepted')
+  t.is(obj.m, 'rgb(255, 204, 0)', 'Array as string interpolation not worked as excepted')
 })
 
 test('Value Array-based Interpolation', (t) => {
