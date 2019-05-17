@@ -59,16 +59,13 @@ const hex2rgb = (all, hex) => {
 }
 
 export function decomposeString (fromValue) {
-  if (fromValue && fromValue.splice && fromValue.isString) {
+  if (typeof fromValue !== 'string' || (fromValue && fromValue.splice && fromValue.isString)) {
     return fromValue
   }
-  const value =
-    typeof fromValue !== 'string'
-      ? fromValue
-      : fromValue
-        .replace(hexColor, hex2rgb)
-        .match(NUM_REGEX)
-        .map((v) => (isNaNForST(v) ? v : +v))
+  const value = fromValue
+    .replace(hexColor, hex2rgb)
+    .match(NUM_REGEX)
+    .map((v) => (isNaNForST(v) ? v : +v))
   value.isString = true
   return value
 }
