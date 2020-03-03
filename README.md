@@ -17,8 +17,11 @@
 
 ## Note
 
-We already know what is tweening and why it's need, so there no need to describe it's, Google will do this if you want.
-**This library is not made as alternative to another libraries, it's has own pros and cons**
+This project is now entering into maintaining mode as no support from community and i don't have enough time to keep this project alive, maintain and add features. Bug-fixes also will be stopped. PR's are welcome.
+
+You can make this project alive again with support by [became Patron](https://patreon.com/dalisoft)
+
+> See "My Patreon" page "Goals" section for more info
 
 ## Frameworks
 
@@ -26,8 +29,6 @@ We already know what is tweening and why it's need, so there no need to describe
 
 ## Docs
 
-- [See docs at GitBook](https://tweenjs.gitbook.io/es6-tween/)
-- [Homepage](https://tweenjs.github.io/es6-tween/) (not completed)
 - [API documentation](./API.md)
 - [Wiki page](https://github.com/tweenjs/es6-tween/wiki)
 
@@ -79,7 +80,7 @@ Download the [library](https://unpkg.com/es6-tween/bundled/Tween.js) and include
 <script src="https://npmcdn.com/es6-tween"></script>
 ```
 
-### More advanced users might want to...
+### More advanced users might want to
 
 #### Using `import`
 
@@ -157,7 +158,7 @@ I sure, BrowserStack helps us to make it, so i am linking to BrowserStack as our
 ## Tests
 
 ```bash
-$ yarn test
+yarn test
 ```
 
 or you can go [here](https://travis-ci.org/tweenjs/es6-tween) for more information, tests and etc...

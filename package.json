@@ -1,6 +1,6 @@
 {
   "name": "es6-tween",
-  "version": "5.5.10",
+  "version": "5.5.11",
   "description": "ES6 implementation of amazing tween.js",
   "browser": "bundled/Tween.min.js",
   "cdn": "bundled/Tween.min.js",
@@ -9,12 +9,16 @@
   "directories": {
     "example": "examples"
   },
+  "funding": {
+    "type": "patreon",
+    "url": "https://www.patreon.com/dalisoft"
+  },
   "scripts": {
     "source": "npx rollup -c",
     "minify": "npx uglifyjs bundled/Tween.js -c -m -o bundled/Tween.min.js --source-map \"filename='bundled/Tween.min.js.map'\"",
     "build": "npm run source && npm run minify",
     "dev": "npx rollup -c -w",
-    "prepublishOnly": "npm run build && npm run lint && npm run doc && npm run doc-md",
+    "prepublishOnly": "npm run lint && npm run build",
     "doc": "npx jsdoc --readme README.md --configure jsdoc.json",
     "doc-md": "npx jsdoc2md src/** > API.md",
     "test": "npm run lint && npm run source && npx ava",
