@@ -1,5 +1,7 @@
 # es6-tween
 
+## This project development suspended due of no support from community and no financial support to author
+
 - High-performant animations without headaches
 - Simple, modular and functional animation library for web and node
 - Tweening library that needs to use where performance matter
@@ -14,14 +16,6 @@
 [![Travis tests][travis-image]][travis-url]
 <br/>
 [![NPM](https://nodei.co/npm/es6-tween.png?downloads=true&stars=true)](https://nodei.co/npm/es6-tween/)
-
-## Note
-
-This project is now entering into maintaining mode as no support from community and i don't have enough time to keep this project alive, maintain and add features. Bug-fixes also will be stopped. PR's are welcome.
-
-You can make this project alive again with support by [became Patron](https://patreon.com/dalisoft)
-
-> See "My Patreon" page "Goals" section for more info
 
 ## Frameworks
 
