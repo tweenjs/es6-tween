@@ -1,0 +1,343 @@
+/**
+ * createUi Styles
+ * this can be later CSS files for es6-tween
+ * 2017, @dalisoft
+ * Licensed under GPL-3.0
+ * Please respect license
+ * Icons used FontAwesome (Thank you!)
+ */
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.controls-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    float: left;
+    position: relative;
+    font-family: Helvetica, Segoe UI, Arial;
+    display: inline-block;
+}
+
+.controls {
+    width: 100%;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    background-color: #444;
+    color: #fff;
+    padding: 10px;
+    -webkit-box-shadow: 0 0 25px 5px #444;
+    box-shadow: 0 0 25px 5px #444;
+    -webkit-user-drag: none;
+    -moz-user-drag: none;
+    -ms-user-drag: none;
+    user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -ms-touch-callout: none;
+}
+
+.controls .button,
+#seekDiv,
+#durationDiv,
+#easingDiv,
+#repeatDiv {
+    display: inline-block;
+}
+
+#seekDiv,
+#durationDiv,
+#easingDiv,
+#repeatDiv,
+#yoyoDiv,
+#reverseDiv {
+    margin-left: 1.5%;
+}
+
+#seek,
+#duration,
+#easing,
+#repeat {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+    -webkit-transition: all 150ms ease-in-out;
+    -o-transition: all 150ms ease-in-out;
+    transition: all 150ms ease-in-out;
+    -webkit-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0);
+}
+
+#seek:hover,
+#duration:hover {
+    opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    -webkit-box-shadow: 0 2px 5px #222;
+    box-shadow: 0 2px 5px #222;
+    width: 110%;
+    -webkit-transform: translate(-5%, 0);
+    -ms-transform: translate(-5%, 0);
+    transform: translate(-5%, 0);
+}
+
+#duration:before,
+#seek:before {
+    content: attr(id);
+    position: relative;
+    text-transform: capitalize;
+    top: -20px;
+    left: 5px;
+    position: absolute;
+    font-size: 12px;
+    color: #fff;
+}
+
+#easingDiv,
+#repeatDiv,
+#yoyoDiv,
+#reverseDiv {
+    -webkit-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0);
+}
+
+#easingDiv:before,
+#repeatDiv:before,
+#yoyoDiv:before,
+#reverseDiv:before {
+    content: 'Easing';
+    font-size: 12px;
+    opacity: 0.7;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+    -webkit-transition: all 150ms ease-in-out;
+    -o-transition: all 150ms ease-in-out;
+    transition: all 150ms ease-in-out;
+}
+
+#repeatDiv:before {
+    content: 'Repeat';
+}
+
+#yoyoDiv:before {
+    content: 'Yoyo';
+    top: -5px;
+    left: -1px;
+    position: absolute;
+}
+
+#reverseDiv:before {
+    content: 'Reverse';
+    top: -5px;
+    left: -1px;
+    position: absolute;
+}
+
+#easingDiv:hover:before,
+#repeatDiv:hover:before,
+#yoyoDiv:hover:before,
+#reverseDiv:hover:before {
+    opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+}
+
+#easing,
+#repeat {
+    height: auto;
+    padding: 4px 6px;
+    border-radius: 0;
+    outline: 0;
+    border: 0;
+}
+
+#easingDiv:hover #easing,
+#easing:hover,
+#repeatDiv:hover #repeat,
+#repeat:hover,
+#yoyoDiv:hover,
+#reverseDiv:hover {
+    opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+}
+
+#seek::-webkit-slider-thumb,
+#duration::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+    -webkit-transition: all 100ms ease-out;
+    -o-transition: all 100ms ease-out;
+    transition: all 100ms ease-out;
+}
+
+#seek::-moz-range-thumb,
+#duration::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+    -webkit-transition: all 100ms ease-out;
+    -o-transition: all 100ms ease-out;
+    transition: all 100ms ease-out;
+}
+
+#seek::-ms-thumb,
+#duration::-ms-thumb {
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+    -webkit-transition: all 100ms ease-out;
+    -o-transition: all 100ms ease-out;
+    transition: all 100ms ease-out;
+}
+
+#seek::-webkit-slider-thumb:hover,
+#duration::-webkit-slider-thumb:hover {
+    -webkit-transform: scale(1.5) translate(0, 0);
+    transform: scale(1.5) translate(0, 0);
+    -webkit-box-shadow: 0 1px 3px #333;
+    box-shadow: 0 1px 3px #333;
+}
+
+.controls .button {
+    padding: 10px 12px;
+    -webkit-transition: all 100ms ease-out;
+    -o-transition: all 100ms ease-out;
+    transition: all 100ms ease-out;
+    border-radius: 50%;
+    -webkit-transform: translate(0, 0, 0);
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0);
+    text-shadow: 0 2px 0 #222;
+}
+
+.controls .button:hover {
+    background-color: #333;
+    -webkit-transform: scale(1.1) translate(0, 0);
+    -ms-transform: scale(1.1) translate(0, 0);
+    transform: scale(1.1) translate(0, 0);
+    -webkit-box-shadow: 0 3px 10px #666;
+    box-shadow: 0 3px 10px #666;
+}
+
+.controls .button:active {
+    background-color: #222;
+    -webkit-transform: scale(0.8) translate(0, 0);
+    -ms-transform: scale(0.8) translate(0, 0);
+    transform: scale(0.8) translate(0, 0);
+}
+
+.controls .button.disabled {
+    color: #666;
+    -webkit-transition: 0;
+    -o-transition: 0;
+    transition: 0;
+    background-color: #333;
+}
+
+.controls .button.disabled:hover {
+    -webkit-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+/* @deprecated. Not works as excepted. PR are welcome */
+/*#seekDiv{
+	display: none;
+	clear: both;
+	margin: 0;
+	padding: 0;
+	box-shadow: none;
+	transform: none;
+}*/
+
+#seek[disabled="true"] {
+    -webkit-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0);
+    -webkit-transition: 0ms;
+    -o-transition: 0ms;
+    transition: 0ms;
+    opacity: .4;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+    font-size: 12px;
+}
+
+#seek[disabled="true"]:after {
+    content: 'Disabled';
+    position: relative;
+    top: -20px;
+}
+
+#seek[disabled="true"]:hover {
+    width: 100%;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+@media screen and (max-width: 979px) {
+	#repeatDiv {
+		display: none;
+	}
+	.controls-container, .controls, .controls .button, #seek, #duration, .controls .button:hover, #seek:hover, #duration:hover, #easingDiv:before, #yoyoDiv:before, #repeatDiv:before, #reverseDiv:before, #easingDiv, #easing, #seekDiv, #yoyo, #repeat, #reverse {
+		box-shadow: none;
+		transition: all 65ms ease-out;
+	}
+}
+
+@media screen and (max-width: 797px) {
+	#seekDiv {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 696px) {
+	#reverseDiv, #yoyoDiv {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 480px) {
+	#durationDiv {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 320px) {
+	#easingDiv {
+		display: none;
+	}
+	.controls .button {
+		margin-left: 10%;
+	}
+}

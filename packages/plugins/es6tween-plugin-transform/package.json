@@ -1,0 +1,27 @@
+{
+  "name": "es6tween-plugin-transform",
+  "version": "0.0.9-deprecated",
+  "description": "CSS and SVG Transform Plugin with CSS Transform Origin support for es6-tween",
+  "main": "transform.js",
+  "cdn": "transform.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "transform",
+	"animation",
+    "es6-tween",
+    "performant",
+	"transform-origin",
+	"sampling",
+	"shape",
+    "easy",
+    "interpolation",
+	"svg",
+	"dom",
+	"css",
+	"css transform"
+  ],
+  "author": "dalisoft",
+  "license": "MIT"
+}

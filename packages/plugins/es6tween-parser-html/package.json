@@ -1,0 +1,31 @@
+{
+  "name": "es6tween-parser-html",
+  "version": "0.0.3",
+  "description": "Executing Tweening via HTML Attribute and JSON Plugin",
+  "main": "exechtml.js",
+  "cdn": "exechtml.min.js",
+  "scripts": {
+    "prepublish": "uglifyjs exechtml.js -c -m -o exechtml.min.js"
+  },
+  "keywords": [
+    "html",
+	"attributes",
+	"event",
+	"trigger",
+	"parser",
+    "animation",
+    "es6-tween",
+    "performant",
+    "scrollTop",
+    "scrollLeft",
+    "easy",
+    "interpolation",
+    "svg",
+    "dom"
+  ],
+  "author": "dalisoft",
+  "license": "MIT",
+  "devDependencies": {
+    "uglify-js": "^3.1.1"
+  }
+}

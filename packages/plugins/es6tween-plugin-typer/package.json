@@ -1,0 +1,29 @@
+{
+  "name": "es6tween-plugin-typer",
+  "version": "0.0.11",
+  "description": "Text ticker/typer animation for crazy things",
+  "main": "typer.js",
+  "cdn": "typer.min.js",
+  "scripts": {
+    "prepublish": "uglifyjs typer.js -c -m -o typer.min.js"
+  },
+  "keywords": [
+    "text",
+    "ticker",
+    "animation",
+    "crazy",
+    "es6-tween",
+    "performant",
+    "easy",
+    "interpolation",
+    "svg",
+    "fill",
+    "attributes",
+    "dom"
+  ],
+  "author": "dalisoft",
+  "license": "MIT",
+  "devDependencies": {
+    "uglify-js": "^3.1.1"
+  }
+}

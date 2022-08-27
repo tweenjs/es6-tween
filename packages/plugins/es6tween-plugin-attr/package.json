@@ -1,0 +1,23 @@
+{
+  "name": "es6tween-plugin-attr",
+  "version": "0.0.9",
+  "description": "Attributes Plugin for es6-tween",
+  "main": "attr.js",
+  "cdn": "attr.min.js",
+  "scripts": {
+    "prepublish": "uglifyjs attr.js -c -m -o attr.min.js"
+  },
+  "keywords": [
+    "attr",
+    "es6-tween",
+    "performant",
+    "easy",
+    "interpolation",
+    "svg",
+    "fill",
+    "attributes",
+    "dom"
+  ],
+  "author": "dalisoft",
+  "license": "MIT"
+}

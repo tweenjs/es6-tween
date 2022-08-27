@@ -1,0 +1,34 @@
+{
+  "name": "es6tween-plugin-event",
+  "version": "1.0.2",
+  "description": "Write less code, but do animations effecient, clean and easier",
+  "main": "event.js",
+  "cdn": "event.min.js",
+  "scripts": {
+    "prepublish": "uglifyjs event.js -c -m -o event.min.js"
+  },
+  "keywords": [
+    "event",
+    "css",
+    "js",
+    "raf",
+    "free",
+    "stroke",
+    "line",
+    "draw",
+    "drawing",
+    "animation",
+    "es6-tween",
+    "performant",
+    "easy",
+    "interpolation",
+    "svg",
+    "attributes",
+    "dom"
+  ],
+  "author": "dalisoft",
+  "license": "MIT",
+  "devDependencies": {
+    "uglify-js": "^3.1.1"
+  }
+}

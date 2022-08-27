@@ -1,0 +1,33 @@
+{
+  "name": "es6tween-plugin-keyframe",
+  "version": "1.0.2",
+  "description": "Use CSS-keyframes in es6-tween to get more powerful control, better browser support and maybe faster performance (not always)",
+  "main": "keyframe.js",
+  "cdn": "keyframe.min.js",
+  "scripts": {
+    "prepublish": "uglifyjs keyframe.js -c -m -o keyframe.min.js"
+  },
+  "keywords": [
+    "keyframe",
+    "css",
+    "js",
+    "raf",
+    "stroke",
+    "line",
+    "draw",
+    "drawing",
+    "animation",
+    "es6-tween",
+    "performant",
+    "easy",
+    "interpolation",
+    "svg",
+    "attributes",
+    "dom"
+  ],
+  "author": "dalisoft",
+  "license": "MIT",
+  "devDependencies": {
+    "uglify-js": "^3.1.1"
+  }
+}

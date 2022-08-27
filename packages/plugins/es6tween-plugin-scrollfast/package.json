@@ -1,0 +1,28 @@
+{
+  "name": "es6tween-plugin-scrollfast",
+  "version": "0.0.5",
+  "description": "Scrolling using CSS3 transform",
+  "main": "scrollfast.js",
+  "cdn": "scrollfast.min.js",
+  "scripts": {
+    "prepublish": "uglifyjs scrollfast.js -c -m -o scrollfast.min.js"
+  },
+  "keywords": [
+    "scroll",
+    "transform",
+    "animation",
+    "es6-tween",
+    "performant",
+    "scrollTop",
+    "scrollLeft",
+    "easy",
+    "interpolation",
+    "svg",
+    "dom"
+  ],
+  "author": "dalisoft",
+  "license": "MIT",
+  "devDependencies": {
+    "uglify-js": "^3.1.1"
+  }
+}

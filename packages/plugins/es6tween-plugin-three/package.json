@@ -1,0 +1,29 @@
+{
+  "name": "es6tween-plugin-three",
+  "version": "0.0.7",
+  "description": "3D Rendering engine plugin",
+  "main": "three.js",
+  "cdn": "three.min.js",
+  "scripts": {
+    "prepublish": "uglifyjs three.js -c -m -o three.min.js"
+  },
+  "keywords": [
+    "rendering",
+    "3d",
+    "three.js",
+    "three",
+    "animation",
+    "es6-tween",
+    "performant",
+    "easy",
+    "interpolation",
+    "svg",
+    "attributes",
+    "dom"
+  ],
+  "author": "dalisoft",
+  "license": "MIT",
+  "devDependencies": {
+    "uglify-js": "^3.1.1"
+  }
+}

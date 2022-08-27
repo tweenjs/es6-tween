@@ -1,0 +1,23 @@
+{
+  "name": "es6tween-plugin-css",
+  "version": "0.0.6-deprecated",
+  "description": "CSS Plugin for es6-tween",
+  "main": "css.js",
+  "cdn": "css.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "css",
+	"animation",
+    "es6-tween",
+    "performant",
+	"complex",
+    "easy",
+    "interpolation",
+	"svg",
+	"dom"
+  ],
+  "author": "dalisoft",
+  "license": "MIT"
+}

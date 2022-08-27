@@ -1,0 +1,28 @@
+{
+  "name": "es6tween-tool-createui",
+  "version": "0.0.12",
+  "description": "UI Tool for managing es6-tween tween",
+  "main": "createui.js",
+  "cdn": "createui.min.js",
+  "scripts": {
+    "prepublish": "uglifyjs createui.js -c -m -o createui.min.js && uglifycss createui.css > createui.min.css"
+  },
+  "keywords": [
+    "ui",
+    "tool",
+    "es6-tween",
+    "performant",
+    "easy",
+    "interpolation",
+    "svg",
+    "fill",
+    "attributes",
+    "dom"
+  ],
+  "author": "dalisoft",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "uglify-js": "^3.1.2",
+    "uglifycss": "0.0.27"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "es6tween-plugin-scroll",
+  "version": "0.0.13",
+  "description": "Scroll Plugin for es6-tween",
+  "main": "scroll.js",
+  "cdn": "scroll.min.js",
+  "scripts": {
+    "prepublish": "uglifyjs scroll.js -c -m -o scroll.min.js"
+  },
+  "keywords": [
+    "scroll",
+    "animation",
+    "es6-tween",
+    "performant",
+    "scrollTop",
+    "scrollLeft",
+    "easy",
+    "interpolation",
+    "svg",
+    "dom"
+  ],
+  "author": "dalisoft",
+  "license": "MIT",
+  "devDependencies": {
+    "uglify-js": "^3.1.1"
+  }
+}

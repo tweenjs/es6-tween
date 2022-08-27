@@ -1,0 +1,28 @@
+{
+  "name": "es6tween-plugin-render",
+  "version": "0.0.16",
+  "description": "Rendering plugin for es6-tween",
+  "main": "render.js",
+  "cdn": "render.min.js",
+  "scripts": {
+    "prepublish": "uglifyjs render.js -c -m -o render.min.js"
+  },
+  "repository": {},
+  "keywords": [
+    "render",
+    "css",
+    "animation",
+    "es6-tween",
+    "performant",
+    "interpolation",
+    "svg",
+    "attributes",
+    "dom",
+    "transform"
+  ],
+  "author": "dalisoft",
+  "license": "MIT",
+  "devDependencies": {
+    "uglify-js": "^3.1.1"
+  }
+}

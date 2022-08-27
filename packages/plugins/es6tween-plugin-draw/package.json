@@ -1,0 +1,32 @@
+{
+  "name": "es6tween-plugin-draw",
+  "version": "0.0.5",
+  "description": "SVG Shape Stroke-Line Drawing, Motion-path and Along-path Plugin for es6-tween",
+  "main": "draw.js",
+  "cdn": "draw.min.js",
+  "scripts": {
+    "prepublish": "uglifyjs draw.js -c -m -o draw.min.js"
+  },
+  "keywords": [
+    "stroke",
+    "line",
+    "motion",
+    "along",
+    "direct string",
+    "draw",
+    "drawing",
+    "animation",
+    "es6-tween",
+    "performant",
+    "easy",
+    "interpolation",
+    "svg",
+    "attributes",
+    "dom"
+  ],
+  "author": "dalisoft",
+  "license": "MIT",
+  "devDependencies": {
+    "uglify-js": "^3.1.1"
+  }
+}
