@@ -1,9 +1,9 @@
 {
   "eslint.enable": true,
   "eslint.autoFixOnSave": true,
-  "eslint.packageManager": "npm",
   "prettier.requireConfig": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  }
+    "source.fixAll.eslint": "explicit"
+  },
+  "npm.packageManager": "bun"
 }

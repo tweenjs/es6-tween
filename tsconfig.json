@@ -2,9 +2,9 @@
   "include": ["packages", "test", "*.js"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    // "lib": [],
+    "target": "es2017",
+    "module": "es2022",
+    "lib": ["ESNext"],
     "allowJs": true,
     "incremental": true,
     "checkJs": true,
@@ -43,6 +43,7 @@
     // "typeRoots": [],
     // "types": [],
     "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     // "preserveSymlinks": true,
 
