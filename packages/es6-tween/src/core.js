@@ -1,5 +1,5 @@
 /* global process */
-import { requestAnimationFrame, cancelAnimationFrame, root } from './shim'
+import { requestAnimationFrame, cancelAnimationFrame, root } from './shim.js';
 
 /**
  * Get browser/Node.js current time-stamp
@@ -15,27 +15,27 @@ const now = (function () {
     (!process.versions || process.versions.electron === undefined)
   ) {
     return function () {
-      const time = process.hrtime()
+      const time = process.hrtime();
 
       // Convert [seconds, nanoseconds] to milliseconds.
-      return time[0] * 1000 + time[1] / 1000000
-    }
+      return time[0] * 1000 + time[1] / 1000000;
+    };
     // In a browser, use window.performance.now if it is available.
   } else if (root.performance !== undefined && root.performance.now !== undefined) {
     // This must be bound, because directly assigning this function
     // leads to an invocation exception in Chrome.
-    return root.performance.now.bind(root.performance)
+    return root.performance.now.bind(root.performance);
     // Use Date.now if it is available.
   } else {
     const offset =
       root.performance && root.performance.timing && root.performance.timing.navigationStart
         ? root.performance.timing.navigationStart
-        : Date.now()
+        : Date.now();
     return function () {
-      return Date.now() - offset
-    }
+      return Date.now() - offset;
+    };
   }
-})()
+})();
 
 /**
  * Lightweight, effecient and modular ES6 version of tween.js
@@ -46,25 +46,25 @@ const now = (function () {
  * // ES6
  * const {add, remove, isRunning, autoPlay} = TWEEN
  */
-const _tweens = []
-let isStarted = false
-let _autoPlay = false
-let _onRequestTick = []
-const _ticker = requestAnimationFrame
-let emptyFrame = 0
-let powerModeThrottle = 120
-let _tick
-let handleLag = true
+const _tweens = [];
+let isStarted = false;
+let _autoPlay = false;
+let _onRequestTick = [];
+const _ticker = requestAnimationFrame;
+let emptyFrame = 0;
+let powerModeThrottle = 120;
+let _tick;
+let handleLag = true;
 
 const onRequestTick = (fn) => {
-  _onRequestTick.push(fn)
-}
+  _onRequestTick.push(fn);
+};
 
 const _requestTick = () => {
   for (let i = 0; i < _onRequestTick.length; i++) {
-    _onRequestTick[i]()
+    _onRequestTick[i]();
   }
-}
+};
 
 /**
  * Adds tween to list
@@ -76,21 +76,21 @@ const _requestTick = () => {
  * TWEEN.add(tween)
  */
 const add = (tween) => {
-  let i = _tweens.indexOf(tween)
+  let i = _tweens.indexOf(tween);
 
   if (i > -1) {
-    _tweens.splice(i, 1)
+    _tweens.splice(i, 1);
   }
 
-  _tweens.push(tween)
+  _tweens.push(tween);
 
-  emptyFrame = 0
+  emptyFrame = 0;
 
   if (_autoPlay && !isStarted) {
-    _tick = _ticker(update)
-    isStarted = true
+    _tick = _ticker(update);
+    isStarted = true;
   }
-}
+};
 
 /**
  * Adds ticker like event
@@ -99,7 +99,7 @@ const add = (tween) => {
  * @example
  * TWEEN.onTick(time => console.log(time))
  */
-const onTick = (fn) => _tweens.push({ update: fn })
+const onTick = (fn) => _tweens.push({ update: fn });
 
 /**
  * Sets after how much frames empty updating should stop
@@ -109,8 +109,8 @@ const onTick = (fn) => _tweens.push({ update: fn })
  * TWEEN.FrameThrottle(60)
  */
 const FrameThrottle = (frameCount = 120) => {
-  powerModeThrottle = frameCount * 1.05
-}
+  powerModeThrottle = frameCount * 1.05;
+};
 
 /**
  * Handle lag, useful if you have rendering Canvas or DOM objects or using es6-tween plugins
@@ -120,15 +120,15 @@ const FrameThrottle = (frameCount = 120) => {
  * TWEEN.ToggleLagSmoothing(false)
  */
 const ToggleLagSmoothing = (_state = true) => {
-  handleLag = _state
-}
+  handleLag = _state;
+};
 
 /**
  * @returns {Array<Tween>} List of tweens in Array
  * @memberof TWEEN
  * TWEEN.getAll() // list of tweens
  */
-const getAll = () => _tweens
+const getAll = () => _tweens;
 
 /**
  * Runs update loop automaticlly
@@ -137,8 +137,8 @@ const getAll = () => _tweens
  * @memberof TWEEN
  */
 const autoPlay = (state) => {
-  _autoPlay = state
-}
+  _autoPlay = state;
+};
 
 /**
  * Removes all tweens from list
@@ -146,10 +146,10 @@ const autoPlay = (state) => {
  * @memberof TWEEN
  */
 const removeAll = () => {
-  _tweens.length = 0
-  cancelAnimationFrame(_tick)
-  isStarted = false
-}
+  _tweens.length = 0;
+  cancelAnimationFrame(_tick);
+  isStarted = false;
+};
 
 /**
  * @param {Tween} tween Tween Instance to be matched
@@ -161,12 +161,12 @@ const removeAll = () => {
 const get = (tween) => {
   for (let i = 0; i < _tweens.length; i++) {
     if (tween === _tweens[i]) {
-      return _tweens[i]
+      return _tweens[i];
     }
   }
 
-  return null
-}
+  return null;
+};
 
 /**
  * @param {Tween} tween Tween Instance to be matched
@@ -176,8 +176,8 @@ const get = (tween) => {
  * TWEEN.has(tween)
  */
 const has = (tween) => {
-  return get(tween) !== null
-}
+  return get(tween) !== null;
+};
 /**
  * Removes tween from list
  * @param {Tween} tween Tween instance
@@ -186,15 +186,15 @@ const has = (tween) => {
  * TWEEN.remove(tween)
  */
 const remove = (tween) => {
-  const i = _tweens.indexOf(tween)
+  const i = _tweens.indexOf(tween);
   if (i !== -1) {
-    _tweens.splice(i, 1)
+    _tweens.splice(i, 1);
   }
   if (_tweens.length === 0) {
-    cancelAnimationFrame(_tick)
-    isStarted = false
+    cancelAnimationFrame(_tick);
+    isStarted = false;
   }
-}
+};
 
 /**
  * Updates global tweens by given time
@@ -207,37 +207,37 @@ const remove = (tween) => {
 
 const update = (time = now(), preserve) => {
   if (emptyFrame >= powerModeThrottle && handleLag) {
-    isStarted = false
-    emptyFrame = 0
-    cancelAnimationFrame(_tick)
-    return false
+    isStarted = false;
+    emptyFrame = 0;
+    cancelAnimationFrame(_tick);
+    return false;
   }
 
   if (_autoPlay && isStarted) {
-    _tick = _ticker(update)
+    _tick = _ticker(update);
   } else {
-    _requestTick()
+    _requestTick();
   }
 
   if (!_tweens.length) {
-    emptyFrame++
+    emptyFrame++;
   }
 
-  let i = 0
-  let length = _tweens.length
+  let i = 0;
+  let length = _tweens.length;
   while (i < length) {
-    _tweens[i++].update(time, preserve)
+    _tweens[i++].update(time, preserve);
 
     if (length > _tweens.length) {
       // The tween has been removed, keep same index
-      i--
+      i--;
     }
 
-    length = _tweens.length
+    length = _tweens.length;
   }
 
-  return true
-}
+  return true;
+};
 
 /**
  * The state of ticker running
@@ -245,7 +245,7 @@ const update = (time = now(), preserve) => {
  * @memberof TWEEN
  * @example TWEEN.isRunning()
  */
-const isRunning = () => isStarted
+const isRunning = () => isStarted;
 
 /**
  * Returns state of lag smoothing handling
@@ -253,7 +253,7 @@ const isRunning = () => isStarted
  * @memberof TWEEN
  * @example TWEEN.isRunning()
  */
-const isLagSmoothing = () => handleLag
+const isLagSmoothing = () => handleLag;
 
 /**
  * The plugins store object
@@ -266,7 +266,7 @@ const isLagSmoothing = () => handleLag
  *
  * @static
  */
-const Plugins = {}
+const Plugins = {};
 
 export {
   Plugins,
@@ -284,5 +284,5 @@ export {
   isRunning,
   isLagSmoothing,
   FrameThrottle,
-  ToggleLagSmoothing
-}
+  ToggleLagSmoothing,
+};

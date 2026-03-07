@@ -13,16 +13,16 @@ import {
   Plugins,
   remove,
   removeAll,
-  update
-} from './core'
-import Easing from './Easing'
-import Interpolation from './Interpolation'
-import Tween from './Tween'
-import Timeline from './Timeline'
-import Selector from './selector'
-import Interpolator from './Interpolator'
-import * as utils from './constants'
-import './shim'
+  update,
+} from './core.js';
+import Easing from './Easing.js';
+import Interpolation from './Interpolation.js';
+import Tween from './Tween.js';
+import Timeline from './Timeline.js';
+import Selector from './selector.js';
+import Interpolator from './Interpolator.js';
+import * as utils from './constants.js';
+
 export {
   Plugins,
   Selector,
@@ -45,5 +45,5 @@ export {
   Timeline,
   Easing,
   Interpolation,
-  utils
-}
+  utils,
+};
