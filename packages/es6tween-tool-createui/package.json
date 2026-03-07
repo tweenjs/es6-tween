@@ -22,7 +22,7 @@
   "author": "dalisoft",
   "license": "GPL-3.0",
   "devDependencies": {
-    "uglify-js": "^3.1.2",
-    "uglifycss": "0.0.27"
+    "uglify-js": "^3.19.3",
+    "uglifycss": "0.0.29"
   }
 }
