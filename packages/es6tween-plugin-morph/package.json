@@ -1,0 +1,31 @@
+{
+  "name": "es6tween-plugin-morph",
+  "version": "0.0.21",
+  "description": "SVG Shape Morphing Plugin for es6-tween",
+  "main": "morph.js",
+  "module": "morph.esmodule.js",
+  "cdn": "morph.min.js",
+  "scripts": {
+    "prepublishOnly": "rollup -c && standard morph.esmodule.js --fix && uglifyjs morph.js -c -m -o morph.min.js",
+    "dev": "rollup -c -w"
+  },
+  "keywords": [
+    "morph",
+    "animation",
+    "es6-tween",
+    "performant",
+    "sampling",
+    "shape",
+    "easy",
+    "interpolation",
+    "svg"
+  ],
+  "author": "dalisoft",
+  "license": "MIT",
+  "dependencies": {
+    "es6-tween": "^5.2.2",
+    "flubber": "^0.4.2",
+    "points.js": "^1.1.6",
+    "svg-points": "^6.0.1"
+  }
+}

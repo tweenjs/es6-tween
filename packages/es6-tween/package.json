@@ -1,0 +1,46 @@
+{
+  "name": "es6-tween",
+  "version": "5.5.11",
+  "description": "ES6 implementation of amazing tween.js",
+  "cdn": "bundled/Tween.min.js",
+  "main": "src/index.js",
+  "type": "module",
+  "directories": {
+    "example": "examples"
+  },
+  "funding": {
+    "type": "patreon",
+    "url": "https://www.patreon.com/dalisoft"
+  },
+  "scripts": {
+    "source": "bun ",
+    "minify": "uglifyjs bundled/Tween.js -c -m -o bundled/Tween.min.js --source-map \"filename='bundled/Tween.min.js.map'\"",
+    "build": "npm run source && npm run minify",
+    "dev": "rollup -c -w",
+    "prepublishOnly": "npm run lint && npm run build",
+    "doc": "jsdoc --readme README.md --configure jsdoc.json",
+    "doc-md": "jsdoc2md src/** > API.md",
+    "test": "node --test",
+    "lint": "eslint ./src",
+    "lint-fix": "eslint ./src --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tweenjs/es6-tween.git"
+  },
+  "keywords": [
+    "tween",
+    "tweening",
+    "es6",
+    "numeric",
+    "interpolation",
+    "easing",
+    "emit"
+  ],
+  "author": "es6-tween contributors",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tweenjs/es6-tween/issues"
+  },
+  "homepage": "https://es6-tween.js.org"
+}

@@ -1,11 +1,5 @@
-dist/
-docs/
-full/
-bundled/
-lite/
-guide_notes/
-node_modules/
+.DS_Store
+node_modules
 npm-debug.log
 yarn-error.log
-.vscode
 .idea

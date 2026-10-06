@@ -1,78 +1,44 @@
 {
-  "name": "es6-tween",
-  "version": "5.5.11",
+  "name": "@es6-tween/workspace",
   "description": "ES6 implementation of amazing tween.js",
-  "browser": "bundled/Tween.min.js",
-  "cdn": "bundled/Tween.min.js",
-  "main": "bundled/Tween.js",
-  "module": "src/index.js",
-  "directories": {
-    "example": "examples"
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20.19.5",
+    "bun": ">=1.4.2"
   },
-  "funding": {
-    "type": "patreon",
-    "url": "https://www.patreon.com/dalisoft"
-  },
+  "packageManager": "bun@1.4.2",
   "scripts": {
-    "source": "npx rollup -c",
-    "minify": "npx uglifyjs bundled/Tween.js -c -m -o bundled/Tween.min.js --source-map \"filename='bundled/Tween.min.js.map'\"",
-    "build": "npm run source && npm run minify",
-    "dev": "npx rollup -c -w",
-    "prepublishOnly": "npm run lint && npm run build",
-    "doc": "npx jsdoc --readme README.md --configure jsdoc.json",
-    "doc-md": "npx jsdoc2md src/** > API.md",
-    "test": "npm run lint && npm run source && npx ava",
-    "lint": "npx eslint ./src",
-    "lint-fix": "npx eslint ./src --fix"
+    "lint": "smartlint",
+    "semantic-release": "lerna exec --concurrency 1 -- semantic-release -e semantic-release-monorepo"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tweenjs/es6-tween.git"
   },
   "keywords": [
-    "tween",
-    "tweening",
-    "es6",
-    "numeric",
-    "interpolation",
-    "easing",
-    "emit"
+    "prettier",
+    "eslint",
+    "config"
   ],
-  "author": "es6-tween contributors",
+  "author": "dalisoft",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tweenjs/es6-tween/issues"
   },
-  "homepage": "https://es6-tween.js.org",
+  "homepage": "https://github.com/tweenjs/es6-tween#readme",
   "devDependencies": {
-    "@babel/core": "^7.4.4",
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
-    "ava": "^5.1.0",
-    "docdash": "^1.1.0",
-    "eslint": "^5.16.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.17.2",
-    "eslint-plugin-node": "^9.0.1",
-    "eslint-plugin-promise": "^4.1.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "jsdoc": "^3.6.2",
-    "jsdoc-to-markdown": "^8.0.0",
-    "puppeteer": "^1.16.0",
-    "rollup": "^1.12.1",
-    "rollup-plugin-babel": "^4.3.2",
-    "uglify-js": "^3.5.12"
+    "@biomejs/biome": "^2.5.15",
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-lerna-scopes": "^21.2.0",
+    "@types/bun": "^1.4.2",
+    "lefthook": "^2.1.17",
+    "rumdl": "^0.2.78",
+    "typescript": "^7.0.2"
   },
-  "dependencies": {},
-  "ava": {
-    "verbose": true,
-    "require": [
-      "esm"
-    ],
-    "babel": {
-      "extensions": [
-        "js"
-      ]
-    }
-  }
+  "trustedDependencies": [
+    "lefthook"
+  ]
 }

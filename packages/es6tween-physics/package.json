@@ -1,0 +1,19 @@
+{
+  "name": "es6tween-physics",
+  "version": "0.0.4",
+  "description": "Physics easing for es6-tween",
+  "main": "physics.js",
+  "cdn": "physics.min.js",
+  "scripts": {
+    "prepublishOnly": "npx uglifyjs physics.js -c -m -o physics.min.js"
+  },
+  "keywords": [
+    "es6-tween",
+    "physics"
+  ],
+  "author": "dalisoft",
+  "license": "MIT",
+  "devDependencies": {
+    "uglify-es": "^3.3.9"
+  }
+}
