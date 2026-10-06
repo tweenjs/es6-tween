@@ -37,6 +37,9 @@ var _gsScope =
             p,
             val;
           for (p in alt) {
+            if (p === '__proto__' || p === 'constructor' || p === 'prototype') {
+              continue;
+            }
             val = alt[p];
             vars[p] =
               typeof val === 'function'
@@ -902,6 +905,9 @@ var _gsScope =
             p,
             val;
           for (p in alt) {
+            if (p === '__proto__' || p === 'constructor' || p === 'prototype') {
+              continue;
+            }
             val = alt[p];
             vars[p] =
               typeof val === 'function'
