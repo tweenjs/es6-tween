@@ -42,8 +42,5 @@
   "bugs": {
     "url": "https://github.com/tweenjs/es6-tween/issues"
   },
-  "homepage": "https://es6-tween.js.org",
-  "devDependencies": {
-    "puppeteer": "^24.38.0"
-  }
+  "homepage": "https://es6-tween.js.org"
 }

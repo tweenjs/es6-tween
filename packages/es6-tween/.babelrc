@@ -1,5 +1,11 @@
 {
-  "exclude": ["node_modules/**", "bundled/**", "performance/**", "logo/**", "examples/**"],
+  "exclude": [
+    "node_modules/**",
+    "bundled/**",
+    "performance/**",
+    "logo/**",
+    "examples/**"
+  ],
   "presets": [
     [
       "@babel/preset-env",

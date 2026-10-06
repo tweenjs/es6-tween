@@ -9,18 +9,18 @@
   },
   "keywords": [
     "transform",
-	"animation",
+    "animation",
     "es6-tween",
     "performant",
-	"transform-origin",
-	"sampling",
-	"shape",
+    "transform-origin",
+    "sampling",
+    "shape",
     "easy",
     "interpolation",
-	"svg",
-	"dom",
-	"css",
-	"css transform"
+    "svg",
+    "dom",
+    "css",
+    "css transform"
   ],
   "author": "dalisoft",
   "license": "MIT"

@@ -9,14 +9,14 @@
   },
   "keywords": [
     "css",
-	"animation",
+    "animation",
     "es6-tween",
     "performant",
-	"complex",
+    "complex",
     "easy",
     "interpolation",
-	"svg",
-	"dom"
+    "svg",
+    "dom"
   ],
   "author": "dalisoft",
   "license": "MIT"

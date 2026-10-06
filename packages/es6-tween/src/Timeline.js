@@ -9,7 +9,7 @@ import {
   EVENT_RESTART,
   EVENT_UPDATE,
   FRAME_MS,
-  TOO_LONG_FRAME_MS,
+  TOO_LONG_FRAME_MS
 } from './constants.js';
 import Selector from './selector.js';
 
@@ -42,7 +42,8 @@ class Timeline extends Tween {
   constructor(params) {
     super();
     this._duration = 0;
-    this._startTime = params && params.startTime !== undefined ? params.startTime : now();
+    this._startTime =
+      params && params.startTime !== undefined ? params.startTime : now();
     this._tweens = [];
     this.elapsed = 0;
     this._id = _id++;
@@ -102,13 +103,18 @@ class Timeline extends Tween {
     nodes = Selector(nodes, true, true);
     if (nodes && nodes.length) {
       if (this._defaultParams) {
-        params = params ? { ...this._defaultParams, ...params } : this._defaultParams;
+        params = params
+          ? { ...this._defaultParams, ...params }
+          : this._defaultParams;
       }
       const position = params.label;
       const offset =
         typeof position === 'number'
           ? position
-          : this.position.parseLabel(typeof position !== 'undefined' ? position : 'afterLast', null);
+          : this.position.parseLabel(
+              typeof position !== 'undefined' ? position : 'afterLast',
+              null
+            );
       const mode = this.getTiming(params.mode, nodes, params, offset);
       for (let i = 0, node, len = nodes.length; i < len; i++) {
         node = nodes[i];
@@ -170,7 +176,10 @@ class Timeline extends Tween {
     for (let i = 0, len = this._tweens.length; i < len; i++) {
       const _tween = this._tweens[i];
       fn(_tween, i);
-      this._duration = Math.max(this._duration, _tween._duration + _tween._startTime);
+      this._duration = Math.max(
+        this._duration,
+        _tween._duration + _tween._startTime
+      );
     }
     return this;
   }
@@ -205,11 +214,17 @@ class Timeline extends Tween {
     const offset =
       typeof position === 'number'
         ? position
-        : this.position.parseLabel(typeof position !== 'undefined' ? position : 'afterLast', null);
+        : this.position.parseLabel(
+            typeof position !== 'undefined' ? position : 'afterLast',
+            null
+          );
     tween._startTime = Math.max(this._startTime, tween._delayTime, offset);
     tween._delayTime = offset;
     tween._isPlaying = true;
-    this._duration = Math.max(_duration, Math.max(tween._startTime + tween._delayTime, tween._duration));
+    this._duration = Math.max(
+      _duration,
+      Math.max(tween._startTime + tween._delayTime, tween._duration)
+    );
     this._tweens.push(tween);
     this.position.setLabel('afterLast', this._duration);
     return this;
@@ -243,7 +258,7 @@ class Timeline extends Tween {
       _isFinite,
       _isPlaying,
       _prevTime,
-      _onStartCallbackFired,
+      _onStartCallbackFired
     } = this;
 
     let elapsed;
@@ -323,7 +338,9 @@ class Timeline extends Tween {
   }
 
   progress(value) {
-    return value !== undefined ? this.update(value * this._duration) : this.elapsed;
+    return value !== undefined
+      ? this.update(value * this._duration)
+      : this.elapsed;
   }
 }
 export default Timeline;

@@ -1,11 +1,11 @@
 export default function (selector, collection, allowRaw) {
   if (!selector) {
-    return null
+    return null;
   }
 
   const isGlobalScope =
     (typeof window !== 'undefined' && selector === window) ||
-    (typeof document !== 'undefined' && selector === document)
+    (typeof document !== 'undefined' && selector === document);
 
   if (collection) {
     return isGlobalScope
@@ -18,7 +18,7 @@ export default function (selector, collection, allowRaw) {
             ? [selector]
             : allowRaw
               ? selector
-              : []
+              : [];
   }
   return isGlobalScope
     ? selector
@@ -30,5 +30,5 @@ export default function (selector, collection, allowRaw) {
           ? selector
           : allowRaw
             ? selector
-            : null
+            : null;
 }

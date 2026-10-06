@@ -13,13 +13,21 @@ const Interpolator = (a, b) => {
   let origin = typeof a === 'string' ? a : isArray ? a.slice() : { ...a };
   if (isArray) {
     for (let i = 0, len = a.length; i < len; i++) {
-      if (a[i] !== b[i] || typeof a[i] !== 'number' || typeof b[i] === 'number') {
+      if (
+        a[i] !== b[i] ||
+        typeof a[i] !== 'number' ||
+        typeof b[i] === 'number'
+      ) {
         decompose(i, origin, a, b);
       }
     }
   } else if (typeof a === 'object') {
     for (let i in a) {
-      if (a[i] !== b[i] || typeof a[i] !== 'number' || typeof b[i] === 'number') {
+      if (
+        a[i] !== b[i] ||
+        typeof a[i] !== 'number' ||
+        typeof b[i] === 'number'
+      ) {
         decompose(i, origin, a, b);
       }
     }

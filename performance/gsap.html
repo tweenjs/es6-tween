@@ -1,73 +1,74 @@
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, minimum-scale=1.0" />
+    <title>GSAP - TweenMax</title>
+    <style>
+      #container {
+        width: 200px;
+        height: auto;
+        margin: 0 auto;
+        position: relative;
+        display: block;
+      }
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, minimum-scale=1.0">
-	<title>GSAP - TweenMax</title>
-	<style>
-		#container {
-			width: 200px;
-			height: auto;
-			margin: 0 auto;
-			position: relative;
-			display: block;
-		}
-		
-		.line {
-			width: 200px;
-			height: 2px;
-			position: absolute;
-		}
-	</style>
-</head>
+      .line {
+        width: 200px;
+        height: 2px;
+        position: absolute;
+      }
+    </style>
+  </head>
 
-<body>
+  <body>
+    <div id="container"></div>
 
-	<div id="container"></div>
+    <script src="TweenMax.js"></script>
+    <script>
+      function random(min, max) {
+        return Math.random() * (max - min) + min;
+      }
 
-	<script src="TweenMax.js"></script>
-	<script>
+      var nodes = [],
+        c = document.getElementById('container'),
+        easing = 'quadraticInOut',
+        ratio = 0.9,
+        wIh = (window.innerHeight || screen.height - 40) * ratio,
+        wIw = window.innerWidth,
+        hwiw = (wIw / 5) * ratio,
+        frag = document.createDocumentFragment();
 
-		function random(min, max) {
-			return Math.random() * (max - min) + min;
-		}
+      function createTest(count) {
+        var i;
+        for (i = 0; i < count; i++) {
+          var div = document.createElement('div'),
+            bg = (Math.random() * 0xffffff) >> 0,
+            r = (bg >> 16) & 255,
+            g = (bg >> 8) & 255,
+            b = bg & 255,
+            bgC = 'rgb(' + r + ',' + g + ', ' + b + ')',
+            l = Math.floor(random(-200, 200)),
+            dl = Math.floor(Math.random() * 1000),
+            tl = Math.floor(random(-200, 200));
+          div.setAttribute('class', 'line');
+          div.style.top = [Math.random() * wIh, 'px'].join('');
+          //div.style.left = l + 'px';
+          div.style.transform = 'translate3d(' + l + 'px, 0px, 0px)';
+          div.style.backgroundColor = bgC;
+          var a = TweenMax.fromTo(
+            div,
+            1,
+            { x: l },
+            { x: tl, ease: Quad.InOut, repeat: -1, yoyo: true }
+          );
 
-		var nodes = [],
-			c = document.getElementById("container"),
-			easing = "quadraticInOut",
-			ratio = 0.9,
-			wIh = (window.innerHeight || screen.height - 40) * ratio,
-			wIw = window.innerWidth,
-			hwiw = (wIw / 5) * ratio,
-			frag = document.createDocumentFragment();
-
-		function createTest(count) {
-			var i;
-			for (i = 0; i < count; i++) {
-				var div = document.createElement("div"),
-					bg = (Math.random() * 0xffffff) >> 0,
-					r = bg >> 16 & 255,
-					g = bg >> 8 & 255,
-					b = bg & 255,
-					bgC = 'rgb(' + r + ',' + g + ', ' + b + ')',
-					l = Math.floor(random(-200, 200)),
-					dl = Math.floor(Math.random() * 1000),
-					tl = Math.floor(random(-200, 200));
-				div.setAttribute("class", "line");
-				div.style.top = [(Math.random() * wIh), "px"].join("");
-				//div.style.left = l + 'px';
-				div.style.transform = "translate3d(" + l + "px, 0px, 0px)";
-				div.style.backgroundColor = bgC;
-				var a = TweenMax.fromTo(div, 1, {x:l}, {x:tl,ease:Quad.InOut,repeat:-1,yoyo:true})
-
-				frag.appendChild(div);
-
-			}
-			c.appendChild(frag);
-		}
-		createTest(200);
-	</script>
-
-</body>
-
+          frag.appendChild(div);
+        }
+        c.appendChild(frag);
+      }
+      createTest(200);
+    </script>
+  </body>
 </html>

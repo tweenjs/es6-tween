@@ -1,7 +1,6 @@
 {
   "eslint.enable": true,
   "eslint.autoFixOnSave": true,
-  "prettier.requireConfig": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },

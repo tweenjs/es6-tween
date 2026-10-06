@@ -12,14 +12,22 @@ function describe(jsHandle: JSHandle<unknown>) {
 }
 
 export default async <TReturn>(run: (page: Page) => Promise<TReturn>) => {
-  let browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
+  let browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox']
+  });
   const page = await browser.newPage();
 
   page.on('console', async (msg) => {
     const args = await Promise.all(msg.args().map((arg) => describe(arg)));
     console.log('Logs from Headless Chrome', ...args);
   });
-  await page.evaluate(await fs.readFile(path.join(import.meta.dirname, 'bundled/Tween.js'), 'utf8'));
+  await page.evaluate(
+    await fs.readFile(
+      path.join(import.meta.dirname, 'bundled/Tween.js'),
+      'utf8'
+    )
+  );
 
   try {
     return run(page);

@@ -6,7 +6,9 @@
 import { Tween } from 'es6-tween';
 import 'es6tween-plugin-typer';
 
-let tween = new Tween(document.querySelector('#mySpan'), {typer:'Start'}).to({typer:'End'}, 2000).start(); // Demo with no config
+let tween = new Tween(document.querySelector('#mySpan'), { typer: 'Start' })
+  .to({ typer: 'End' }, 2000)
+  .start(); // Demo with no config
 ```
 
 # Config

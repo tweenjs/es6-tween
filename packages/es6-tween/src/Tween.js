@@ -1,4 +1,11 @@
-import { add, now, Plugins, remove, isRunning, isLagSmoothing } from './core.js';
+import {
+  add,
+  now,
+  Plugins,
+  remove,
+  isRunning,
+  isLagSmoothing
+} from './core.js';
 import Easing from './Easing.js';
 import Interpolation from './Interpolation.js';
 import NodeCache, { Store } from './NodeCache.js';
@@ -22,7 +29,7 @@ import {
   EVENT_STOP,
   EVENT_SEEK,
   FRAME_MS,
-  TOO_LONG_FRAME_MS,
+  TOO_LONG_FRAME_MS
 } from './constants.js';
 
 let _id = 0; // Unique ID
@@ -87,7 +94,10 @@ class Tween {
     if (!!node && typeof node === 'object' && !object && !node.nodeType) {
       object = this.object = node;
       node = null;
-    } else if (!!node && (node.nodeType || node.length || typeof node === 'string')) {
+    } else if (
+      !!node &&
+      (node.nodeType || node.length || typeof node === 'string')
+    ) {
       node = this.node = Selector(node);
       object = this.object = NodeCache(node, object, this);
     }
@@ -337,7 +347,8 @@ class Tween {
    * @deprecated Not works as excepted and useless, so we deprecated this method
    */
   duration(amount) {
-    this._duration = typeof amount === 'function' ? amount(this._duration) : amount;
+    this._duration =
+      typeof amount === 'function' ? amount(this._duration) : amount;
 
     return this;
   }
@@ -353,13 +364,13 @@ class Tween {
     this._valuesEnd = properties;
 
     if (typeof duration === 'number' || typeof duration === 'function') {
-      this._duration = typeof duration === 'function' ? duration(this._duration) : duration;
+      this._duration =
+        typeof duration === 'function' ? duration(this._duration) : duration;
     } else if (typeof duration === 'object') {
       for (const prop in duration) {
         if (typeof this[prop] === 'function') {
-          const [arg1 = null, arg2 = null, arg3 = null, arg4 = null] = Array.isArray(duration[prop])
-            ? duration[prop]
-            : [duration[prop]];
+          const [arg1 = null, arg2 = null, arg3 = null, arg4 = null] =
+            Array.isArray(duration[prop]) ? duration[prop] : [duration[prop]];
           this[prop](arg1, arg2, arg3, arg4);
         }
       }
@@ -384,7 +395,10 @@ class Tween {
 
     if (node && node.queueID && Store[node.queueID]) {
       const prevTweenByNode = Store[node.queueID];
-      if (prevTweenByNode.propNormaliseRequired && prevTweenByNode.tween !== this) {
+      if (
+        prevTweenByNode.propNormaliseRequired &&
+        prevTweenByNode.tween !== this
+      ) {
         for (const property in _valuesEnd) {
           if (prevTweenByNode.tween._valuesEnd[property] !== undefined) {
             // delete prevTweenByNode.tween._valuesEnd[property];
@@ -397,7 +411,11 @@ class Tween {
 
     if (node && InitialValues) {
       if (!object || Object.keys(object).length === 0) {
-        object = this.object = NodeCache(node, InitialValues(node, _valuesEnd), this);
+        object = this.object = NodeCache(
+          node,
+          InitialValues(node, _valuesEnd),
+          this
+        );
       } else if (!_valuesEnd || Object.keys(_valuesEnd).length === 0) {
         _valuesEnd = this._valuesEnd = InitialValues(node, object);
       }
@@ -446,7 +464,11 @@ class Tween {
         } else {
           decompose(property, object, _valuesStart, _valuesEnd);
         }
-        if (typeof start === 'number' && typeof end === 'string' && end[1] === '=') {
+        if (
+          typeof start === 'number' &&
+          typeof end === 'string' &&
+          end[1] === '='
+        ) {
           continue;
         }
       }
@@ -470,7 +492,12 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   start(time) {
-    this._startTime = time !== undefined ? (typeof time === 'string' ? now() + parseFloat(time) : time) : now();
+    this._startTime =
+      time !== undefined
+        ? typeof time === 'string'
+          ? now() + parseFloat(time)
+          : time
+        : now();
     this._startTime += this._delayTime;
     this._initTime = this._prevTime = this._startTime;
 
@@ -489,7 +516,16 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   stop() {
-    let { _isPlaying, _isFinite, object, _startTime, _duration, _r, _yoyo, _reversed } = this;
+    let {
+      _isPlaying,
+      _isFinite,
+      object,
+      _startTime,
+      _duration,
+      _r,
+      _yoyo,
+      _reversed
+    } = this;
 
     if (!_isPlaying) {
       return this;
@@ -516,7 +552,8 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   delay(amount) {
-    this._delayTime = typeof amount === 'function' ? amount(this._delayTime) : amount;
+    this._delayTime =
+      typeof amount === 'function' ? amount(this._delayTime) : amount;
 
     return this;
   }
@@ -546,7 +583,11 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   repeat(amount) {
-    this._repeat = !this._duration ? 0 : typeof amount === 'function' ? amount(this._repeat) : amount;
+    this._repeat = !this._duration
+      ? 0
+      : typeof amount === 'function'
+        ? amount(this._repeat)
+        : amount;
     this._r = this._repeat;
     this._isFinite = isFinite(amount);
 
@@ -560,7 +601,8 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   reverseDelay(amount) {
-    this._reverseDelayTime = typeof amount === 'function' ? amount(this._reverseDelayTime) : amount;
+    this._reverseDelayTime =
+      typeof amount === 'function' ? amount(this._reverseDelayTime) : amount;
 
     return this;
   }
@@ -573,7 +615,12 @@ class Tween {
    * @memberof TWEEN.Tween
    */
   yoyo(state, _easingReverse) {
-    this._yoyo = typeof state === 'function' ? state(this._yoyo) : state === null ? this._yoyo : state;
+    this._yoyo =
+      typeof state === 'function'
+        ? state(this._yoyo)
+        : state === null
+          ? this._yoyo
+          : state;
     if (!state) {
       this._reversed = false;
     }
@@ -659,7 +706,7 @@ class Tween {
       _isFinite,
       _isPlaying,
       __render,
-      _chainedTweensCount,
+      _chainedTweensCount
     } = this;
 
     let elapsed;
@@ -699,7 +746,9 @@ class Tween {
       this._onStartCallbackFired = true;
     }
 
-    currentEasing = _reversed ? _easingReverse || _easingFunction : _easingFunction;
+    currentEasing = _reversed
+      ? _easingReverse || _easingFunction
+      : _easingFunction;
 
     if (!object) {
       return true;
@@ -707,7 +756,10 @@ class Tween {
 
     for (property in _valuesEnd) {
       const start = _valuesStart[property];
-      if ((start === undefined || start === null) && !(Plugins[property] && Plugins[property].update)) {
+      if (
+        (start === undefined || start === null) &&
+        !(Plugins[property] && Plugins[property].update)
+      ) {
         continue;
       }
       const end = _valuesEnd[property];
@@ -725,7 +777,11 @@ class Tween {
       if (typeof end === 'number') {
         object[property] = start + (end - start) * value;
       } else if (Array.isArray(end) && !end.isString && !Array.isArray(start)) {
-        object[property] = _interpolationFunctionCall(end, value, object[property]);
+        object[property] = _interpolationFunctionCall(
+          end,
+          value,
+          object[property]
+        );
       } else if (end && end.update) {
         end.update(value);
       } else if (typeof end === 'function') {
@@ -736,7 +792,15 @@ class Tween {
         recompose(property, object, _valuesStart, _valuesEnd, value, elapsed);
       }
       if (Plugins[property] && Plugins[property].update) {
-        Plugins[property].update.call(this, object[property], start, end, value, elapsed, property);
+        Plugins[property].update.call(
+          this,
+          object[property],
+          start,
+          end,
+          value,
+          elapsed,
+          property
+        );
       }
       propCount++;
     }
@@ -763,7 +827,10 @@ class Tween {
         } else {
           for (property in _valuesEnd) {
             let end = _valuesEnd[property];
-            if (typeof end === 'string' && typeof _valuesStart[property] === 'number') {
+            if (
+              typeof end === 'string' &&
+              typeof _valuesStart[property] === 'number'
+            ) {
               _valuesStart[property] += parseFloat(end[0] + end.substr(2));
             }
           }

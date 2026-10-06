@@ -13,7 +13,7 @@ import {
   Plugins,
   remove,
   removeAll,
-  update,
+  update
 } from './core.js';
 import Easing from './Easing.js';
 import Interpolation from './Interpolation.js';
@@ -45,5 +45,5 @@ export {
   Timeline,
   Easing,
   Interpolation,
-  utils,
+  utils
 };
