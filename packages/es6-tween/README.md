@@ -1,7 +1,5 @@
 # es6-tween
 
-## This project development suspended due of no support from community and no financial support to author
-
 - High-performant animations without headaches
 - Simple, modular and functional animation library for web and node
 - Tweening library that needs to use where performance matter
@@ -12,7 +10,7 @@
 [![CDNJS][cdnjs-image]][cdnjs-url]
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][npm-url]
-[![license](https://img.shields.io/github/license/tweenjs/es6-tween.svg)]()
+[![license](https://img.shields.io/github/license/tweenjs/es6-tween.svg)](https://github.com/tweenjs/es6-tween)
 [![Travis tests][travis-image]][travis-url]
 <br/>
 [![NPM](https://nodei.co/npm/es6-tween.png?downloads=true&stars=true)](https://nodei.co/npm/es6-tween/)
@@ -32,7 +30,7 @@ TWEEN.autoPlay(true); // simplify the your code
 let coords = { x: 0, y: 0 };
 let tween = new TWEEN.Tween(coords)
   .to({ x: 100, y: 100 }, 1000)
-  .on('update', ({ x, y }) => {
+  .on("update", ({ x, y }) => {
     console.log(`The values is x: ${x} and y: ${y}`);
   })
   .start();
@@ -60,7 +58,6 @@ Download the [library](https://unpkg.com/es6-tween/bundled/Tween.js) and include
 
 - See [cdnjs-hosted version](https://cdnjs.com/libraries/es6-tween) for get which result you want
 - NOTE: `@latest` suffix sometimes saves life by loading latest, because sometimes CDN services will not load the latest
-
 - Now you can load from CDN
 
 ```html
@@ -79,7 +76,7 @@ Download the [library](https://unpkg.com/es6-tween/bundled/Tween.js) and include
 #### Using `import`
 
 ```javascript
-import { Easing, Tween, autoPlay } from 'es6-tween';
+import { Easing, Tween, autoPlay } from "es6-tween";
 ```
 
 #### Using [getlibs](https://github.com/activewidgets/getlibs)
@@ -99,15 +96,15 @@ import { Easing, Tween, autoPlay } from 'es6-tween';
 #### Using `npm` or `yarn`
 
 ```bash
-$ yarn add es6-tween
+yarn add es6-tween
 # or
-$ npm install es6-tween
+npm install es6-tween
 ```
 
 Then include the Tween.js module with the standard node.js `require`:
 
 ```javascript
-const { Tween, Easing, autoPlay } = require('es6-tween');
+const { Tween, Easing, autoPlay } = require("es6-tween");
 ```
 
 And you can use Tween.js as in all other examples--for example:
@@ -122,9 +119,9 @@ You can run script commands to build modules into single `UMD` compatible file:
 #### Using commands
 
 ```bash
-$ yarn build # builds production files
+yarn build # builds production files
 # or
-$ yarn dev # builds and watchs development files
+yarn dev # builds and watchs development files
 ```
 
 Then reference the library source:
@@ -199,13 +196,13 @@ It's great to see this library to be used in production and/or library, thank yo
 
 If you have projects using es6-tween, please make issue or PR, i will add here your project too :)
 
-[npm-min-size]: https://img.shields.io/bundlephobia/min/es6-tween.svg
-[npm-gzip-size]: https://img.badgesize.io/https://unpkg.com/es6-tween?compression=gzip
-[npm-image]: https://img.shields.io/npm/v/es6-tween.svg
-[npm-url]: https://npmjs.org/package/es6-tween
-[downloads-image]: https://img.shields.io/npm/dm/es6-tween.svg
-[travis-image]: https://travis-ci.org/tweenjs/es6-tween.svg?branch=master
-[travis-url]: https://travis-ci.org/tweenjs/es6-tween
 [cdnjs-image]: https://img.shields.io/cdnjs/v/es6-tween.svg
 [cdnjs-url]: https://cdnjs.com/libraries/es6-tween
+[downloads-image]: https://img.shields.io/npm/dm/es6-tween.svg
+[npm-gzip-size]: https://img.badgesize.io/https://unpkg.com/es6-tween?compression=gzip
+[npm-image]: https://img.shields.io/npm/v/es6-tween.svg
+[npm-min-size]: https://img.shields.io/bundlephobia/min/es6-tween.svg
+[npm-url]: https://npmjs.org/package/es6-tween
+[travis-image]: https://travis-ci.org/tweenjs/es6-tween.svg?branch=master
+[travis-url]: https://travis-ci.org/tweenjs/es6-tween
 [unpkg-url]: https://unpkg.com/es6-tween
